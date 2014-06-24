@@ -28,6 +28,8 @@
     "gulp-rename": "^1.2.0",
     "gulp-jshint": "^1.6.3",
     "gulp-uglify": "^0.3.1",
-    "jshint-stylish": "^0.2.0"
+    "gulp-karma": "0.0.4",
+    "jshint-stylish": "^0.2.0",
+    "karma": "^0.12.16"
   }
 }
