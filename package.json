@@ -6,8 +6,7 @@
   "author": "Matthew Wagerfield",
   "readmeFilename": "README.md",
   "license": "MIT",
-  "scripts": {
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "git://github.com/wagerfield/nd-physics.git"
@@ -21,6 +20,14 @@
     "ND"
   ],
   "devDependencies": {
-    "gulp": "^3.6.0"
+    "gulp": "^3.6.0",
+    "gulp-load-plugins": "^0.5.2",
+    "gulp-clean": "^0.3.0",
+    "gulp-concat": "^2.2.0",
+    "gulp-plumber": "^0.6.3",
+    "gulp-rename": "^1.2.0",
+    "gulp-jshint": "^1.6.3",
+    "gulp-uglify": "^0.3.1",
+    "jshint-stylish": "^0.2.0"
   }
 }
