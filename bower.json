@@ -1,0 +1,27 @@
+{
+  "name": "nd-physics",
+  "version": "0.0.0",
+  "description": "Dimension Agnostic Physics Engine",
+  "homepage": "http://wagerfield.github.io/nd-physics/",
+  "authors": [
+    "Matthew Wagerfield"
+  ],
+  "license": "MIT",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "physics",
+    "particles",
+    "springs",
+    "2D",
+    "3D",
+    "ND"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test"
+  ]
+}
