@@ -1,0 +1,26 @@
+{
+  "name": "nd-physics",
+  "version": "0.0.0",
+  "description": "Dimension Agnostic Physics Engine",
+  "homepage": "http://wagerfield.github.io/nd-physics/",
+  "author": "Matthew Wagerfield",
+  "readmeFilename": "README.md",
+  "license": "MIT",
+  "scripts": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/wagerfield/nd-physics.git"
+  },
+  "keywords": [
+    "physics",
+    "particles",
+    "springs",
+    "2D",
+    "3D",
+    "ND"
+  ],
+  "devDependencies": {
+    "gulp": "^3.6.0"
+  }
+}
