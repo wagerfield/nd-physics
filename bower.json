@@ -20,8 +20,12 @@
   ],
   "ignore": [
     "**/.*",
+    "gruntfile.js",
     "node_modules",
     "bower_components",
+    "report",
+    "source",
+    "template",
     "test"
   ]
 }
