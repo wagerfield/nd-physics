@@ -1,6 +1,7 @@
 module.exports = function(grunt) {
 
   require('time-grunt')(grunt);
+  require('load-grunt-tasks')(grunt);
 
   grunt.initConfig({
 
@@ -9,7 +10,12 @@ module.exports = function(grunt) {
 
     // Source Files
     sourceFiles: [
-      'source/Core.js'
+      'source/**/*.js'
+    ],
+
+    // Test Files
+    testFiles: [
+      'test/**/*.js'
     ],
 
     // Concat Tasks
@@ -28,6 +34,38 @@ module.exports = function(grunt) {
       }
     },
 
+    // Karma Tasks
+    karma: {
+      options: {
+        files: ['<%= sourceFiles %>', '<%= testFiles %>'],
+        frameworks: ['jasmine'],
+        reporters: ['mocha', 'osx'],
+        browsers: ['Chrome'],
+        logLevel: 'INFO',
+        htmlReporter: {
+          outputDir: 'report/jasmine',
+          templatePath: 'template/jasmine.html'
+        },
+        coverageReporter: {
+          type : 'html',
+          dir : 'report/coverage'
+        }
+      },
+      development: {
+        preprocessors: {
+          'source/**/*.js': ['coverage']
+        },
+        reporters: ['mocha', 'osx', 'coverage', 'html']
+      },
+      continuous: {
+        singleRun:true,
+        preprocessors: {
+          'source/**/*.js': ['coverage']
+        },
+        reporters: ['mocha', 'osx', 'coverage', 'html']
+      }
+    },
+
     // Watch Tasks
     watch: {
       build: {
@@ -40,12 +78,8 @@ module.exports = function(grunt) {
     }
   });
 
-  // Load Tasks
-  grunt.loadNpmTasks('grunt-contrib-concat');
-  grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-watch');
-
   // Register Tasks
   grunt.registerTask('build', ['concat', 'uglify']);
+  grunt.registerTask('test', ['karma:development']);
   grunt.registerTask('default', ['watch']);
 };
