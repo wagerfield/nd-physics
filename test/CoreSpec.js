@@ -32,7 +32,7 @@ describe('Core (NDP Object)', function() {
       NDP.DIMENSIONS = '2.5';
       expect(NDP.DIMENSIONS).toBeAnInteger();
     });
-    it('should clamp values below 1 and above 3', function() {
+    it('should clip values below 1 and above 3', function() {
       NDP.DIMENSIONS = 0;
       expect(NDP.DIMENSIONS).toBe(1);
       NDP.DIMENSIONS = 4;
