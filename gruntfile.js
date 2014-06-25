@@ -26,13 +26,26 @@ module.exports = function(grunt) {
         src: '<%= concat.deploy.dest %>',
         dest: 'deploy/<%= pkg.name %>.min.js'
       }
+    },
+
+    // Watch Tasks
+    watch: {
+      build: {
+        files: ['gruntfile.js', '<%= sourceFiles %>'],
+        tasks: ['build'],
+        options: {
+          spawn: false
+        }
+      }
     }
   });
 
   // Load Tasks
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-watch');
 
   // Register Tasks
   grunt.registerTask('build', ['concat', 'uglify']);
+  grunt.registerTask('default', ['watch']);
 };
