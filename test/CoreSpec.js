@@ -4,7 +4,7 @@ describe('Core (NDP Object)', function() {
     jasmine.addMatchers(CustomMatchers);
   });
 
-  describe('NDP namespace object', function() {
+  describe('NDP namespace', function() {
     it('should be an Object', function() {
       expect(NDP).toEqual(jasmine.any(Object));
     });
@@ -14,13 +14,13 @@ describe('Core (NDP Object)', function() {
     it('should be a String', function() {
       expect(NDP.VERSION).toEqual(jasmine.any(String));
     });
-    it('should conform to semantic versioning "[v]MAJOR.MINOR.PATCH"', function() {
-      expect(NDP.VERSION).toMatch(/^v?\d+\.\d+\.\d+$/);
-    });
-    it('should not be writable', function() {
+    it('should be readonly', function() {
       var version = NDP.VERSION;
       NDP.VERSION = 'kittens';
       expect(NDP.VERSION).toBe(version);
+    });
+    it('should conform to semantic versioning "[v]MAJOR.MINOR.PATCH"', function() {
+      expect(NDP.VERSION).toMatch(/^v?\d+\.\d+\.\d+$/);
     });
   });
 
@@ -56,16 +56,16 @@ describe('Core (NDP Object)', function() {
     it('should be an Array', function() {
       expect(NDP.COMPONENTS).toEqual(jasmine.any(Array));
     });
+    it('should be readonly', function() {
+      var components = NDP.COMPONENTS;
+      NDP.COMPONENTS = ['a', 'b', 'c'];
+      expect(NDP.COMPONENTS).toBe(components);
+    });
     it('should only contain Strings', function() {
       expect(NDP.COMPONENTS).toOnlyContain(jasmine.any(String));
     });
     it('should contain unique values', function() {
       expect(NDP.COMPONENTS).toContainUniqueValues();
-    });
-    it('should not be writable', function() {
-      var components = NDP.COMPONENTS;
-      NDP.COMPONENTS = ['a', 'b', 'c'];
-      expect(NDP.COMPONENTS).toBe(components);
     });
   });
 
@@ -132,6 +132,16 @@ describe('Core (NDP Object)', function() {
   describe('getTime()', function() {
     it('should be an Integer', function() {
       expect(NDP.getTime()).toBeAnInteger();
+    });
+    it('should increment by [delay] milliseconds', function(done) {
+      var delay = 100;
+      var timeA = NDP.getTime();
+      setTimeout(function() {
+        var timeB = NDP.getTime();
+        var delta = timeB - timeA;
+        expect(delta).toBeCloseTo(delay, -0.32);
+        done();
+      }, delay);
     });
   });
 
