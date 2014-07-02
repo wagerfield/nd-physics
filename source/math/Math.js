@@ -2,13 +2,17 @@
  * Math.PI * 2.
  * @type {Number}
  */
-Math.PI2 = Math.PI * 2;
+Object.defineProperty(Math, 'PI2', {
+  value: Math.PI * 2
+});
 
 /**
  * Math.PI / 2.
  * @type {Number}
  */
-Math.PIH = Math.PI / 2;
+Object.defineProperty(Math, 'PIH', {
+  value: Math.PI / 2
+});
 
 /**
  * Normalizes a value to a given scale.
@@ -100,7 +104,7 @@ Math.randomSign = function(opt_probability) {
  */
 Math.randomBoolean = function(opt_probability) {
   opt_probability = NDP.isNumber(opt_probability) ? opt_probability : 0.5;
-  return Math.random() < probability;
+  return Math.random() < opt_probability;
 };
 
 /**
@@ -109,5 +113,5 @@ Math.randomBoolean = function(opt_probability) {
  * @return {Object} Random item from the array.
  */
 Math.randomItem = function(array) {
-  return array[Math.floor(Math.random() * array.length)];
+  return array[Math.round(Math.random() * (array.length - 1))];
 };
