@@ -139,7 +139,7 @@ describe('Core (NDP Object)', function() {
       setTimeout(function() {
         var timeB = NDP.getTime();
         var delta = timeB - timeA;
-        expect(delta).toBeCloseTo(delay, -0.32);
+        expect(delta >= delay).toBeTruthy();
         done();
       }, delay);
     });
