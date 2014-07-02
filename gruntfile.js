@@ -55,7 +55,8 @@ module.exports = function(grunt) {
         preprocessors: {
           'source/**/*.js': ['coverage']
         },
-        reporters: ['mocha', 'osx', 'coverage', 'html']
+        // reporters: ['mocha', 'osx', 'coverage', 'html']
+        reporters: ['mocha', 'osx']
       },
       continuous: {
         singleRun:true,
