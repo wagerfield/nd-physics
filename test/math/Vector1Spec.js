@@ -134,7 +134,7 @@ describe('NDP.Vector1', function() {
       var output = NDP.Vector1.create();
       if (length > 0) {
         length = opt_length / length;
-        output[0] = v[0] * length;
+        NDP.Vector1.scale(output, v, length);
       }
       return output;
     }
