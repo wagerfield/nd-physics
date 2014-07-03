@@ -113,5 +113,5 @@ Math.randomBoolean = function(opt_probability) {
  * @return {Object} Random item from the array.
  */
 Math.randomItem = function(array) {
-  return array[Math.round(Math.random() * (array.length - 1))];
+  return array[Math.floor(Math.random() * (array.length - 1e-6))];
 };
