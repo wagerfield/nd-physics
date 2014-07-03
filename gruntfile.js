@@ -56,7 +56,7 @@ module.exports = function(grunt) {
           'source/**/*.js': ['coverage']
         },
         // reporters: ['mocha', 'osx', 'coverage', 'html']
-        reporters: ['mocha', 'osx']
+        reporters: ['mocha', 'osx', 'coverage']
       },
       continuous: {
         singleRun:true,
