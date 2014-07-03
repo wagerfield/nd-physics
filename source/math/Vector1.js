@@ -85,21 +85,21 @@ NDP.Vector1.scale = function(target, a, scalar) {
 
 /**
  * Calculates the squared length of a given Vector1 Array.
- * @param {Array} target Target Vector1 Array.
+ * @param {Array} vector Target Vector1 Array.
  * @return {Number} The squared length of the Vector1 Array.
  */
-NDP.Vector1.squaredLength = function(target) {
-  var x = target[0];
+NDP.Vector1.squaredLength = function(vector) {
+  var x = vector[0];
   return x*x;
 };
 
 /**
  * Calculates the length of a given Vector1 Array.
- * @param {Array} target Target Vector1 Array.
+ * @param {Array} vector Target Vector1 Array.
  * @return {Number} The length of the Vector1 Array.
  */
-NDP.Vector1.length = function(target) {
-  return Math.abs(target[0]);
+NDP.Vector1.length = function(vector) {
+  return Math.abs(vector[0]);
 };
 
 /**
@@ -114,7 +114,7 @@ NDP.Vector1.normalize = function(target, a, opt_length) {
   var l = NDP.Vector1.length(a);
   if (l > 0) {
     l = opt_length / l;
-    target[0] = a[0] * l;
+    NDP.Vector1.scale(target, a, l);
   } else {
     NDP.Vector1.identity(target);
   }
