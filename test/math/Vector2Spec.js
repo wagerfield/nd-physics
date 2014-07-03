@@ -40,7 +40,7 @@ describe('NDP.Vector2', function() {
     });
   });
 
-  describe('set(target, x)', function() {
+  describe('set(target, x, y)', function() {
     it('should set [target][n] to [x]', function() {
       NDP.Vector2.set(this.a, 1, 3);
       NDP.Vector2.set(this.b, 2, 4);
