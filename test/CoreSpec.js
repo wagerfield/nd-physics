@@ -4,10 +4,8 @@ describe('Core (NDP Object)', function() {
     jasmine.addMatchers(CustomMatchers);
   });
 
-  describe('NDP namespace', function() {
-    it('should be an Object', function() {
-      expect(NDP).toEqual(jasmine.any(Object));
-    });
+  it('should be an Object', function() {
+    expect(NDP).toEqual(jasmine.any(Object));
   });
 
   describe('VERSION', function() {
