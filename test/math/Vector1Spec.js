@@ -19,11 +19,11 @@ describe('NDP.Vector1', function() {
     };
     this.normalize = function(v, opt_length) {
       opt_length = opt_length || 1;
-      var length = this.length(v);
-      var output = [0];
+      var length = NDP.Vector1.length(v);
+      var output = NDP.Vector1.create();
       if (length > 0) {
         length = opt_length / length;
-        output = this.scale(v, length);
+        NDP.Vector1.scale(output, v, length);
       }
       return output;
     };

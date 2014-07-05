@@ -5,6 +5,13 @@ CustomMatchers.toEqualArray = function(util, customEqualityTesters) {
       function isArray(object) {
         return typeof object === 'object' && typeof object.length === 'number';
       }
+      function print(array) {
+        var output = [];
+        for (var i = 0; i < array.length; i++) {
+          output[i] = array[i];
+        }
+        return '[' + output.join(', ') + ']';
+      }
       var result = {
         pass: isArray(actual),
         message: 'Expected ' + jasmine.pp(actual) + ' to be an Array.'
@@ -20,7 +27,7 @@ CustomMatchers.toEqualArray = function(util, customEqualityTesters) {
             break;
           }
         }
-        result.message = "Expected " + jasmine.pp(actual) + " to equal " + jasmine.pp(expected) + ".";
+        result.message = "Expected " + print(actual) + " to equal " + print(expected) + ".";
       }
       return result;
     }

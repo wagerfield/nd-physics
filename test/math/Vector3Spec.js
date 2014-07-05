@@ -2,6 +2,31 @@ describe('NDP.Vector3', function() {
 
   beforeEach(function() {
     jasmine.addMatchers(CustomMatchers);
+    this.add = function(a, b) {
+      return [a[0]+b[0], a[1]+b[1], a[2]+b[2]];
+    };
+    this.subtract = function(a, b) {
+      return [a[0]-b[0], a[1]-b[1], a[2]-b[2]];
+    };
+    this.scale = function(v, s) {
+      return [v[0]*s, v[1]*s, v[2]*s];
+    };
+    this.squaredLength = function(v) {
+      return v[0]*v[0] + v[1]*v[1]+ v[2]*v[2];
+    };
+    this.length = function(v) {
+      return Math.sqrt(this.squaredLength(v));
+    };
+    this.normalize = function(v, opt_length) {
+      opt_length = opt_length || 1;
+      var length = NDP.Vector3.length(v);
+      var output = NDP.Vector3.create();
+      if (length > 0) {
+        length = opt_length / length;
+        NDP.Vector3.scale(output, v, length);
+      }
+      return output;
+    };
     this.a = NDP.Vector3.create();
     this.b = NDP.Vector3.create(10);
     this.c = NDP.Vector3.create(-5, 10, -2);
@@ -63,96 +88,71 @@ describe('NDP.Vector3', function() {
   });
 
   describe('add(target, a, b)', function() {
-    function add(a, b) {
-      return [a[0]+b[0], a[1]+b[1], a[2]+b[2]];
-    }
     it('should set [target][n] to [a][n] + [b][n]', function() {
       NDP.Vector3.add(this.target, this.a, this.b);
-      expect(this.target).toEqualArray(add(this.a, this.b));
+      expect(this.target).toEqualArray(this.add(this.a, this.b));
       NDP.Vector3.add(this.target, this.a, this.c);
-      expect(this.target).toEqualArray(add(this.a, this.c));
+      expect(this.target).toEqualArray(this.add(this.a, this.c));
       NDP.Vector3.add(this.target, this.b, this.c);
-      expect(this.target).toEqualArray(add(this.b, this.c));
+      expect(this.target).toEqualArray(this.add(this.b, this.c));
     });
   });
 
   describe('subtract(target, a, b)', function() {
-    function subtract(a, b) {
-      return [a[0]-b[0], a[1]-b[1], a[2]-b[2]];
-    }
     it('should set [target][n] to [a][n] - [b][n]', function() {
       NDP.Vector3.subtract(this.target, this.a, this.b);
-      expect(this.target).toEqualArray(subtract(this.a, this.b));
+      expect(this.target).toEqualArray(this.subtract(this.a, this.b));
       NDP.Vector3.subtract(this.target, this.a, this.c);
-      expect(this.target).toEqualArray(subtract(this.a, this.c));
+      expect(this.target).toEqualArray(this.subtract(this.a, this.c));
       NDP.Vector3.subtract(this.target, this.b, this.c);
-      expect(this.target).toEqualArray(subtract(this.b, this.c));
+      expect(this.target).toEqualArray(this.subtract(this.b, this.c));
     });
   });
 
   describe('scale(target, a, scalar)', function() {
-    function scalar(v, s) {
-      return [v[0]*s, v[1]*s, v[2]*s];
-    }
     it('should set [target][n] to [a][n] * [scalar]', function() {
       var SCALAR = 10;
       NDP.Vector3.scale(this.target, this.a, SCALAR);
-      expect(this.target).toEqualArray(scalar(this.a, SCALAR));
+      expect(this.target).toEqualArray(this.scale(this.a, SCALAR));
       NDP.Vector3.scale(this.target, this.b, SCALAR);
-      expect(this.target).toEqualArray(scalar(this.b, SCALAR));
+      expect(this.target).toEqualArray(this.scale(this.b, SCALAR));
       NDP.Vector3.scale(this.target, this.c, SCALAR);
-      expect(this.target).toEqualArray(scalar(this.c, SCALAR));
+      expect(this.target).toEqualArray(this.scale(this.c, SCALAR));
     });
   });
 
   describe('squaredLength(vector)', function() {
-    function squaredLength(v) {
-      return v[0]*v[0] + v[1]*v[1] + v[2]*v[2];
-    }
     it('should return [vector][n] * [vector][n]', function() {
-      expect(NDP.Vector3.squaredLength(this.a)).toEqual(squaredLength(this.a));
-      expect(NDP.Vector3.squaredLength(this.b)).toEqual(squaredLength(this.b));
-      expect(NDP.Vector3.squaredLength(this.c)).toEqual(squaredLength(this.c));
+      expect(NDP.Vector3.squaredLength(this.a)).toEqual(this.squaredLength(this.a));
+      expect(NDP.Vector3.squaredLength(this.b)).toEqual(this.squaredLength(this.b));
+      expect(NDP.Vector3.squaredLength(this.c)).toEqual(this.squaredLength(this.c));
     });
   });
 
   describe('length(vector)', function() {
-    function length(v) {
-      return Math.sqrt(v[0]*v[0] + v[1]*v[1] + v[2]*v[2]);
-    }
     it('should return Math.sqrt([vector][n] * [vector][n])', function() {
-      expect(NDP.Vector3.length(this.a)).toEqual(length(this.a));
-      expect(NDP.Vector3.length(this.b)).toEqual(length(this.b));
-      expect(NDP.Vector3.length(this.c)).toEqual(length(this.c));
+      expect(NDP.Vector3.length(this.a)).toEqual(this.length(this.a));
+      expect(NDP.Vector3.length(this.b)).toEqual(this.length(this.b));
+      expect(NDP.Vector3.length(this.c)).toEqual(this.length(this.c));
     });
   });
 
   describe('normalize(target, a, opt_length)', function() {
-    function normalize(v, opt_length) {
-      opt_length = opt_length || 1;
-      var length = NDP.Vector3.length(v);
-      var output = NDP.Vector3.create();
-      if (length > 0) {
-        length = opt_length / length;
-        NDP.Vector3.scale(output, v, length);
-      }
-      return output;
-    }
     it('should set [target] to [a] normalized to [opt_length](1)', function() {
       NDP.Vector3.normalize(this.target, this.a);
-      expect(this.target).toEqualArray(normalize(this.a));
+      expect(this.target).toEqualArray(this.normalize(this.a));
       NDP.Vector3.normalize(this.target, this.b);
-      expect(this.target).toEqualArray(normalize(this.b));
+      expect(this.target).toEqualArray(this.normalize(this.b));
       NDP.Vector3.normalize(this.target, this.c);
-      expect(this.target).toEqualArray(normalize(this.c));
+      expect(this.target).toEqualArray(this.normalize(this.c));
       NDP.Vector3.normalize(this.target, this.a, 10);
-      expect(this.target).toEqualArray(normalize(this.a, 10));
+      expect(this.target).toEqualArray(this.normalize(this.a, 10));
       NDP.Vector3.normalize(this.target, this.b, 10);
-      expect(this.target).toEqualArray(normalize(this.b, 10));
+      expect(this.target).toEqualArray(this.normalize(this.b, 10));
       NDP.Vector3.normalize(this.target, this.c, 10);
-      expect(this.target).toEqualArray(normalize(this.c, 10));
+      expect(this.target).toEqualArray(this.normalize(this.c, 10));
       NDP.Vector3.normalize(this.target, this.c, -2);
-      expect(this.target).toEqualArray(normalize(this.c, -2));
+      expect(this.target).toEqualArray(this.normalize(this.c, -2));
     });
   });
 });
