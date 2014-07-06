@@ -1,0 +1,2 @@
+NDP.Particle = function() {
+};

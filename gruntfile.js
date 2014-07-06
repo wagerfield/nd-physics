@@ -12,6 +12,8 @@ module.exports = function(grunt) {
     sourceFiles: [
       'source/Core.js',
       'source/Engine.js',
+      'source/Particle.js',
+      'source/Spring.js',
       'source/math/*.js',
       'source/integrators/Integrator.js',
       'source/integrators/*.js',

@@ -1,0 +1,2 @@
+NDP.Spring = function() {
+};
