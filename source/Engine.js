@@ -12,7 +12,7 @@ NDP.Engine = function(opt_integrator, opt_physical) {
   this.__buffer = 0.0;
   this.__time = null;
 
-  // Setup
+  // Step Properties
   this.physical = NDP.isBoolean(opt_physical) ? opt_physical : false;
   this.lubricity = 0.999;
   this.timeStep = 1/60;
@@ -22,7 +22,7 @@ NDP.Engine = function(opt_integrator, opt_physical) {
    * Integrator to use for calculating physics.
    * @type {Integrator}
    */
-  // this.integrator = NDP.isType(opt_integrator, NDP.Integrator) ? opt_integrator : new NDP.EulerIntegrator();
+  this.integrator = NDP.isType(opt_integrator, NDP.Integrator) ? opt_integrator : new NDP.EulerIntegrator();
 
   /**
    * Particles collection.
