@@ -10,7 +10,13 @@ module.exports = function(grunt) {
 
     // Source Files
     sourceFiles: [
-      'source/**/*.js'
+      'source/Core.js',
+      'source/Engine.js',
+      'source/math/*.js',
+      'source/integrators/Integrator.js',
+      'source/integrators/*.js',
+      'source/behaviours/Behaviour.js',
+      'source/behaviours/*.js'
     ],
 
     // Test Files
