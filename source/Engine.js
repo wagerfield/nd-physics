@@ -195,7 +195,7 @@ NDP.Engine.prototype.integrate = function(delta) {
 
   // Update particles.
   for (var pi = 0, pl = this.particles.length; pi < pl; pi++) {
-    // this.particles[pi].update(delta, pi);
+    this.particles[pi].update(delta, pi);
   }
 
   // Integrate physics.
@@ -203,7 +203,7 @@ NDP.Engine.prototype.integrate = function(delta) {
 
   // Update springs.
   for (var si = 0, sl = this.springs.length; si < sl; si++) {
-    // this.springs[si].update(delta, si);
+    this.springs[si].update(delta, si);
   }
   return this;
 };
