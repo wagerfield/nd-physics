@@ -25,13 +25,13 @@ NDP.Engine = function(opt_integrator, opt_physical) {
   this.integrator = NDP.isType(opt_integrator, NDP.Integrator) ? opt_integrator : new NDP.EulerIntegrator();
 
   /**
-   * Particles collection.
+   * Particle collection.
    * @type {Array.<Particle>}
    */
   this.particles = [];
 
   /**
-   * Springs collection.
+   * Spring collection.
    * @type {Array.<Spring>}
    */
   this.springs = [];
@@ -59,7 +59,7 @@ Object.defineProperty(NDP.Engine.prototype, 'physical', {
 Object.defineProperty(NDP.Engine.prototype, 'lubricity', {
   set: function(value) {
     if (NDP.isNumber(value)) {
-      this.__lubricity = value;
+      this.__lubricity = Math.clamp(value, 0.000001, 0.999999);
     }
   },
   get: function() {
