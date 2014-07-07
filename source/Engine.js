@@ -83,13 +83,13 @@ Object.defineProperty(NDP.Engine.prototype, 'timeStep', {
 });
 
 /**
- * Maximum number of steps to perform inside each step call.
+ * Maximum number of steps to perform inside each step.
  * @type {Number}
  */
 Object.defineProperty(NDP.Engine.prototype, 'maxSteps', {
   set: function(value) {
     if (NDP.isNumber(value)) {
-      this.__maxSteps = Math.floor(value);
+      this.__maxSteps = Math.clamp(Math.floor(value), 1, 10);
     }
   },
   get: function() {

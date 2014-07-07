@@ -147,6 +147,11 @@ describe('NDP.Engine(opt_integrator, opt_physical)', function() {
       this.engineA.physical = true;
       expect(this.engineA.physical).toBe(true);
     });
+    it('should only accept Boolean values', function() {
+      var physical = this.engineA.physical;
+      this.engineA.physical = 'kittens';
+      expect(this.engineA.physical).toBe(physical);
+    });
   });
 
   describe('lubricity', function() {
@@ -160,6 +165,11 @@ describe('NDP.Engine(opt_integrator, opt_physical)', function() {
       expect(this.engineA.lubricity).toBe(0.999);
       this.engineA.lubricity = 0.5;
       expect(this.engineA.lubricity).toBe(0.5);
+    });
+    it('should only accept Numeric values', function() {
+      var lubricity = this.engineA.lubricity;
+      this.engineA.lubricity = 'kittens';
+      expect(this.engineA.lubricity).toBe(lubricity);
     });
     it('should clamp values to be greater than 0 and less than 1', function() {
       expect(this.engineA.lubricity).toBeLessThan(1);
@@ -178,9 +188,55 @@ describe('NDP.Engine(opt_integrator, opt_physical)', function() {
   });
 
   describe('timeStep', function() {
+    it('should be a Number', function() {
+      expect(this.engineA.timeStep).toEqual(jasmine.any(Number));
+    });
+    it('should be 1/60 by default', function() {
+      expect(this.engineA.timeStep).toBe(1/60);
+    });
+    it('should be writable', function() {
+      expect(this.engineA.timeStep).toBe(1/60);
+      this.engineA.timeStep = 1/30;
+      expect(this.engineA.timeStep).toBe(1/30);
+    });
+    it('should only accept Numeric values', function() {
+      var timeStep = this.engineA.timeStep;
+      this.engineA.timeStep = 'kittens';
+      expect(this.engineA.timeStep).toBe(timeStep);
+    });
   });
 
   describe('maxSteps', function() {
+    it('should be a Number', function() {
+      expect(this.engineA.maxSteps).toEqual(jasmine.any(Number));
+    });
+    it('should be 4 by default', function() {
+      expect(this.engineA.maxSteps).toBe(4);
+    });
+    it('should be writable', function() {
+      expect(this.engineA.maxSteps).toBe(4);
+      this.engineA.maxSteps = 2;
+      expect(this.engineA.maxSteps).toBe(2);
+    });
+    it('should only accept Numeric values', function() {
+      var maxSteps = this.engineA.maxSteps;
+      this.engineA.maxSteps = 'kittens';
+      expect(this.engineA.maxSteps).toBe(maxSteps);
+    });
+    it('should floor Numeric values', function() {
+      this.engineA.maxSteps = 1.1;
+      expect(this.engineA.maxSteps).toBe(1);
+      this.engineA.maxSteps = 2.5;
+      expect(this.engineA.maxSteps).toBe(2);
+      this.engineA.maxSteps = 3.9;
+      expect(this.engineA.maxSteps).toBe(3);
+    });
+    it('should clamp values between 1 and 10', function() {
+      this.engineA.maxSteps = 0;
+      expect(this.engineA.maxSteps).toBe(1);
+      this.engineA.maxSteps = 20;
+      expect(this.engineA.maxSteps).toBe(10);
+    });
   });
 
   describe('addParticle(particle)', function() {
