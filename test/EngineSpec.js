@@ -291,6 +291,10 @@ describe('NDP.Engine(opt_integrator, opt_physical)', function() {
       expect(this.engineA.particles[0]).toBe(this.particleA);
       expect(this.engineA.particles[1]).toBe(this.particleB);
     });
+    it('should return the Engine instance that called it', function() {
+      expect(this.engineA.addParticle(this.particleA)).toBe(this.engineA);
+      expect(this.engineB.addParticle(this.particleB)).toBe(this.engineB);
+    });
   });
 
   describe('removeParticle(particle)', function() {
@@ -317,6 +321,10 @@ describe('NDP.Engine(opt_integrator, opt_physical)', function() {
       expect(this.engineA.particles.length).toBe(0);
       expect(this.engineA.particles[0]).toBeUndefined();
       expect(this.engineA.particles[1]).toBeUndefined();
+    });
+    it('should return the Engine instance that called it', function() {
+      expect(this.engineA.removeParticle(this.particleA)).toBe(this.engineA);
+      expect(this.engineB.removeParticle(this.particleB)).toBe(this.engineB);
     });
   });
 
@@ -371,6 +379,10 @@ describe('NDP.Engine(opt_integrator, opt_physical)', function() {
       expect(this.engineA.springs[0]).toBe(this.springA);
       expect(this.engineA.springs[1]).toBe(this.springB);
     });
+    it('should return the Engine instance that called it', function() {
+      expect(this.engineA.addSpring(this.springA)).toBe(this.engineA);
+      expect(this.engineB.addSpring(this.springB)).toBe(this.engineB);
+    });
   });
 
   describe('removeSpring(spring)', function() {
@@ -398,9 +410,14 @@ describe('NDP.Engine(opt_integrator, opt_physical)', function() {
       expect(this.engineA.springs[0]).toBeUndefined();
       expect(this.engineA.springs[1]).toBeUndefined();
     });
+    it('should return the Engine instance that called it', function() {
+      expect(this.engineA.removeSpring(this.springA)).toBe(this.engineA);
+      expect(this.engineB.removeSpring(this.springB)).toBe(this.engineB);
+    });
   });
 
   describe('step()', function() {
+
   });
 
   describe('integrate(delta)', function() {
