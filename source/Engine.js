@@ -103,9 +103,7 @@ Object.defineProperty(NDP.Engine.prototype, 'maxSteps', {
  * @return {Engine} Engine instance for chaining.
  */
 NDP.Engine.prototype.addParticle = function(particle) {
-  if (NDP.isType(particle, NDP.Particle)) {
-    NDP.addItemToArray(particle, this.particles);
-  }
+  NDP.addItemToArray(particle, this.particles, NDP.Particle);
   return this;
 };
 
@@ -125,9 +123,7 @@ NDP.Engine.prototype.removeParticle = function(particle) {
  * @return {Engine} Engine instance for chaining.
  */
 NDP.Engine.prototype.addSpring = function(spring) {
-  if (NDP.isType(spring, NDP.Spring)) {
-    NDP.addItemToArray(spring, this.springs);
-  }
+  NDP.addItemToArray(spring, this.springs, NDP.Spring);
   return this;
 };
 

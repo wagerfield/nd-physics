@@ -11,6 +11,7 @@ describe('NDP.Engine(opt_integrator, opt_physical)', function() {
     this.particleA = new NDP.Particle();
     this.particleB = new NDP.Particle();
     this.springA = new NDP.Spring(this.particleA, this.particleB);
+    this.springB = new NDP.Spring(this.particleB, this.particleA);
   });
 
   it('should be a Function Object', function() {
@@ -240,15 +241,163 @@ describe('NDP.Engine(opt_integrator, opt_physical)', function() {
   });
 
   describe('addParticle(particle)', function() {
+    it('should add a particle to the [particles] collection', function() {
+      expect(this.engineA.particles.length).toBe(0);
+
+      this.engineA.addParticle(this.particleA);
+      expect(this.engineA.particles.length).toBe(1);
+      expect(this.engineA.particles[0]).toBe(this.particleA);
+
+      this.engineA.addParticle(this.particleB);
+      expect(this.engineA.particles.length).toBe(2);
+      expect(this.engineA.particles[1]).toBe(this.particleB);
+    });
+    it('should only accept Particle instances', function() {
+      expect(this.engineA.particles.length).toBe(0);
+
+      this.engineA.addParticle('cats');
+      expect(this.engineA.particles.length).toBe(0);
+
+      this.engineA.addParticle(this.particleA);
+      expect(this.engineA.particles.length).toBe(1);
+      expect(this.engineA.particles[0]).toBe(this.particleA);
+
+      this.engineA.addParticle(this.springA);
+      expect(this.engineA.particles.length).toBe(1);
+
+      this.engineA.addParticle(this.particleB);
+      expect(this.engineA.particles.length).toBe(2);
+      expect(this.engineA.particles[1]).toBe(this.particleB);
+
+      expect(this.engineA.particles).toOnlyContain(jasmine.any(NDP.Particle));
+    });
+    it('should only accept unique Particle instances', function() {
+      expect(this.engineA.particles.length).toBe(0);
+
+      this.engineA.addParticle(this.particleA);
+      expect(this.engineA.particles.length).toBe(1);
+      expect(this.engineA.particles[0]).toBe(this.particleA);
+
+      this.engineA.addParticle(this.particleA);
+      expect(this.engineA.particles.length).toBe(1);
+      expect(this.engineA.particles[0]).toBe(this.particleA);
+
+      this.engineA.addParticle(this.particleB);
+      expect(this.engineA.particles.length).toBe(2);
+      expect(this.engineA.particles[1]).toBe(this.particleB);
+
+      this.engineA.addParticle(this.particleA);
+      expect(this.engineA.particles.length).toBe(2);
+      expect(this.engineA.particles[0]).toBe(this.particleA);
+      expect(this.engineA.particles[1]).toBe(this.particleB);
+    });
   });
 
   describe('removeParticle(particle)', function() {
+    beforeEach(function() {
+      this.engineA.addParticle(this.particleA);
+      this.engineA.addParticle(this.particleB);
+    });
+    it('should remove a particle from the [particles] collection', function() {
+      expect(this.engineA.particles.length).toBe(2);
+      expect(this.engineA.particles[0]).toBe(this.particleA);
+      expect(this.engineA.particles[1]).toBe(this.particleB);
+
+      this.engineA.removeParticle(this.particleA);
+      expect(this.engineA.particles.length).toBe(1);
+      expect(this.engineA.particles[0]).toBe(this.particleB);
+      expect(this.engineA.particles[1]).toBeUndefined();
+
+      this.engineA.removeParticle(this.particleA);
+      expect(this.engineA.particles.length).toBe(1);
+      expect(this.engineA.particles[0]).toBe(this.particleB);
+      expect(this.engineA.particles[1]).toBeUndefined();
+
+      this.engineA.removeParticle(this.particleB);
+      expect(this.engineA.particles.length).toBe(0);
+      expect(this.engineA.particles[0]).toBeUndefined();
+      expect(this.engineA.particles[1]).toBeUndefined();
+    });
   });
 
   describe('addSpring(spring)', function() {
+    it('should add a spring to the [springs] collection', function() {
+      expect(this.engineA.springs.length).toBe(0);
+
+      this.engineA.addSpring(this.springA);
+      expect(this.engineA.springs.length).toBe(1);
+      expect(this.engineA.springs[0]).toBe(this.springA);
+
+      this.engineA.addSpring(this.springB);
+      expect(this.engineA.springs.length).toBe(2);
+      expect(this.engineA.springs[1]).toBe(this.springB);
+    });
+    it('should only accept Spring instances', function() {
+      expect(this.engineA.springs.length).toBe(0);
+
+      this.engineA.addSpring('dogs');
+      expect(this.engineA.springs.length).toBe(0);
+
+      this.engineA.addSpring(this.springA);
+      expect(this.engineA.springs.length).toBe(1);
+      expect(this.engineA.springs[0]).toBe(this.springA);
+
+      this.engineA.addSpring(this.particleA);
+      expect(this.engineA.springs.length).toBe(1);
+
+      this.engineA.addSpring(this.springB);
+      expect(this.engineA.springs.length).toBe(2);
+      expect(this.engineA.springs[1]).toBe(this.springB);
+
+      expect(this.engineA.springs).toOnlyContain(jasmine.any(NDP.Spring));
+    });
+    it('should only accept unique Spring instances', function() {
+      expect(this.engineA.springs.length).toBe(0);
+
+      this.engineA.addSpring(this.springA);
+      expect(this.engineA.springs.length).toBe(1);
+      expect(this.engineA.springs[0]).toBe(this.springA);
+
+      this.engineA.addSpring(this.springA);
+      expect(this.engineA.springs.length).toBe(1);
+      expect(this.engineA.springs[0]).toBe(this.springA);
+
+      this.engineA.addSpring(this.springB);
+      expect(this.engineA.springs.length).toBe(2);
+      expect(this.engineA.springs[1]).toBe(this.springB);
+
+      this.engineA.addSpring(this.springA);
+      expect(this.engineA.springs.length).toBe(2);
+      expect(this.engineA.springs[0]).toBe(this.springA);
+      expect(this.engineA.springs[1]).toBe(this.springB);
+    });
   });
 
   describe('removeSpring(spring)', function() {
+    beforeEach(function() {
+      this.engineA.addSpring(this.springA);
+      this.engineA.addSpring(this.springB);
+    });
+    it('should remove a spring from the [springs] collection', function() {
+      expect(this.engineA.springs.length).toBe(2);
+      expect(this.engineA.springs[0]).toBe(this.springA);
+      expect(this.engineA.springs[1]).toBe(this.springB);
+
+      this.engineA.removeSpring(this.springA);
+      expect(this.engineA.springs.length).toBe(1);
+      expect(this.engineA.springs[0]).toBe(this.springB);
+      expect(this.engineA.springs[1]).toBeUndefined();
+
+      this.engineA.removeSpring(this.springA);
+      expect(this.engineA.springs.length).toBe(1);
+      expect(this.engineA.springs[0]).toBe(this.springB);
+      expect(this.engineA.springs[1]).toBeUndefined();
+
+      this.engineA.removeSpring(this.springB);
+      expect(this.engineA.springs.length).toBe(0);
+      expect(this.engineA.springs[0]).toBeUndefined();
+      expect(this.engineA.springs[1]).toBeUndefined();
+    });
   });
 
   describe('step()', function() {
