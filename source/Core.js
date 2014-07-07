@@ -153,7 +153,7 @@ NDP.getAxes = function(dimensions) {
 NDP.addItemToArray = function(item, array, opt_type) {
   var index = array.indexOf(item),
       add = index === -1;
-  if (opt_type !== undefined && add) add = NDP.isType(item, opt_type);
+  if (add && opt_type !== undefined) add = NDP.isType(item, opt_type);
   if (add) array.push(item);
   return add;
 };
