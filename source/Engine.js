@@ -199,7 +199,7 @@ NDP.Engine.prototype.integrate = function(delta) {
   }
 
   // Integrate physics.
-  // this.integrator.integrate(this.particles, delta, this.__lubricity);
+  this.integrator.integrate(this.particles, delta, this.__lubricity);
 
   // Update springs.
   for (var si = 0, sl = this.springs.length; si < sl; si++) {
