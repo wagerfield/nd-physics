@@ -417,6 +417,24 @@ describe('NDP.Engine(opt_integrator, opt_physical)', function() {
   });
 
   describe('step()', function() {
+    beforeEach(function() {
+    });
+    it('should set [__time] if called for the first time', function() {
+    });
+    it('should return the Engine instance if the [time delta] is <= 0', function() {
+    });
+    it('should set [__delta] to the [time delta] converted to seconds', function() {
+    });
+    it('should increment [__buffer] by [__delta]', function() {
+    });
+    it('should use [timeStep] delta integration when [physical] is true', function() {
+    });
+    it('should reduce [__buffer] if [__buffer] >= [timeStep]', function() {
+    });
+    it('should exit [__buffer] reduction loop if [maxSteps] is exceeded', function() {
+    });
+    it('should use [__delta] integration when [physical] is false', function() {
+    });
     it('should return the Engine instance that called it', function() {
       expect(this.engineA.step()).toBe(this.engineA);
     });

@@ -10,6 +10,7 @@ NDP.Engine = function(opt_integrator, opt_physical) {
 
   // Time Properties
   this.__buffer = 0.0;
+  this.__delta = null;
   this.__time = null;
 
   // Step Properties
@@ -155,13 +156,13 @@ NDP.Engine.prototype.step = function() {
   if (delta <= 0) return this;
 
   // Convert delta to seconds.
-  delta *= 0.001;
+  this.__delta = delta * 0.001;
 
   // Update time.
   this.__time = time;
 
-  // Increment time buffer.
-  this.__buffer += delta;
+  // Increment time buffer by delta.
+  this.__buffer += this.__delta;
 
   // Use physical time step.
   if (this.__physical) {
@@ -181,7 +182,7 @@ NDP.Engine.prototype.step = function() {
   } else {
 
     // Integrate by delta time step.
-    this.integrate(delta);
+    this.integrate(this.__delta);
   }
   return this;
 };
