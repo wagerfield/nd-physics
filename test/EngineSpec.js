@@ -417,9 +417,26 @@ describe('NDP.Engine(opt_integrator, opt_physical)', function() {
   });
 
   describe('step()', function() {
-
+    it('should return the Engine instance that called it', function() {
+      expect(this.engineA.step()).toBe(this.engineA);
+    });
   });
 
   describe('integrate(delta)', function() {
+    it('should return if [delta] is 0', function() {
+    });
+    it('should return if there are no [particles]', function() {
+    });
+    it('should call particles[n].update(delta, index)', function() {
+    });
+    it('should call integrator.integrate(particles, delta, lubricity)', function() {
+    });
+    it('should call springs[n].update(delta, index)', function() {
+    });
+    it('should call, in order, particles[n].update(), integrator.integrate(), springs[n].update()', function() {
+    });
+    it('should return the Engine instance that called it', function() {
+      expect(this.engineA.integrate(100)).toBe(this.engineA);
+    });
   });
 });

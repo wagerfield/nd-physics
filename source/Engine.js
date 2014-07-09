@@ -193,6 +193,9 @@ NDP.Engine.prototype.step = function() {
  */
 NDP.Engine.prototype.integrate = function(delta) {
 
+  // Return if delta is 0 or there are no particles to update.
+  if (!delta || !this.particles.length) return this;
+
   // Update particles.
   for (var pi = 0, pl = this.particles.length; pi < pl; pi++) {
     this.particles[pi].update(delta, pi);
