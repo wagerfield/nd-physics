@@ -424,37 +424,140 @@ describe('NDP.Engine(opt_integrator, opt_physical)', function() {
 
   describe('integrate(delta)', function() {
     beforeEach(function() {
+      this.deltaA = 1;
+      this.deltaB = 2;
       this.engineA = new NDP.Engine(this.integratorA);
+      this.particles = this.engineA.particles;
+      this.lubricity = this.engineA.lubricity;
+      this.calls = [];
       spyOn(this.integratorA, 'integrate');
       spyOn(this.particleA, 'update');
       spyOn(this.particleB, 'update');
       spyOn(this.springA, 'update');
       spyOn(this.springB, 'update');
     });
-    it('should return if [delta] is 0', function() {
+    it('should return the Engine instance if [delta] is 0', function() {
       this.engineA.addParticle(this.particleA);
       expect(this.engineA.particles.length).toBe(1);
       expect(this.integratorA.integrate).not.toHaveBeenCalled();
 
-      this.engineA.integrate();
+      expect(this.engineA.integrate()).toBe(this.engineA);
       expect(this.integratorA.integrate).not.toHaveBeenCalled();
 
-      var delta = 10;
-      var particles = this.engineA.particles;
-      var lubricity = this.engineA.lubricity;
-      this.engineA.integrate(delta);
-      expect(this.integratorA.integrate).toHaveBeenCalled();
-      expect(this.integratorA.integrate).toHaveBeenCalledWith(particles, delta, lubricity);
+      this.engineA.integrate(this.deltaA);
+      expect(this.integratorA.integrate).toHaveBeenCalledWith(this.particles, this.deltaA, this.lubricity);
     });
-    it('should return if there are no [particles]', function() {
+    it('should return the Engine instance if there are no [particles]', function() {
+      expect(this.engineA.particles.length).toBe(0);
+      expect(this.integratorA.integrate).not.toHaveBeenCalled();
+
+      expect(this.engineA.integrate(this.deltaA)).toBe(this.engineA);
+      expect(this.integratorA.integrate).not.toHaveBeenCalled();
+
+      this.engineA.addParticle(this.particleA);
+      expect(this.engineA.particles.length).toBe(1);
+
+      this.engineA.integrate(this.deltaA);
+      expect(this.integratorA.integrate).toHaveBeenCalledWith(this.particles, this.deltaA, this.lubricity);
     });
     it('should call particles[n].update(delta, index)', function() {
+      this.engineA.addParticle(this.particleA);
+      expect(this.engineA.particles.length).toBe(1);
+      expect(this.particleA.update).not.toHaveBeenCalled();
+
+      this.engineA.integrate(this.deltaA);
+      expect(this.particleA.update).toHaveBeenCalledWith(this.deltaA, 0);
+
+      this.engineA.addParticle(this.particleB);
+      expect(this.engineA.particles.length).toBe(2);
+      expect(this.particleB.update).not.toHaveBeenCalled();
+
+      this.engineA.integrate(this.deltaB);
+      expect(this.particleA.update).toHaveBeenCalledWith(this.deltaB, 0);
+      expect(this.particleB.update).toHaveBeenCalledWith(this.deltaB, 1);
+
+      expect(this.particleA.update.calls.count()).toEqual(2);
+      expect(this.particleB.update.calls.count()).toEqual(1);
     });
     it('should call integrator.integrate(particles, delta, lubricity)', function() {
+      expect(this.integratorA.integrate).not.toHaveBeenCalled();
+
+      this.engineA.addParticle(this.particleA);
+      this.engineA.integrate(this.deltaA);
+      expect(this.integratorA.integrate).toHaveBeenCalledWith(this.particles, this.deltaA, this.lubricity);
+      expect(this.integratorA.integrate.calls.count()).toEqual(1);
+
+      this.engineA.integrate(this.deltaB);
+      expect(this.integratorA.integrate).toHaveBeenCalledWith(this.particles, this.deltaB, this.lubricity);
+      expect(this.integratorA.integrate.calls.count()).toEqual(2);
     });
     it('should call springs[n].update(delta, index)', function() {
+      this.engineA.addParticle(this.particleA);
+      this.engineA.addSpring(this.springA);
+      expect(this.engineA.springs.length).toBe(1);
+      expect(this.springA.update).not.toHaveBeenCalled();
+
+      this.engineA.integrate(this.deltaA);
+      expect(this.springA.update).toHaveBeenCalledWith(this.deltaA, 0);
+
+      this.engineA.addSpring(this.springB);
+      expect(this.engineA.springs.length).toBe(2);
+      expect(this.particleB.update).not.toHaveBeenCalled();
+
+      this.engineA.integrate(this.deltaB);
+      expect(this.springA.update).toHaveBeenCalledWith(this.deltaB, 0);
+      expect(this.springB.update).toHaveBeenCalledWith(this.deltaB, 1);
+
+      expect(this.springA.update.calls.count()).toEqual(2);
+      expect(this.springB.update.calls.count()).toEqual(1);
     });
-    it('should call, in order, particles[n].update(), integrator.integrate(), springs[n].update()', function() {
+    it('should call, in order: particles[n].update(), integrator.integrate(), springs[n].update()', function() {
+      var calls = [],
+          deltaA = 1,
+          deltaB = 2,
+          integrator = new NDP.Integrator(),
+          engine = new NDP.Engine(integrator),
+          particleA = new NDP.Particle(),
+          particleB = new NDP.Particle(),
+          springA = new NDP.Spring(particleA, particleB),
+          springB = new NDP.Spring(particleB, particleA);
+
+      spyOn(integrator, 'integrate').and.callFake(function() {
+        calls.push('i');
+      });
+      spyOn(particleA, 'update').and.callFake(function() {
+        calls.push('pA');
+      });
+      spyOn(particleB, 'update').and.callFake(function() {
+        calls.push('pB');
+      });
+      spyOn(springA, 'update').and.callFake(function() {
+        calls.push('sA');
+      });
+      spyOn(springB, 'update').and.callFake(function() {
+        calls.push('sB');
+      });
+
+      engine.addParticle(particleA);
+      engine.addParticle(particleB);
+      engine.addSpring(springA);
+      engine.addSpring(springB);
+
+      expect(integrator.integrate).not.toHaveBeenCalled();
+      expect(particleA.update).not.toHaveBeenCalled();
+      expect(particleB.update).not.toHaveBeenCalled();
+      expect(springA.update).not.toHaveBeenCalled();
+      expect(springB.update).not.toHaveBeenCalled();
+
+      engine.integrate(deltaA);
+
+      expect(integrator.integrate.calls.count()).toEqual(1);
+      expect(particleA.update.calls.count()).toEqual(1);
+      expect(particleB.update.calls.count()).toEqual(1);
+      expect(springA.update.calls.count()).toEqual(1);
+      expect(springB.update.calls.count()).toEqual(1);
+
+      expect(calls).toEqualArray(['pA', 'pB', 'i', 'sA', 'sB']);
     });
     it('should return the Engine instance that called it', function() {
       expect(this.engineA.integrate(100)).toBe(this.engineA);
