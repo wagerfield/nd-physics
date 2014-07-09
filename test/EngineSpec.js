@@ -423,7 +423,28 @@ describe('NDP.Engine(opt_integrator, opt_physical)', function() {
   });
 
   describe('integrate(delta)', function() {
+    beforeEach(function() {
+      this.engineA = new NDP.Engine(this.integratorA);
+      spyOn(this.integratorA, 'integrate');
+      spyOn(this.particleA, 'update');
+      spyOn(this.particleB, 'update');
+      spyOn(this.springA, 'update');
+      spyOn(this.springB, 'update');
+    });
     it('should return if [delta] is 0', function() {
+      this.engineA.addParticle(this.particleA);
+      expect(this.engineA.particles.length).toBe(1);
+      expect(this.integratorA.integrate).not.toHaveBeenCalled();
+
+      this.engineA.integrate();
+      expect(this.integratorA.integrate).not.toHaveBeenCalled();
+
+      var delta = 10;
+      var particles = this.engineA.particles;
+      var lubricity = this.engineA.lubricity;
+      this.engineA.integrate(delta);
+      expect(this.integratorA.integrate).toHaveBeenCalled();
+      expect(this.integratorA.integrate).toHaveBeenCalledWith(particles, delta, lubricity);
     });
     it('should return if there are no [particles]', function() {
     });

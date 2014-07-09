@@ -193,7 +193,7 @@ NDP.Engine.prototype.step = function() {
  */
 NDP.Engine.prototype.integrate = function(delta) {
 
-  // Return if delta is 0 or there are no particles to update.
+  // Return if delta is 0 or there are no particles within the Engine.
   if (!delta || !this.particles.length) return this;
 
   // Update particles.
