@@ -52,13 +52,34 @@ describe('NDP.Engine(opt_integrator, opt_physical)', function() {
     });
   });
 
+  describe('__delta', function() {
+    it('should be __private', function() {
+      expect(this.engineA.__delta).toBeDefined();
+      expect(this.engineA.delta).toBeUndefined();
+    });
+    it('should be null initially', function() {
+      expect(this.engineA.__delta).toBeNull();
+    });
+    it('should be a Number after calling step() twice over time', function(done) {
+      var delay = 1;
+      var engine = this.engineA;
+
+      expect(engine.__delta).toBeNull();
+      engine.step();
+      expect(engine.__delta).toBeNull();
+
+      setTimeout(function() {
+        engine.step();
+        expect(engine.__delta).toEqual(jasmine.any(Number));
+        done();
+      }, delay);
+    });
+  });
+
   describe('__time', function() {
     it('should be __private', function() {
       expect(this.engineA.__time).toBeDefined();
       expect(this.engineA.time).toBeUndefined();
-    });
-    it('should be null initially', function() {
-      expect(this.engineA.__time).toBeNull();
     });
     it('should be null initially', function() {
       expect(this.engineA.__time).toBeNull();
