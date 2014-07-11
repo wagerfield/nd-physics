@@ -107,7 +107,7 @@ NDP.isArray = function(value) {
  * @see https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Date/getTime
  */
 NDP.getTime = function() {
-  return new Date().getTime();
+  return NDP.Timer.now();
 };
 
 /**
@@ -197,4 +197,11 @@ NDP.copyValuesToArray = function(source, target, opt_limit) {
  * @constructor
  * @type {ArrayClass}
  */
-NDP.Array = !!window.Float32Array ? Float32Array : Array;
+NDP.Array = !!window.Float32Array ? window.Float32Array : Array;
+
+/**
+ * Timer class. Favours performance if available.
+ * @constructor
+ * @type {Date|performance}
+ */
+NDP.Timer = !!window.performance ? window.performance : Date;
