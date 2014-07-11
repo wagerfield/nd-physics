@@ -128,8 +128,8 @@ describe('Core (NDP Object)', function() {
   });
 
   describe('getTime()', function() {
-    it('should be an Integer', function() {
-      expect(NDP.getTime()).toBeAnInteger();
+    it('should be a Number', function() {
+      expect(NDP.getTime()).toEqual(jasmine.any(Number));
     });
     it('should increment by [delay] milliseconds', function(done) {
       var delay = 100;
