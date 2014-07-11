@@ -171,10 +171,10 @@ NDP.Engine.prototype.step = function() {
     // maximum amount of iterations per step is reached.
     while (this.__buffer >= this.__timeStep && ++i < this.__maxSteps) {
 
-      // Integrate by fixed time step.
+      // Integrate by timeStep.
       this.integrate(this.__timeStep);
 
-      // Reduce buffer by one timeStep.
+      // Reduce buffer by timeStep.
       this.__buffer -= this.__timeStep;
     }
 

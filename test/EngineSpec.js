@@ -439,10 +439,36 @@ describe('NDP.Engine(opt_integrator, opt_physical)', function() {
 
   describe('step()', function() {
     beforeEach(function() {
+      this.engineA = new NDP.Engine(this.integratorA, true);
+      this.engineB = new NDP.Engine(this.integratorB, false);
+      spyOn(this.engineA, 'integrate');
+      spyOn(this.engineB, 'integrate');
     });
     it('should set [__time] if called for the first time', function() {
+      expect(this.engineA.__time).toBeNull();
+      this.engineA.step();
+      expect(this.engineA.__time).not.toBeNull();
+      expect(this.engineA.__time).toBeAnInteger();
     });
-    it('should return the Engine instance if the [time delta] is <= 0', function() {
+    it('should return the Engine instance if the [time delta] <= 0', function(done) {
+      var engine = this.engineA;
+      var integrator = this.integratorA;
+
+      expect(engine.__time).toBeNull();
+      expect(engine.__delta).toBeNull();
+      expect(engine.step()).toBe(engine);
+
+      expect(engine.__delta).toBeNull();
+      expect(engine.__time).toBeAnInteger();
+      expect(engine.integrate).not.toHaveBeenCalled();
+
+      setTimeout(function() {
+        expect(engine.step()).toBe(engine);
+        expect(engine.__delta).toEqual(jasmine.any(Number));
+        expect(engine.integrate).toHaveBeenCalled();
+        expect(engine.integrate.calls.count()).toBe(1);
+        done();
+      }, engine.timeStep * 1000); // Convert to milliseconds
     });
     it('should set [__delta] to the [time delta] converted to seconds', function() {
     });
