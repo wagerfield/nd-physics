@@ -270,4 +270,14 @@ describe('Core (NDP Object)', function() {
       }
     });
   });
+
+  describe('Timer', function() {
+    it('should be window.performance if available, otherwise Date', function() {
+      if (!!window.performance) {
+        expect(NDP.Timer).toBe(window.performance);
+      } else {
+        expect(NDP.Timer).toBe(Date);
+      }
+    });
+  });
 });
