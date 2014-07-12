@@ -140,16 +140,17 @@ NDP.Engine.prototype.removeSpring = function(spring) {
 
 /**
  * Steps the physics engine calling integrate on each step.
+ * @param {Number} opt_time Optional time value to override current time.
  * @return {Engine} Engine instance for chaining.
  */
-NDP.Engine.prototype.step = function() {
+NDP.Engine.prototype.step = function(opt_time) {
 
   // Set initial time value.
   if (!this.__time) this.__time = NDP.getTime();
 
   // Compute delta time since last step.
   var i = 0,
-      time = NDP.getTime(),
+      time = opt_time || NDP.getTime(),
       delta = time - this.__time;
 
   // No sufficient change.
