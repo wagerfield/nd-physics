@@ -453,7 +453,10 @@ describe('NDP.Engine(opt_integrator, opt_physical)', function() {
       expect(engine.__time).toBeNull();
       expect(engine.__delta).toBeNull();
 
-      expect(engine.step()).toBe(engine);
+      engine.step();
+
+      expect(engine.step(engine.__time)).toBe(engine);
+      expect(engine.step(engine.__time * 2)).toBe(engine);
     });
     it('should set [__delta] to the [time delta] converted to seconds', function() {
       // expect(engine.__delta).toBeNull();
