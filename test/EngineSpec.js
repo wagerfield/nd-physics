@@ -447,33 +447,30 @@ describe('NDP.Engine(opt_integrator, opt_physical)', function() {
       expect(this.engineA.__time).toEqual(jasmine.any(Number));
     });
     it('should return the Engine instance if [time delta] <= 0', function() {
-      var engine = this.engineA;
-      var integrator = this.integratorA;
-
-      expect(engine.__time).toBeNull();
-      expect(engine.__delta).toBeNull();
-
-      engine.step();
-
-      expect(engine.step(engine.__time)).toBe(engine);
-      expect(engine.step(engine.__time * 2)).toBe(engine);
+      expect(this.engineA.__time).toBeNull();
+      expect(this.engineA.__delta).toBeNull();
+      this.engineA.step();
+      expect(this.engineA.step(this.engineA.__time)).toBe(this.engineA);
+      expect(this.engineA.step(this.engineA.__time * 2)).toBe(this.engineA);
     });
-    it('should set [__delta] to the [time delta] converted to seconds', function() {
-      // expect(engine.__delta).toBeNull();
-      // expect(engine.__time).toEqual(jasmine.any(Number));
-      // expect(engine.integrate).not.toHaveBeenCalled();
-
-      // setTimeout(function() {
-      //   expect(engine.step()).toBe(engine);
-      //   expect(engine.__delta).toEqual(jasmine.any(Number));
-      //   expect(engine.integrate).toHaveBeenCalled();
-      //   expect(engine.integrate.calls.count()).toBe(1);
-      //   done();
-      // }, engine.timeStep * 1000); // Convert to milliseconds
+    it('should set [__delta] to [time delta] converted from milliseconds to seconds', function() {
+      expect(this.engineA.__time).toBeNull();
+      expect(this.engineA.__delta).toBeNull();
+      this.engineA.step();
+      this.engineA.step(this.engineA.__time + 1);
+      expect(this.engineA.__delta).toBe(0.001);
     });
     it('should increment [__buffer] by [__delta]', function() {
+      expect(this.engineA.__time).toBeNull();
+      expect(this.engineA.__delta).toBeNull();
+      expect(this.engineA.__buffer).toBe(0);
+      this.engineA.step();
+      this.engineA.__buffer = 0;
+      this.engineA.step(this.engineA.__time + 1);
+      expect(this.engineA.__buffer).toBe(0.001);
     });
     it('should use [timeStep] delta integration when [physical] is true', function() {
+
     });
     it('should reduce [__buffer] if [__buffer] >= [timeStep]', function() {
     });
