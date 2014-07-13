@@ -457,26 +457,51 @@ describe('NDP.Engine(opt_integrator, opt_physical)', function() {
       expect(this.engineA.__time).toBeNull();
       expect(this.engineA.__delta).toBeNull();
       this.engineA.step();
-      this.engineA.step(this.engineA.__time + 1);
-      expect(this.engineA.__delta).toBe(0.001);
+      this.engineA.step(this.engineA.__time + 1000);
+      expect(this.engineA.__delta).toBe(1);
     });
     it('should increment [__buffer] by [__delta]', function() {
-      expect(this.engineA.__time).toBeNull();
-      expect(this.engineA.__delta).toBeNull();
-      expect(this.engineA.__buffer).toBe(0);
-      this.engineA.step();
-      this.engineA.__buffer = 0;
-      this.engineA.step(this.engineA.__time + 1);
-      expect(this.engineA.__buffer).toBe(0.001);
+      expect(this.engineB.__time).toBeNull();
+      expect(this.engineB.__delta).toBeNull();
+      expect(this.engineB.__buffer).toBe(0);
+      this.engineB.step();
+      var buffer = this.engineB.__buffer;
+      // Only works with values > timeStep when engine isn't using physical integration
+      this.engineB.step(this.engineB.__time + 1000);
+      expect(this.engineB.__buffer).toBe(buffer + 1);
     });
     it('should use [timeStep] delta integration when [physical] is true', function() {
-
+      expect(this.engineA.physical).toBe(true);
+      this.engineA.step();
+      this.engineA.step(this.engineA.__time + this.engineA.timeStep * 2 * 1000);
+      expect(this.engineA.integrate).toHaveBeenCalledWith(this.engineA.timeStep);
+      expect(this.engineA.integrate.calls.count()).toEqual(2);
     });
     it('should reduce [__buffer] if [__buffer] >= [timeStep]', function() {
+      var INTEGRATIONS = 3;
+      expect(this.engineA.physical).toBe(true);
+      this.engineA.step();
+      this.engineA.step(this.engineA.__time + this.engineA.timeStep * 1000 * INTEGRATIONS);
+      expect(this.engineA.integrate).toHaveBeenCalledWith(this.engineA.timeStep);
+      expect(this.engineA.integrate.calls.count()).toEqual(INTEGRATIONS);
+      expect(this.engineA.__buffer).toBeCloseTo(0);
     });
     it('should exit [__buffer] reduction loop if [maxSteps] is exceeded', function() {
+      var OVERFLOW = 2;
+      var INTEGRATIONS = this.engineA.maxSteps + OVERFLOW;
+      expect(this.engineA.physical).toBe(true);
+      this.engineA.step();
+      this.engineA.step(this.engineA.__time + this.engineA.timeStep * 1000 * INTEGRATIONS);
+      expect(this.engineA.integrate).toHaveBeenCalledWith(this.engineA.timeStep);
+      expect(this.engineA.integrate.calls.count()).toEqual(this.engineA.maxSteps);
+      expect(this.engineA.__buffer).toBeCloseTo(this.engineA.timeStep * OVERFLOW);
     });
     it('should use [__delta] integration when [physical] is false', function() {
+      expect(this.engineB.physical).toBe(false);
+      this.engineB.step();
+      expect(this.engineB.integrate).toHaveBeenCalledWith(this.engineB.__delta);
+      this.engineB.step();
+      expect(this.engineB.integrate).toHaveBeenCalledWith(this.engineB.__delta);
     });
     it('should return the Engine instance that called it', function() {
       expect(this.engineA.step()).toBe(this.engineA);
