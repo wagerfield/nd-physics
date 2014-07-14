@@ -11,10 +11,26 @@ NDP.Particle = function(mass, opt_radius, opt_fixed, opt_dimensions) {
 };
 
 /**
+ * Adds a behaviour to the particle.
+ * @param {Behaviour} behaviour Behaviour to add to the particle.
+ * @return {Particle} Particle instance for chaining.
+ */
+NDP.Particle.prototype.addBehaviour = function(behaviour) {
+};
+
+/**
+ * Removes a behaviour from the particle.
+ * @param {Behaviour} behaviour Behaviour to remove from the particle.
+ * @return {Particle} Particle instance for chaining.
+ */
+NDP.Particle.prototype.removeBehaviour = function(behaviour) {
+};
+
+/**
  * Applies registered behaviours to the particle and updates its vectors.
  * @param {Number} delta Time delta since last integration.
  * @param {Number} index Index of the particle within the system.
- * @return {NDP.Particle} Particle instance for chaining.
+ * @return {Particle} Particle instance for chaining.
  */
 NDP.Particle.prototype.update = function(delta, index) {
 };
