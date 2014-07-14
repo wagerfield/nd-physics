@@ -8,6 +8,9 @@
  * @param {Number} opt_dimensions Optional number of component dimension that the particle should have. Defaults to NDP.DIMENSIONS.
  */
 NDP.Particle = function(mass, opt_radius, opt_fixed, opt_dimensions) {
+
+  // Validate mass parameter.
+  if (!NDP.isNumber(mass)) throw 'Particle: mass must be a Number ['+mass+']';
 };
 
 /**
