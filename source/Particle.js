@@ -10,7 +10,9 @@
 NDP.Particle = function(mass, opt_radius, opt_fixed, opt_dimensions) {
 
   // Validate mass argument.
-  if (!NDP.isNumber(mass)) throw 'Particle: mass must be a Number ['+mass+']';
+  if (!NDP.isNumber(mass)) {
+    throw 'Particle: mass must be a Number ['+mass+']';
+  }
 
   // Set particle properties.
   this.mass = mass;
@@ -21,6 +23,14 @@ NDP.Particle = function(mass, opt_radius, opt_fixed, opt_dimensions) {
   Object.defineProperty(this, 'dimensions', {
     value: NDP.isNumber(opt_dimensions) ? parseInt(opt_dimensions, 10) : NDP.DIMENSIONS
   });
+
+  // Set vector object.
+  this.__vector = NDP.getVector(this.dimensions);
+
+  // Validate vector object.
+  if (!this.__vector) {
+    throw 'Particle: No Vector Object available for ['+this.dimensions+'] dimensions';
+  }
 };
 
 /**
