@@ -11,6 +11,16 @@ NDP.Particle = function(mass, opt_radius, opt_fixed, opt_dimensions) {
 
   // Validate mass parameter.
   if (!NDP.isNumber(mass)) throw 'Particle: mass must be a Number ['+mass+']';
+
+  // Set particle properties.
+  this.mass = mass;
+  this.radius = NDP.isNumber(opt_radius) ? opt_radius : mass;
+  this.fixed = NDP.isBoolean(opt_fixed) ? opt_fixed : false;
+
+  // Create and set dimensions property.
+  Object.defineProperty(this, 'dimensions', {
+    value: NDP.isNumber(opt_dimensions) ? opt_dimensions : NDP.DIMENSIONS
+  });
 };
 
 /**
