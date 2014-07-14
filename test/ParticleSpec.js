@@ -52,8 +52,15 @@ describe('NDP.Particle(mass, opt_radius, opt_fixed, opt_dimensions)', function()
 
   describe('dimensions', function() {
     it('should be an Integer', function() {
+      this.particleB = new NDP.Particle(1, 1, false, 2.4);
+      expect(this.particleA.dimensions).toBeAnInteger();
+      expect(this.particleB.dimensions).toBeAnInteger();
+      expect(this.particleB.dimensions).toBe(2);
     });
     it('should be readonly', function() {
+      var dimensions = this.particleA.dimensions;
+      this.particleB.dimensions = 'kittens';
+      expect(this.particleA.dimensions).toBe(dimensions);
     });
   });
 });
