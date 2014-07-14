@@ -29,6 +29,7 @@ NDP.Particle = function(mass, opt_radius, opt_fixed, opt_dimensions) {
  * @return {Particle} Particle instance for chaining.
  */
 NDP.Particle.prototype.addBehaviour = function(behaviour) {
+  return this;
 };
 
 /**
@@ -37,6 +38,7 @@ NDP.Particle.prototype.addBehaviour = function(behaviour) {
  * @return {Particle} Particle instance for chaining.
  */
 NDP.Particle.prototype.removeBehaviour = function(behaviour) {
+  return this;
 };
 
 /**
@@ -46,4 +48,5 @@ NDP.Particle.prototype.removeBehaviour = function(behaviour) {
  * @return {Particle} Particle instance for chaining.
  */
 NDP.Particle.prototype.update = function(delta, index) {
+  return this;
 };

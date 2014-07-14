@@ -4,6 +4,7 @@ describe('NDP.Particle(mass, opt_radius, opt_fixed, opt_dimensions)', function()
     jasmine.addMatchers(CustomMatchers);
     this.particleA = new NDP.Particle(1);
     this.particleB = new NDP.Particle(2);
+    this.behaviour = new NDP.Behaviour();
   });
 
   it('should be a Function Object', function() {
@@ -61,6 +62,24 @@ describe('NDP.Particle(mass, opt_radius, opt_fixed, opt_dimensions)', function()
       var dimensions = this.particleA.dimensions;
       this.particleB.dimensions = 'kittens';
       expect(this.particleA.dimensions).toBe(dimensions);
+    });
+  });
+
+  describe('addBehaviour(behaviour)', function() {
+    it('should return the Particle instance that called it', function() {
+      expect(this.particleA.addBehaviour(this.behaviour)).toBe(this.particleA);
+    });
+  });
+
+  describe('removeBehaviour(behaviour)', function() {
+    it('should return the Particle instance that called it', function() {
+      expect(this.particleA.removeBehaviour(this.behaviour)).toBe(this.particleA);
+    });
+  });
+
+  describe('update(delta, index)', function() {
+    it('should return the Particle instance that called it', function() {
+      expect(this.particleA.update(1, 0)).toBe(this.particleA);
     });
   });
 });
