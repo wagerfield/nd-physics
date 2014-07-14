@@ -51,6 +51,24 @@ describe('NDP.Particle(mass, opt_radius, opt_fixed, opt_dimensions)', function()
     expect(this.particleA.dimensions).toBe(3);
   });
 
+  describe('mass', function() {
+    it('should be a Number', function() {
+      expect(this.particleA.mass).toEqual(jasmine.any(Number));
+    });
+  });
+
+  describe('radius', function() {
+    it('should be a Number', function() {
+      expect(this.particleA.radius).toEqual(jasmine.any(Number));
+    });
+  });
+
+  describe('fixed', function() {
+    it('should be a Boolean', function() {
+      expect(this.particleA.fixed).toEqual(jasmine.any(Boolean));
+    });
+  });
+
   describe('dimensions', function() {
     it('should be an Integer', function() {
       this.particleB = new NDP.Particle(1, 1, false, 2.4);
