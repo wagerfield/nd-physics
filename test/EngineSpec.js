@@ -8,8 +8,8 @@ describe('NDP.Engine(opt_integrator, opt_physical)', function() {
     this.engineA = new NDP.Engine();
     this.engineB = new NDP.Engine(this.integratorA, true);
 
-    this.particleA = new NDP.Particle();
-    this.particleB = new NDP.Particle();
+    this.particleA = new NDP.Particle(1);
+    this.particleB = new NDP.Particle(1);
     this.springA = new NDP.Spring(this.particleA, this.particleB);
     this.springB = new NDP.Spring(this.particleB, this.particleA);
   });
@@ -603,8 +603,8 @@ describe('NDP.Engine(opt_integrator, opt_physical)', function() {
           deltaB = 2,
           integrator = new NDP.Integrator(),
           engine = new NDP.Engine(integrator),
-          particleA = new NDP.Particle(),
-          particleB = new NDP.Particle(),
+          particleA = new NDP.Particle(1),
+          particleB = new NDP.Particle(1),
           springA = new NDP.Spring(particleA, particleB),
           springB = new NDP.Spring(particleB, particleA);
 
