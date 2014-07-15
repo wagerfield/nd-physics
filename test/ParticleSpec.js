@@ -162,6 +162,18 @@ describe('NDP.Particle(mass, opt_radius, opt_fixed, opt_dimensions)', function()
     it('should be a Boolean', function() {
       expect(this.particleA.fixed).toEqual(jasmine.any(Boolean));
     });
+    it('should only accept Boolean values', function() {
+      var fixed = this.particleA.fixed;
+      this.particleA.fixed = 'kittens';
+      expect(this.particleA.fixed).toBe(fixed);
+    });
+    it('should set __fixed', function() {
+      expect(this.particleA.__fixed).toBe(false);
+      expect(this.particleA.__fixed).toBe(this.particleA.fixed);
+      this.particleA.fixed = true;
+      expect(this.particleA.__fixed).toBe(true);
+      expect(this.particleA.__fixed).toBe(this.particleA.fixed);
+    });
   });
 
   describe('behaviours', function() {

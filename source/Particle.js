@@ -103,6 +103,21 @@ Object.defineProperty(NDP.Particle.prototype, 'radius', {
 });
 
 /**
+ * Fixed.
+ * @type {Boolean}
+ */
+Object.defineProperty(NDP.Particle.prototype, 'fixed', {
+  set: function(value) {
+    if (NDP.isBoolean(value)) {
+      this.__fixed = value;
+    }
+  },
+  get: function() {
+    return this.__fixed;
+  }
+});
+
+/**
  * Adds a behaviour to the particle.
  * @param {Behaviour} behaviour Behaviour to add to the particle.
  * @return {Particle} Particle instance for chaining.
