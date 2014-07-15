@@ -100,6 +100,31 @@ describe('NDP.Particle(mass, opt_radius, opt_fixed, opt_dimensions)', function()
     it('should be a Number', function() {
       expect(this.particleA.mass).toEqual(jasmine.any(Number));
     });
+    it('should only be set to Numbers', function() {
+      var mass = this.particleA.mass;
+      this.particleA.mass = 'kittens';
+      expect(this.particleA.mass).toBe(mass);
+    });
+    it('should set __mass', function() {
+      expect(this.particleA.__mass).toBe(this.particleA.mass);
+      this.particleA.mass = 2;
+      expect(this.particleA.__mass).toBe(this.particleA.mass);
+    });
+    it('should set __inverseMass to 1 / mass', function() {
+      expect(this.particleA.__inverseMass).toBe(1 / this.particleA.mass);
+      this.particleA.mass = 2;
+      expect(this.particleA.__inverseMass).toBe(1 / this.particleA.mass);
+    });
+  });
+
+  describe('__inverseMass', function() {
+    it('should be a Number', function() {
+      expect(this.particleA.__inverseMass).toEqual(jasmine.any(Number));
+    });
+    it('should be __private', function() {
+      expect(this.particleA.__inverseMass).toBeDefined();
+      expect(this.particleA.inverseMass).toBeUndefined();
+    });
   });
 
   describe('radius', function() {

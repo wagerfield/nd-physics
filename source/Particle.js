@@ -71,6 +71,22 @@ NDP.Particle = function(mass, opt_radius, opt_fixed, opt_dimensions) {
 NDP.Particle.__uid = 0;
 
 /**
+ * Mass of the particle.
+ * @type {Number}
+ */
+Object.defineProperty(NDP.Particle.prototype, 'mass', {
+  set: function(value) {
+    if (NDP.isNumber(value)) {
+      this.__mass = value;
+      this.__inverseMass = 1.0 / value;
+    }
+  },
+  get: function() {
+    return this.__mass;
+  }
+});
+
+/**
  * Adds a behaviour to the particle.
  * @param {Behaviour} behaviour Behaviour to add to the particle.
  * @return {Particle} Particle instance for chaining.
