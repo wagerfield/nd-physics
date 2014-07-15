@@ -67,7 +67,8 @@ module.exports = function(grunt) {
       },
       continuous: {
         singleRun: true,
-        reporters: ['mocha']
+        reporters: ['mocha'],
+        browsers: ['PhantomJS']
       }
     },
 
