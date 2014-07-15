@@ -125,6 +125,30 @@ describe('NDP.Particle(mass, opt_radius, opt_fixed, opt_dimensions)', function()
     });
   });
 
+  describe('__acc, __vel, __pos', function() {
+    beforeEach(function() {
+      this.vectorKeys = ['__acc', '__vel', '__pos'];
+    });
+    it('should be __private', function() {
+      for (var i = 0; i < this.vectorKeys.length; i++) {
+        var privateKey = this.vectorKeys[i];
+        var publicKey = privateKey.replace(/_/g, '');
+        expect(this.particleA[privateKey]).toBeDefined();
+        expect(this.particleA[publicKey]).toBeUndefined();
+      }
+    });
+    it('should be an NDP.Array instance', function() {
+      for (var i = 0; i < this.vectorKeys.length; i++) {
+        expect(this.particleA[this.vectorKeys[i]]).toEqual(jasmine.any(NDP.Array));
+      }
+    });
+    it('should be of length [dimensions]', function() {
+      for (var i = 0; i < this.vectorKeys.length; i++) {
+        expect(this.particleA[this.vectorKeys[i]].length).toBe(this.particleA.dimensions);
+      }
+    });
+  });
+
   describe('addBehaviour(behaviour)', function() {
     it('should return the Particle instance that called it', function() {
       expect(this.particleA.addBehaviour(this.behaviour)).toBe(this.particleA);
