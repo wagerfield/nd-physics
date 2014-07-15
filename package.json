@@ -8,7 +8,8 @@
   "license": "MIT",
   "scripts": {
     "build": "grunt build",
-    "test": "grunt test"
+    "test": "grunt karma:continuous",
+    "travis": "travis-lint"
   },
   "repository": {
     "type": "git",
