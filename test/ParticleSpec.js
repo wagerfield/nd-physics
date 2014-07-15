@@ -149,6 +149,38 @@ describe('NDP.Particle(mass, opt_radius, opt_fixed, opt_dimensions)', function()
     });
   });
 
+  describe('__old', function() {
+    it('should be __private', function() {
+      expect(this.particleA.__old).toBeDefined();
+      expect(this.particleA.old).toBeUndefined();
+    });
+    it('should be an Object', function() {
+      expect(this.particleA.__old).toEqual(jasmine.any(Object));
+    });
+    it('should only contain references to NDP.Array instances', function() {
+      for (var key in this.particleA.__old) {
+        expect(this.particleA.__old[key]).toEqual(jasmine.any(NDP.Array));
+      }
+    });
+    describe('acc, vel, pos', function() {
+      beforeEach(function() {
+        this.vectorKeys = ['acc', 'vel', 'pos'];
+      });
+      it('should be an NDP.Array instance', function() {
+        for (var i = 0; i < this.vectorKeys.length; i++) {
+          var key = this.vectorKeys[i];
+          expect(this.particleA.__old[key]).toEqual(jasmine.any(NDP.Array));
+        }
+      });
+      it('should be of length [dimensions]', function() {
+        for (var i = 0; i < this.vectorKeys.length; i++) {
+          var key = this.vectorKeys[i];
+          expect(this.particleA.__old[key].length).toBe(this.particleA.dimensions);
+        }
+      });
+    });
+  });
+
   describe('addBehaviour(behaviour)', function() {
     it('should return the Particle instance that called it', function() {
       expect(this.particleA.addBehaviour(this.behaviour)).toBe(this.particleA);
