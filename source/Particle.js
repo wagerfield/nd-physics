@@ -1,7 +1,7 @@
 /**
  * Particle constructor.
- * Manages behaviour collections.
- * Updates translation vectors on each time step by applying the effects of registered behaviours.
+ * Manages behaviour collection.
+ * Updates translation vectors by applying the effects of registered behaviours.
  * @constructor
  * @param {Number} mass Mass of the particle.
  * @param {Number} opt_radius Optional radius value for the particle. Defaults to the same value as the mass.
