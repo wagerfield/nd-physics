@@ -1,5 +1,4 @@
-NDP.Behaviour = function(type) {
-  this.type = type;
+NDP.Behaviour = function() {
 };
 
-NDP.Behaviour.prototype = {};
+NDP.Behaviour.id = 'Behaviour';
