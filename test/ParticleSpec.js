@@ -100,7 +100,7 @@ describe('NDP.Particle(mass, opt_radius, opt_fixed, opt_dimensions)', function()
     it('should be a Number', function() {
       expect(this.particleA.mass).toEqual(jasmine.any(Number));
     });
-    it('should only be set to Numbers', function() {
+    it('should only accept Numbers', function() {
       var mass = this.particleA.mass;
       this.particleA.mass = 'kittens';
       expect(this.particleA.mass).toBe(mass);
@@ -130,6 +130,31 @@ describe('NDP.Particle(mass, opt_radius, opt_fixed, opt_dimensions)', function()
   describe('radius', function() {
     it('should be a Number', function() {
       expect(this.particleA.radius).toEqual(jasmine.any(Number));
+    });
+    it('should only accept Numbers', function() {
+      var radius = this.particleA.radius;
+      this.particleA.radius = 'kittens';
+      expect(this.particleA.radius).toBe(radius);
+    });
+    it('should set __radius', function() {
+      expect(this.particleA.__radius).toBe(this.particleA.radius);
+      this.particleA.radius = 2;
+      expect(this.particleA.__radius).toBe(this.particleA.radius);
+    });
+    it('should set __radiusSquared to radius * radius', function() {
+      expect(this.particleA.__radiusSquared).toBe(Math.pow(this.particleA.radius, 2));
+      this.particleA.radius = 2;
+      expect(this.particleA.__radiusSquared).toBe(Math.pow(this.particleA.radius, 2));
+    });
+  });
+
+  describe('__radiusSquared', function() {
+    it('should be a Number', function() {
+      expect(this.particleA.__radiusSquared).toEqual(jasmine.any(Number));
+    });
+    it('should be __private', function() {
+      expect(this.particleA.__radiusSquared).toBeDefined();
+      expect(this.particleA.radiusSquared).toBeUndefined();
     });
   });
 

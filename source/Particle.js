@@ -87,6 +87,22 @@ Object.defineProperty(NDP.Particle.prototype, 'mass', {
 });
 
 /**
+ * Radius of the particle.
+ * @type {Number}
+ */
+Object.defineProperty(NDP.Particle.prototype, 'radius', {
+  set: function(value) {
+    if (NDP.isNumber(value)) {
+      this.__radius = value;
+      this.__radiusSquared = value * value;
+    }
+  },
+  get: function() {
+    return this.__radius;
+  }
+});
+
+/**
  * Adds a behaviour to the particle.
  * @param {Behaviour} behaviour Behaviour to add to the particle.
  * @return {Particle} Particle instance for chaining.
