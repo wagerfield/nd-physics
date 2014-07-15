@@ -19,7 +19,17 @@ NDP.Particle = function(mass, opt_radius, opt_fixed, opt_dimensions) {
   this.mass = mass;
   this.radius = NDP.isNumber(opt_radius) ? opt_radius : mass;
   this.fixed = NDP.isBoolean(opt_fixed) ? opt_fixed : false;
-  this.dimensions = NDP.isNumber(opt_dimensions) ? opt_dimensions : NDP.DIMENSIONS;
+
+  /**
+   * Dimensional size.
+   * @type {Number}
+   */
+  Object.defineProperty(this, 'dimensions', {
+    value: NDP.isNumber(opt_dimensions) ? parseInt(opt_dimensions, 10) : NDP.DIMENSIONS
+  });
+
+  // Cache dimensions privately for performance.
+  this.__dimensions = this.dimensions;
 
   /**
    * Unique identifier.
@@ -53,21 +63,6 @@ NDP.Particle = function(mass, opt_radius, opt_fixed, opt_dimensions) {
  * @type {Number}
  */
 NDP.Particle.__uid = 0;
-
-/**
- * Dimensional size of the particle.
- * @type {Number}
- */
-Object.defineProperty(NDP.Particle.prototype, 'dimensions', {
-  set: function(value) {
-    if (NDP.isNumber(value)) {
-      this.__dimensions = parseInt(value, 10);
-    }
-  },
-  get: function() {
-    return this.__dimensions;
-  }
-});
 
 /**
  * Adds a behaviour to the particle.

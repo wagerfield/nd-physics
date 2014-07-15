@@ -90,8 +90,13 @@ describe('NDP.Particle(mass, opt_radius, opt_fixed, opt_dimensions)', function()
     });
     it('should be readonly', function() {
       var dimensions = this.particleA.dimensions;
-      this.particleB.dimensions = 'kittens';
+      this.particleA.dimensions = 'kittens';
       expect(this.particleA.dimensions).toBe(dimensions);
+    });
+    it('should have a private __dimensions cache', function() {
+      expect(this.particleA.__dimensions).toBeDefined();
+      expect(this.particleA.__dimensions).toBeAnInteger();
+      expect(this.particleA.__dimensions).toBe(this.particleA.dimensions);
     });
   });
 
@@ -101,7 +106,7 @@ describe('NDP.Particle(mass, opt_radius, opt_fixed, opt_dimensions)', function()
     });
     it('should be readonly', function() {
       var id = this.particleA.id;
-      this.particleB.id = 'kittens';
+      this.particleA.id = 'kittens';
       expect(this.particleA.id).toBe(id);
     });
     it('should be 1 greater than a previously created Particle instance [id]', function() {
