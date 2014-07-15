@@ -105,6 +105,15 @@ describe('NDP.Particle(mass, opt_radius, opt_fixed, opt_dimensions)', function()
       this.particleA.mass = 'kittens';
       expect(this.particleA.mass).toBe(mass);
     });
+    it('should not set other Particle instance mass values', function() {
+      var massA = this.particleA.mass;
+      var massB = this.particleB.mass;
+      expect(massA).toBe(1);
+      expect(massB).toBe(2);
+      this.particleA.mass = massA = 3;
+      expect(this.particleA.mass).toBe(massA);
+      expect(this.particleB.mass).toBe(massB);
+    });
     it('should set __mass', function() {
       expect(this.particleA.__mass).toBe(this.particleA.mass);
       this.particleA.mass = 2;
@@ -136,6 +145,15 @@ describe('NDP.Particle(mass, opt_radius, opt_fixed, opt_dimensions)', function()
       this.particleA.radius = 'kittens';
       expect(this.particleA.radius).toBe(radius);
     });
+    it('should not set other Particle instance radius values', function() {
+      var radiusA = this.particleA.radius;
+      var radiusB = this.particleB.radius;
+      expect(radiusA).toBe(1);
+      expect(radiusB).toBe(2);
+      this.particleA.radius = radiusA = 3;
+      expect(this.particleA.radius).toBe(radiusA);
+      expect(this.particleB.radius).toBe(radiusB);
+    });
     it('should set __radius', function() {
       expect(this.particleA.__radius).toBe(this.particleA.radius);
       this.particleA.radius = 2;
@@ -166,6 +184,15 @@ describe('NDP.Particle(mass, opt_radius, opt_fixed, opt_dimensions)', function()
       var fixed = this.particleA.fixed;
       this.particleA.fixed = 'kittens';
       expect(this.particleA.fixed).toBe(fixed);
+    });
+    it('should not set other Particle instance fixed values', function() {
+      var fixedA = this.particleA.fixed;
+      var fixedB = this.particleB.fixed;
+      expect(fixedA).toBe(false);
+      expect(fixedB).toBe(false);
+      this.particleA.fixed = fixedA = true;
+      expect(this.particleA.fixed).toBe(fixedA);
+      expect(this.particleB.fixed).toBe(fixedB);
     });
     it('should set __fixed', function() {
       expect(this.particleA.__fixed).toBe(false);
