@@ -115,7 +115,7 @@ describe('NDP.Particle(mass, opt_radius, opt_fixed, opt_dimensions)', function()
     it('should be an Object', function() {
       expect(this.particleA.__vector).toEqual(jasmine.any(Object));
     });
-    it('should reference NDP.Vector[particle.dimensions]', function() {
+    it('should reference NDP.Vector[dimensions]', function() {
       expect(this.particleA.__vector).toEqual(NDP['Vector' + this.particleA.dimensions]);
     });
     it('should throw an error for cases where a Vector Object is not available', function() {
