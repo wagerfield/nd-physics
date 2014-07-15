@@ -140,6 +140,9 @@ describe('NDP.Engine(opt_integrator, opt_physical)', function() {
     it('should be an Integrator', function() {
       expect(this.engineA.integrator).toEqual(jasmine.any(NDP.Integrator));
     });
+    it('should create a new EulerIntegrator if [opt_integrator] is not defined', function() {
+      expect(this.engineA.integrator).toEqual(jasmine.any(NDP.EulerIntegrator));
+    });
     it('should be [opt_integrator] if passed to the first argument', function() {
       expect(this.engineB.integrator).toBe(this.integratorA);
     });
