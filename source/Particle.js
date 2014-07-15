@@ -123,6 +123,13 @@ Object.defineProperty(NDP.Particle.prototype, 'fixed', {
  * @return {Particle} Particle instance for chaining.
  */
 NDP.Particle.prototype.addBehaviour = function(behaviour) {
+  if (NDP.addItemToArray(behaviour, this.behaviours, NDP.Behaviour)) {
+    switch (behaviour.constructor.id) {
+      case NDP.CollisionBehaviour.id:
+        behaviour.addParticle(this);
+        break;
+    }
+  }
   return this;
 };
 
@@ -132,6 +139,13 @@ NDP.Particle.prototype.addBehaviour = function(behaviour) {
  * @return {Particle} Particle instance for chaining.
  */
 NDP.Particle.prototype.removeBehaviour = function(behaviour) {
+  if (NDP.removeItemFromArray(behaviour, this.behaviours)) {
+    switch (behaviour.constructor.id) {
+      case NDP.CollisionBehaviour.id:
+        behaviour.removeParticle(this);
+        break;
+    }
+  }
   return this;
 };
 
