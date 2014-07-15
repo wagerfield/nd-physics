@@ -118,6 +118,18 @@ describe('NDP.Particle(mass, opt_radius, opt_fixed, opt_dimensions)', function()
     it('should be a Array', function() {
       expect(this.particleA.behaviours).toEqual(jasmine.any(Array));
     });
+    it('should create a new Array per instance', function() {
+      expect(this.particleA.behaviours).not.toBe(this.particleB.behaviours);
+    });
+    it('should be empty initially', function() {
+      expect(this.particleA.behaviours).toEqual([]);
+    });
+    it('should be writable', function() {
+      var behaviours = this.particleA.behaviours;
+      this.particleA.behaviours = this.particleB.behaviours;
+      expect(this.particleA.behaviours).not.toBe(behaviours);
+      expect(this.particleA.behaviours).toBe(this.particleB.behaviours);
+    });
   });
 
   describe('id', function() {
