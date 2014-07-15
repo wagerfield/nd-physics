@@ -83,6 +83,20 @@ describe('NDP.Particle(mass, opt_radius, opt_fixed, opt_dimensions)', function()
     });
   });
 
+  describe('__vector', function() {
+    it('should be an Object', function() {
+      expect(this.particleA.__vector).toEqual(jasmine.any(Object));
+    });
+    it('should reference NDP.Vector[particle.dimensions]', function() {
+      expect(this.particleA.__vector).toEqual(NDP['Vector' + this.particleA.dimensions]);
+    });
+    it('should throw an error for cases where a Vector Object is not available', function() {
+      expect(function() {
+        new NDP.Particle(1, 1, false, 0);
+      }).toThrow('Particle: No Vector Object available for [0] dimensions');
+    });
+  });
+
   describe('addBehaviour(behaviour)', function() {
     it('should return the Particle instance that called it', function() {
       expect(this.particleA.addBehaviour(this.behaviour)).toBe(this.particleA);
