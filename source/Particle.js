@@ -1,6 +1,7 @@
 /**
  * Particle constructor.
- * Creates a particle that can have behaviours that are applied on each time step within the system.
+ * Manages behaviour collections.
+ * Updates translation vectors on each time step by applying the effects of registered behaviours.
  * @constructor
  * @param {Number} mass Mass of the particle.
  * @param {Number} opt_radius Optional radius value for the particle. Defaults to the same value as the mass.
@@ -36,6 +37,16 @@ NDP.Particle = function(mass, opt_radius, opt_fixed, opt_dimensions) {
   if (!this.__vector) {
     throw 'Particle: No Vector Object available for ['+this.dimensions+'] dimensions';
   }
+
+  // Create particle vectors.
+  this.__acc = this.__vector.create();
+  this.__vel = this.__vector.create();
+  this.__pos = this.__vector.create();
+  this.__old = {
+    acc: this.__vector.create(),
+    vel: this.__vector.create(),
+    pos: this.__vector.create()
+  };
 };
 
 /**
