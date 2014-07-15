@@ -51,6 +51,18 @@ describe('NDP.Particle(mass, opt_radius, opt_fixed, opt_dimensions)', function()
     expect(this.particleA.dimensions).toBe(3);
   });
 
+  describe('constructor.__uid', function() {
+    it('should be an Integer', function() {
+      expect(NDP.Particle.__uid).toBeAnInteger();
+      expect(this.particleA.constructor.__uid).toBeAnInteger();
+    });
+    it('should increment with each new Particle instance', function() {
+      var uid = NDP.Particle.__uid;
+      var particle = new NDP.Particle(1);
+      expect(NDP.Particle.__uid).toBe(uid + 1);
+    });
+  });
+
   describe('mass', function() {
     it('should be a Number', function() {
       expect(this.particleA.mass).toEqual(jasmine.any(Number));
@@ -80,6 +92,22 @@ describe('NDP.Particle(mass, opt_radius, opt_fixed, opt_dimensions)', function()
       var dimensions = this.particleA.dimensions;
       this.particleB.dimensions = 'kittens';
       expect(this.particleA.dimensions).toBe(dimensions);
+    });
+  });
+
+  describe('id', function() {
+    it('should be an Integer', function() {
+      expect(this.particleA.id).toBeAnInteger();
+    });
+    it('should be readonly', function() {
+      var id = this.particleA.id;
+      this.particleB.id = 'kittens';
+      expect(this.particleA.id).toBe(id);
+    });
+    it('should be 1 greater than a previously created Particle instance [id]', function() {
+      this.particleA = new NDP.Particle(1);
+      this.particleB = new NDP.Particle(1);
+      expect(this.particleB.id).toBe(this.particleA.id + 1);
     });
   });
 

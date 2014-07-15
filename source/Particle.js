@@ -19,9 +19,14 @@ NDP.Particle = function(mass, opt_radius, opt_fixed, opt_dimensions) {
   this.radius = NDP.isNumber(opt_radius) ? opt_radius : mass;
   this.fixed = NDP.isBoolean(opt_fixed) ? opt_fixed : false;
 
-  // Create and set dimensions property.
+  // Set dimensions property.
   Object.defineProperty(this, 'dimensions', {
     value: NDP.isNumber(opt_dimensions) ? parseInt(opt_dimensions, 10) : NDP.DIMENSIONS
+  });
+
+  // Set unique identifier.
+  Object.defineProperty(this, 'id', {
+    value: this.constructor.__uid++
   });
 
   // Set vector object.
@@ -32,6 +37,12 @@ NDP.Particle = function(mass, opt_radius, opt_fixed, opt_dimensions) {
     throw 'Particle: No Vector Object available for ['+this.dimensions+'] dimensions';
   }
 };
+
+/**
+ * Particle unique identifier.
+ * @type {Number}
+ */
+NDP.Particle.__uid = 0;
 
 /**
  * Adds a behaviour to the particle.
