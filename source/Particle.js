@@ -15,11 +15,6 @@ NDP.Particle = function(mass, opt_radius, opt_fixed, opt_dimensions) {
     throw 'Particle: mass must be a Number ['+mass+']';
   }
 
-  // Set particle properties.
-  this.mass = mass;
-  this.radius = NDP.isNumber(opt_radius) ? opt_radius : mass;
-  this.fixed = NDP.isBoolean(opt_fixed) ? opt_fixed : false;
-
   /**
    * Dimensional size.
    * @type {Number}
@@ -31,14 +26,6 @@ NDP.Particle = function(mass, opt_radius, opt_fixed, opt_dimensions) {
   // Cache dimensions privately for performance.
   this.__dimensions = this.dimensions;
 
-  /**
-   * Unique identifier.
-   * @type {Number}
-   */
-  Object.defineProperty(this, 'id', {
-    value: this.constructor.__uid++
-  });
-
   // Set vector object.
   this.__vector = NDP.getVector(this.dimensions);
 
@@ -46,6 +33,25 @@ NDP.Particle = function(mass, opt_radius, opt_fixed, opt_dimensions) {
   if (!this.__vector) {
     throw 'Particle: No Vector Object available for ['+this.dimensions+'] dimensions';
   }
+
+  // Set particle properties.
+  this.mass = mass;
+  this.radius = NDP.isNumber(opt_radius) ? opt_radius : mass;
+  this.fixed = NDP.isBoolean(opt_fixed) ? opt_fixed : false;
+
+  /**
+   * Behaviour collection.
+   * @type {Array.<Behaviour>}
+   */
+  this.behaviours = [];
+
+  /**
+   * Unique identifier.
+   * @type {Number}
+   */
+  Object.defineProperty(this, 'id', {
+    value: this.constructor.__uid++
+  });
 
   // Create particle vectors.
   this.__acc = this.__vector.create();

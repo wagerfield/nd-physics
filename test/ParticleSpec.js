@@ -63,24 +63,6 @@ describe('NDP.Particle(mass, opt_radius, opt_fixed, opt_dimensions)', function()
     });
   });
 
-  describe('mass', function() {
-    it('should be a Number', function() {
-      expect(this.particleA.mass).toEqual(jasmine.any(Number));
-    });
-  });
-
-  describe('radius', function() {
-    it('should be a Number', function() {
-      expect(this.particleA.radius).toEqual(jasmine.any(Number));
-    });
-  });
-
-  describe('fixed', function() {
-    it('should be a Boolean', function() {
-      expect(this.particleA.fixed).toEqual(jasmine.any(Boolean));
-    });
-  });
-
   describe('dimensions', function() {
     it('should be an Integer', function() {
       this.particleB = new NDP.Particle(1, 1, false, 2.4);
@@ -100,6 +82,44 @@ describe('NDP.Particle(mass, opt_radius, opt_fixed, opt_dimensions)', function()
     });
   });
 
+  describe('__vector', function() {
+    it('should be an Object', function() {
+      expect(this.particleA.__vector).toEqual(jasmine.any(Object));
+    });
+    it('should reference NDP.Vector[dimensions]', function() {
+      expect(this.particleA.__vector).toEqual(NDP['Vector' + this.particleA.dimensions]);
+    });
+    it('should throw an error for cases where a Vector Object is not available', function() {
+      expect(function() {
+        new NDP.Particle(1, 1, false, 0);
+      }).toThrow('Particle: No Vector Object available for [0] dimensions');
+    });
+  });
+
+  describe('mass', function() {
+    it('should be a Number', function() {
+      expect(this.particleA.mass).toEqual(jasmine.any(Number));
+    });
+  });
+
+  describe('radius', function() {
+    it('should be a Number', function() {
+      expect(this.particleA.radius).toEqual(jasmine.any(Number));
+    });
+  });
+
+  describe('fixed', function() {
+    it('should be a Boolean', function() {
+      expect(this.particleA.fixed).toEqual(jasmine.any(Boolean));
+    });
+  });
+
+  describe('behaviours', function() {
+    it('should be a Array', function() {
+      expect(this.particleA.behaviours).toEqual(jasmine.any(Array));
+    });
+  });
+
   describe('id', function() {
     it('should be an Integer', function() {
       expect(this.particleA.id).toBeAnInteger();
@@ -113,20 +133,6 @@ describe('NDP.Particle(mass, opt_radius, opt_fixed, opt_dimensions)', function()
       this.particleA = new NDP.Particle(1);
       this.particleB = new NDP.Particle(1);
       expect(this.particleB.id).toBe(this.particleA.id + 1);
-    });
-  });
-
-  describe('__vector', function() {
-    it('should be an Object', function() {
-      expect(this.particleA.__vector).toEqual(jasmine.any(Object));
-    });
-    it('should reference NDP.Vector[dimensions]', function() {
-      expect(this.particleA.__vector).toEqual(NDP['Vector' + this.particleA.dimensions]);
-    });
-    it('should throw an error for cases where a Vector Object is not available', function() {
-      expect(function() {
-        new NDP.Particle(1, 1, false, 0);
-      }).toThrow('Particle: No Vector Object available for [0] dimensions');
     });
   });
 
