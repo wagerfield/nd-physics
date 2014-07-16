@@ -3,3 +3,6 @@ NDP.Behaviour = function() {
 };
 
 NDP.Behaviour.id = 'Behaviour';
+
+NDP.Behaviour.prototype.apply = function(particle, delta, index) {
+};
