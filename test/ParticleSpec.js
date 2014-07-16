@@ -294,12 +294,68 @@ describe('NDP.Particle(mass, opt_radius, opt_fixed, opt_dimensions)', function()
   });
 
   describe('addBehaviour(behaviour)', function() {
+    beforeEach(function() {
+      this.abstractBehaviour = new NDP.Behaviour();
+      this.constantBehaviour = new NDP.ConstantBehaviour();
+      this.collisionBehaviour = new NDP.CollisionBehaviour();
+      spyOn(this.collisionBehaviour, 'addParticle');
+    });
+    it('should add a unique behaviour to the [behaviours] collection', function() {
+      expect(this.particleA.behaviours).toEqual([]);
+
+      // Add abstractBehaviour for the first time.
+      this.particleA.addBehaviour(this.abstractBehaviour);
+      expect(this.particleA.behaviours.length).toBe(1);
+      expect(this.particleA.behaviours).toEqualArray([
+        this.abstractBehaviour
+      ]);
+
+      // Add abstractBehaviour a second time.
+      this.particleA.addBehaviour(this.abstractBehaviour);
+      expect(this.particleA.behaviours.length).toBe(1);
+      expect(this.particleA.behaviours).toEqualArray([
+        this.abstractBehaviour
+      ]);
+
+      // Add constantBehaviour for the first time.
+      this.particleA.addBehaviour(this.constantBehaviour);
+      expect(this.particleA.behaviours.length).toBe(2);
+      expect(this.particleA.behaviours).toEqualArray([
+        this.abstractBehaviour,
+        this.constantBehaviour
+      ]);
+
+      // Add abstractBehaviour a third time.
+      this.particleA.addBehaviour(this.abstractBehaviour);
+      expect(this.particleA.behaviours.length).toBe(2);
+      expect(this.particleA.behaviours).toEqualArray([
+        this.abstractBehaviour,
+        this.constantBehaviour
+      ]);
+    });
     it('should return the Particle instance that called it', function() {
-      expect(this.particleA.addBehaviour(this.behaviour)).toBe(this.particleA);
+      expect(this.particleA.addBehaviour(this.abstractBehaviour)).toBe(this.particleA);
+      expect(this.particleA.addBehaviour(this.constantBehaviour)).toBe(this.particleA);
+    });
+    describe('CollisionBehaviour', function() {
+      it('should call addParticle(particle)', function() {
+        this.particleA.addBehaviour(this.collisionBehaviour);
+        expect(this.particleA.behaviours.length).toBe(1);
+        expect(this.particleA.behaviours).toEqualArray([
+          this.collisionBehaviour
+        ]);
+        expect(this.collisionBehaviour.addParticle).toHaveBeenCalledWith(this.particleA);
+      });
     });
   });
 
   describe('removeBehaviour(behaviour)', function() {
+    beforeEach(function() {
+      this.abstractBehaviour = new NDP.Behaviour();
+      this.constantBehaviour = new NDP.ConstantBehaviour();
+      this.collisionBehaviour = new NDP.CollisionBehaviour();
+      spyOn(this.collisionBehaviour, 'removeParticle');
+    });
     it('should return the Particle instance that called it', function() {
       expect(this.particleA.removeBehaviour(this.behaviour)).toBe(this.particleA);
     });

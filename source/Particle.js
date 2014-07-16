@@ -103,7 +103,7 @@ Object.defineProperty(NDP.Particle.prototype, 'radius', {
 });
 
 /**
- * Fixed.
+ * Whether or not the particle is fixed.
  * @type {Boolean}
  */
 Object.defineProperty(NDP.Particle.prototype, 'fixed', {
