@@ -67,7 +67,6 @@ NDP.Particle = function(mass, opt_radius, opt_fixed, opt_dimensions) {
   for (var i = 0; i < this.__dimensions; i++) {
     this.__defineComponent(i, 'acc', 'a');
     this.__defineComponent(i, 'vel', 'v');
-    this.__defineComponent(i, 'pos', 'p');
     this.__defineComponent(i, 'pos');
   }
 };
@@ -213,7 +212,6 @@ NDP.Particle.prototype.update = function(delta, index) {
     component = NDP.COMPONENTS[i];
     this['__a' + component] = this.__acc[i];
     this['__v' + component] = this.__vel[i];
-    this['__p' + component] = this.__pos[i];
     this['__'  + component] = this.__pos[i];
   }
   return this;

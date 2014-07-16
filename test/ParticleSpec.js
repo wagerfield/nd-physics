@@ -293,6 +293,54 @@ describe('NDP.Particle(mass, opt_radius, opt_fixed, opt_dimensions)', function()
     });
   });
 
+  describe('__defineComponent(index, arrayKey, opt_prefix)', function() {
+    beforeEach(function() {
+      this.particle1 = new NDP.Particle(1, 1, false, 1);
+      this.particle2 = new NDP.Particle(1, 1, false, 2);
+      this.particle3 = new NDP.Particle(1, 1, false, 3);
+      this.map = [
+        {prefix:'a', array:'__acc'},
+        {prefix:'v', array:'__vel'},
+        {prefix:'' , array:'__pos'}
+      ];
+      this.particles = [
+        this.particle1,
+        this.particle2,
+        this.particle3
+      ];
+      this.components3 = [4, 5, 6];
+      this.components2 = [2, 3];
+      this.components1 = [1];
+    });
+    it('should have defined and set [public] and [__private] properties for acceleration[a], velocity[v] and position[p]', function() {
+      // console.log(JSON.stringify(this.particle3, null, 4));
+      for (var p = 0; p < this.particles.length; p++) {
+        var particle = this.particles[p];
+        for (var c = 0; c < NDP.COMPONENTS.length; c++) {
+          var component = NDP.COMPONENTS[c];
+          for (var i = 0; i < this.map.length; i++) {
+            var item = this.map[i],
+                pubKey = item.prefix + component,
+                priKey = '__' + pubKey;
+            if (c < particle.dimensions) {
+              expect(particle[pubKey]).toBe(particle[item.array][c]);
+              expect(particle[priKey]).toBe(particle[item.array][c]);
+            } else {
+              expect(particle[pubKey]).toBeUndefined();
+              expect(particle[priKey]).toBeUndefined();
+            }
+          }
+        }
+      }
+    });
+    it('should set the value of a component key', function() {
+    });
+    it('should define a setter and getter for a component key', function() {
+    });
+    it('should define a setter and getter for a component key', function() {
+    });
+  });
+
   describe('addBehaviour(behaviour)', function() {
     beforeEach(function() {
       this.abstractBehaviour = new NDP.Behaviour();
