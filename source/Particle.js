@@ -70,9 +70,6 @@ NDP.Particle = function(mass, opt_radius, opt_fixed, opt_dimensions) {
     this.__defineComponent(i, 'pos', 'p');
     this.__defineComponent(i, 'pos');
   }
-
-  // Set initial property values.
-  this.update(0);
 };
 
 /**
