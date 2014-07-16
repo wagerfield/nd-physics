@@ -156,5 +156,25 @@ NDP.Particle.prototype.removeBehaviour = function(behaviour) {
  * @return {Particle} Particle instance for chaining.
  */
 NDP.Particle.prototype.update = function(delta, index) {
+  var i, l, behaviour, component;
+
+  // Apply behaviours.
+  if (!this.__fixed && delta !== 0) {
+    for (i = 0, l = this.behaviours.length; i < l; i++) {
+      behaviour = this.behaviours[i];
+      if (behaviour.active) {
+        behaviour.apply(this, delta, index);
+      }
+    }
+  }
+
+  // Set component properties.
+  for (i = 0, l = this.__dimensions; i < l; i++) {
+    component = NDP.COMPONENTS[i];
+    this['a'+component] = this.__acc[i];
+    this['v'+component] = this.__vel[i];
+    this['p'+component] = this.__pos[i];
+    this[component] = this.__pos[i];
+  }
   return this;
 };
