@@ -5,3 +5,4 @@ NDP.ConstantBehaviour = function() {
 NDP.ConstantBehaviour.id = 'ConstantBehaviour';
 
 NDP.ConstantBehaviour.prototype = Object.create(NDP.Behaviour.prototype);
+NDP.ConstantBehaviour.prototype.constructor = NDP.ConstantBehaviour;
