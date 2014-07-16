@@ -150,6 +150,18 @@ NDP.Particle.prototype.removeBehaviour = function(behaviour) {
 };
 
 /**
+ * Sets the position of the particle.
+ * @param {Array} components Array of values to set each dimension component to.
+ * @return {Particle} Particle instance for chaining.
+ */
+NDP.Particle.prototype.setPosition = function(components) {
+  NDP.copyValuesToArray(components, this.__pos);
+  this.__vector.copy(this.__old.pos, this.__pos);
+  this.update(0);
+  return this;
+};
+
+/**
  * Applies registered behaviours to the particle and updates its vectors.
  * @param {Number} delta Time delta since last integration.
  * @param {Number} index Index of the particle within the system.
