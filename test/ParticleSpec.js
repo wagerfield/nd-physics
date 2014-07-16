@@ -312,7 +312,7 @@ describe('NDP.Particle(mass, opt_radius, opt_fixed, opt_dimensions)', function()
       this.components2 = [2, 3];
       this.components1 = [1];
     });
-    it('should have defined and set [public] and [__private] properties for acceleration[a], velocity[v] and position[p]', function() {
+    it('should have defined and set [public] and [__private] properties for acceleration, velocity and position', function() {
       // console.log(JSON.stringify(this.particle3, null, 4));
       for (var p = 0; p < this.particles.length; p++) {
         var particle = this.particles[p];

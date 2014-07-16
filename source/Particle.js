@@ -207,7 +207,7 @@ NDP.Particle.prototype.update = function(delta, index) {
     }
   }
 
-  // Set component private properties.
+  // Set private component properties.
   for (i = 0, l = this.__dimensions; i < l; i++) {
     component = NDP.COMPONENTS[i];
     this['__a' + component] = this.__acc[i];
