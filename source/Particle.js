@@ -85,25 +85,27 @@ NDP.Particle.__uid = 0;
  * @param {String} opt_prefix Optional component prefix. Defaults to '';
  */
 NDP.Particle.prototype.__defineComponent = function(index, arrayKey, opt_prefix) {
+
+  // Build property keys.
   var prefix = typeof opt_prefix === 'string' ? opt_prefix : '',
-      componentPublic = prefix + NDP.COMPONENTS[index],
-      componentPrivate = '__' + componentPublic,
+      componentKeyPublic = prefix + NDP.COMPONENTS[index],
+      componentKeyPrivate = '__' + componentKeyPublic,
       arrayKeyPrivate = '__' + arrayKey;
 
   // Set initial component value.
-  this[componentPrivate] = this[arrayKeyPrivate][index];
+  this[componentKeyPrivate] = this[arrayKeyPrivate][index];
 
   // Define getter and setter.
-  Object.defineProperty(this, componentPublic, {
+  Object.defineProperty(this, componentKeyPublic, {
     set: function(value) {
       if (NDP.isNumber(value)) {
-        this[componentPrivate] = value;
+        this[componentKeyPrivate] = value;
         this[arrayKeyPrivate][index] = value;
         this.__old[arrayKey][index] = value;
       }
     },
     get: function() {
-      return this[componentPrivate];
+      return this[componentKeyPrivate];
     }
   });
 };
@@ -206,7 +208,7 @@ NDP.Particle.prototype.update = function(delta, index) {
     }
   }
 
-  // Set private component properties.
+  // Set component private properties.
   for (i = 0, l = this.__dimensions; i < l; i++) {
     component = NDP.COMPONENTS[i];
     this['__a' + component] = this.__acc[i];
