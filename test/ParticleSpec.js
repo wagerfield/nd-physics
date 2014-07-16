@@ -308,11 +308,13 @@ describe('NDP.Particle(mass, opt_radius, opt_fixed, opt_dimensions)', function()
         this.particle2,
         this.particle3
       ];
-      this.components3 = [4, 5, 6];
-      this.components2 = [2, 3];
-      this.components1 = [1];
     });
     it('should have defined and set [public] and [__private] properties for acceleration, velocity and position', function() {
+      this.particle1.x = 10;
+      this.particle2.y = 10;
+      this.particle3.z = 10;
+      // console.log(JSON.stringify(this.particle1, null, 4));
+      // console.log(JSON.stringify(this.particle2, null, 4));
       // console.log(JSON.stringify(this.particle3, null, 4));
       for (var p = 0; p < this.particles.length; p++) {
         var particle = this.particles[p];
@@ -323,8 +325,11 @@ describe('NDP.Particle(mass, opt_radius, opt_fixed, opt_dimensions)', function()
                 pubKey = item.prefix + component,
                 priKey = '__' + pubKey;
             if (c < particle.dimensions) {
-              expect(particle[pubKey]).toBe(particle[item.array][c]);
-              expect(particle[priKey]).toBe(particle[item.array][c]);
+              var arrayValue = particle[item.array][c];
+              expect(particle[pubKey]).toBeDefined();
+              expect(particle[pubKey]).toBe(arrayValue);
+              expect(particle[priKey]).toBeDefined();
+              expect(particle[priKey]).toBe(arrayValue);
             } else {
               expect(particle[pubKey]).toBeUndefined();
               expect(particle[priKey]).toBeUndefined();
@@ -333,11 +338,44 @@ describe('NDP.Particle(mass, opt_radius, opt_fixed, opt_dimensions)', function()
         }
       }
     });
-    it('should set the value of a component key', function() {
+    it('should set the [public] [__private] [__array] and [__old.array] values for a component', function() {
+
+      // Position
+      var NEW_POSITION = 10;
+      this.particle3.x = NEW_POSITION;
+      expect(this.particle3.x).toBe(NEW_POSITION);
+      expect(this.particle3.__x).toBe(NEW_POSITION);
+      expect(this.particle3.__pos[0]).toBe(NEW_POSITION);
+      expect(this.particle3.__old.pos[0]).toBe(NEW_POSITION);
+
+      // Acceleration
+      var NEW_ACCELERATION = 20;
+      this.particle3.ay = NEW_ACCELERATION;
+      expect(this.particle3.ay).toBe(NEW_ACCELERATION);
+      expect(this.particle3.__ay).toBe(NEW_ACCELERATION);
+      expect(this.particle3.__acc[1]).toBe(NEW_ACCELERATION);
+      expect(this.particle3.__old.acc[1]).toBe(NEW_ACCELERATION);
+
+      // Velocity
+      var NEW_VELOCITY = 30;
+      this.particle3.vz = NEW_VELOCITY;
+      expect(this.particle3.vz).toBe(NEW_VELOCITY);
+      expect(this.particle3.__vz).toBe(NEW_VELOCITY);
+      expect(this.particle3.__vel[2]).toBe(NEW_VELOCITY);
+      expect(this.particle3.__old.vel[2]).toBe(NEW_VELOCITY);
     });
-    it('should define a setter and getter for a component key', function() {
-    });
-    it('should define a setter and getter for a component key', function() {
+    it('should only accept Number values', function() {
+
+      // Cache position.
+      var position = this.particle3.x;
+      expect(position).toEqual(jasmine.any(Number));
+
+      // Try setting string value.
+      this.particle1.x = 'kittens';
+      expect(this.particle1.x).toBe(position);
+      expect(this.particle1.__x).toBe(position);
+      expect(this.particle1.__pos[0]).toBe(position);
+      expect(this.particle1.__old.pos[0]).toBe(position);
     });
   });
 
