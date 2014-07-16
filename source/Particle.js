@@ -63,6 +63,14 @@ NDP.Particle = function(mass, opt_radius, opt_fixed, opt_dimensions) {
     pos: this.__vector.create()
   };
 
+  // Define component getters and setters.
+  for (var i = 0; i < this.__dimensions; i++) {
+    this.__defineComponent(i, 'acc', 'a');
+    this.__defineComponent(i, 'vel', 'v');
+    this.__defineComponent(i, 'pos', 'p');
+    this.__defineComponent(i, 'pos');
+  }
+
   // Set initial property values.
   this.update(0);
 };
@@ -72,6 +80,36 @@ NDP.Particle = function(mass, opt_radius, opt_fixed, opt_dimensions) {
  * @type {Number}
  */
 NDP.Particle.__uid = 0;
+
+/**
+ * Creates a getter and setter for a dimension component.
+ * @param {Number} index Index of the component.
+ * @param {String} arrayKey Array key.
+ * @param {String} opt_prefix Optional component prefix. Defaults to '';
+ */
+NDP.Particle.prototype.__defineComponent = function(index, arrayKey, opt_prefix) {
+  var prefix = typeof opt_prefix === 'string' ? opt_prefix : '',
+      componentPublic = prefix + NDP.COMPONENTS[index],
+      componentPrivate = '__' + componentPublic,
+      arrayKeyPrivate = '__' + arrayKey;
+
+  // Set initial component value.
+  this[componentPrivate] = this[arrayKeyPrivate][index];
+
+  // Define getter and setter.
+  Object.defineProperty(this, componentPublic, {
+    set: function(value) {
+      if (NDP.isNumber(value)) {
+        this[componentPrivate] = value;
+        this[arrayKeyPrivate][index] = value;
+        this.__old[arrayKey][index] = value;
+      }
+    },
+    get: function() {
+      return this[componentPrivate];
+    }
+  });
+};
 
 /**
  * Mass of the particle.
@@ -153,18 +191,6 @@ NDP.Particle.prototype.removeBehaviour = function(behaviour) {
 };
 
 /**
- * Sets the position of the particle.
- * @param {Array} components Array of values to set each dimension component to.
- * @return {Particle} Particle instance for chaining.
- */
-NDP.Particle.prototype.setPosition = function(components) {
-  NDP.copyValuesToArray(components, this.__pos);
-  this.__vector.copy(this.__old.pos, this.__pos);
-  this.update(0);
-  return this;
-};
-
-/**
  * Applies registered behaviours to the particle and updates its vectors.
  * @param {Number} delta Time delta since last integration.
  * @param {Number} index Index of the particle within the system.
@@ -183,13 +209,13 @@ NDP.Particle.prototype.update = function(delta, index) {
     }
   }
 
-  // Set component properties.
+  // Set private component properties.
   for (i = 0, l = this.__dimensions; i < l; i++) {
     component = NDP.COMPONENTS[i];
-    this['a'+component] = this.__acc[i];
-    this['v'+component] = this.__vel[i];
-    this['p'+component] = this.__pos[i];
-    this[component] = this.__pos[i];
+    this['__a' + component] = this.__acc[i];
+    this['__v' + component] = this.__vel[i];
+    this['__p' + component] = this.__pos[i];
+    this['__'  + component] = this.__pos[i];
   }
   return this;
 };
