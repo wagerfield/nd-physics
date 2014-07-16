@@ -356,8 +356,72 @@ describe('NDP.Particle(mass, opt_radius, opt_fixed, opt_dimensions)', function()
       this.collisionBehaviour = new NDP.CollisionBehaviour();
       spyOn(this.collisionBehaviour, 'removeParticle');
     });
+    it('should remove a behaviour from the [behaviours] collection', function() {
+      expect(this.particleA.behaviours).toEqual([]);
+
+      // Add abstractBehaviour for the first time.
+      this.particleA.addBehaviour(this.abstractBehaviour);
+      expect(this.particleA.behaviours.length).toBe(1);
+      expect(this.particleA.behaviours).toEqualArray([
+        this.abstractBehaviour
+      ]);
+
+      // Remove abstractBehaviour for the first time.
+      this.particleA.removeBehaviour(this.abstractBehaviour);
+      expect(this.particleA.behaviours.length).toBe(0);
+      expect(this.particleA.behaviours).toEqualArray([]);
+
+      // Add abstractBehaviour a second time.
+      this.particleA.addBehaviour(this.abstractBehaviour);
+      expect(this.particleA.behaviours.length).toBe(1);
+      expect(this.particleA.behaviours).toEqualArray([
+        this.abstractBehaviour
+      ]);
+
+      // Add constantBehaviour for the first time.
+      this.particleA.addBehaviour(this.constantBehaviour);
+      expect(this.particleA.behaviours.length).toBe(2);
+      expect(this.particleA.behaviours).toEqualArray([
+        this.abstractBehaviour,
+        this.constantBehaviour
+      ]);
+
+      // Remove abstractBehaviour a second time.
+      this.particleA.removeBehaviour(this.abstractBehaviour);
+      expect(this.particleA.behaviours.length).toBe(1);
+      expect(this.particleA.behaviours).toEqualArray([
+        this.constantBehaviour
+      ]);
+    });
     it('should return the Particle instance that called it', function() {
-      expect(this.particleA.removeBehaviour(this.behaviour)).toBe(this.particleA);
+
+      // Test with an empty behaviours collection.
+      expect(this.particleA.behaviours).toEqual([]);
+      expect(this.particleA.removeBehaviour(this.abstractBehaviour)).toBe(this.particleA);
+      expect(this.particleA.removeBehaviour(this.constantBehaviour)).toBe(this.particleA);
+
+      // Test with a populated behaviours collection.
+      this.particleA.addBehaviour(this.abstractBehaviour);
+      this.particleA.addBehaviour(this.constantBehaviour);
+      expect(this.particleA.behaviours).toEqualArray([
+        this.abstractBehaviour,
+        this.constantBehaviour
+      ]);
+      expect(this.particleA.removeBehaviour(this.abstractBehaviour)).toBe(this.particleA);
+      expect(this.particleA.removeBehaviour(this.constantBehaviour)).toBe(this.particleA);
+      expect(this.particleA.behaviours).toEqual([]);
+    });
+    describe('CollisionBehaviour', function() {
+      it('should call removeParticle(particle)', function() {
+        this.particleA.addBehaviour(this.collisionBehaviour);
+        expect(this.particleA.behaviours.length).toBe(1);
+        expect(this.particleA.behaviours).toEqualArray([
+          this.collisionBehaviour
+        ]);
+        this.particleA.removeBehaviour(this.collisionBehaviour);
+        expect(this.collisionBehaviour.removeParticle).toHaveBeenCalledWith(this.particleA);
+        expect(this.particleA.behaviours).toEqualArray([]);
+      });
     });
   });
 
