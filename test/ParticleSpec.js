@@ -631,7 +631,28 @@ describe('NDP.Particle(mass, opt_radius, opt_fixed, opt_dimensions)', function()
       expect(this.abstractBehaviour.apply.calls.count()).toBe(3);
       expect(this.constantBehaviour.apply.calls.count()).toBe(3);
     });
-    it('should set __private acceleration, velocity and position properties', function() {
+    it('should set __private acceleration, velocity and position properties from their respective vector arrays', function() {
+      expect(this.particle1.__x).toBe(0);
+      expect(this.particle1.__y).toBe(0);
+      expect(this.particle1.__ax).toBe(0);
+      expect(this.particle1.__ay).toBe(0);
+      expect(this.particle1.__vx).toBe(0);
+      expect(this.particle1.__vy).toBe(0);
+
+      this.particle1.__pos[0] = 1;
+      this.particle1.__pos[1] = 2;
+      this.particle1.__acc[0] = 3;
+      this.particle1.__acc[1] = 4;
+      this.particle1.__vel[0] = 5;
+      this.particle1.__vel[1] = 6;
+
+      this.particle1.update();
+      expect(this.particle1.__x).toBe(1);
+      expect(this.particle1.__y).toBe(2);
+      expect(this.particle1.__ax).toBe(3);
+      expect(this.particle1.__ay).toBe(4);
+      expect(this.particle1.__vx).toBe(5);
+      expect(this.particle1.__vy).toBe(6);
     });
     it('should return the Particle instance that called it', function() {
       expect(this.particleA.update(0)).toBe(this.particleA);
