@@ -553,16 +553,48 @@ describe('NDP.Particle(mass, opt_radius, opt_fixed, opt_dimensions)', function()
     beforeEach(function() {
       this.abstractBehaviour = new NDP.Behaviour();
       this.constantBehaviour = new NDP.ConstantBehaviour();
+      this.abstractBehaviour.active = false;
 
-      this.particle1 = new NDP.Particle(1, 1, false, 1);
+      spyOn(this.abstractBehaviour, 'apply');
+      spyOn(this.constantBehaviour, 'apply');
+
+      this.particle1 = new NDP.Particle(1, 1, false, 2);
       this.particle1.addBehaviour(this.abstractBehaviour);
       this.particle1.addBehaviour(this.constantBehaviour);
 
-      this.particle2 = new NDP.Particle(1, 1, true, 1);
+      this.particle2 = new NDP.Particle(1, 1, true, 2);
       this.particle2.addBehaviour(this.abstractBehaviour);
       this.particle2.addBehaviour(this.constantBehaviour);
     });
-    it('should not call apply ', function() {
+    it('should not call behaviour.apply() when particle.fixed is true', function() {
+      expect(this.particle2.fixed).toBe(true);
+      expect(this.particle2.behaviours).toEqualArray([
+        this.abstractBehaviour,
+        this.constantBehaviour
+      ]);
+      expect(this.abstractBehaviour.apply).not.toHaveBeenCalled();
+      expect(this.constantBehaviour.apply).not.toHaveBeenCalled();
+      this.particle2.update(10);
+      expect(this.abstractBehaviour.apply).not.toHaveBeenCalled();
+      expect(this.constantBehaviour.apply).not.toHaveBeenCalled();
+    });
+    it('should not call behaviour.apply() when [delta] is 0 and particle.fixed is false', function() {
+      expect(this.particle1.fixed).toBe(false);
+      expect(this.particle1.behaviours).toEqualArray([
+        this.abstractBehaviour,
+        this.constantBehaviour
+      ]);
+      expect(this.abstractBehaviour.apply).not.toHaveBeenCalled();
+      expect(this.constantBehaviour.apply).not.toHaveBeenCalled();
+      this.particle1.update(0);
+      expect(this.abstractBehaviour.apply).not.toHaveBeenCalled();
+      expect(this.constantBehaviour.apply).not.toHaveBeenCalled();
+    });
+    it('should not call behaviour.apply() when behaviour.active is false', function() {
+    });
+    it('should call behaviour.apply() on all registered behaviours', function() {
+    });
+    it('should set __private acceleration, velocity and position properties', function() {
     });
     it('should return the Particle instance that called it', function() {
       expect(this.particleA.update(0)).toBe(this.particleA);
