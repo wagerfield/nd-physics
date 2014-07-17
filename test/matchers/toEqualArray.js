@@ -21,6 +21,10 @@ CustomMatchers.toEqualArray = function(util, customEqualityTesters) {
         result.message = 'Expected ' + jasmine.pp(expected) + ' to be an Array.';
       }
       if (result.pass) {
+        result.pass = actual.length === expected.length;
+        result.message = 'Expected arrays to be the same length. expected.length[' + expected.length + '] actual.length[' + actual.length + ']';
+      }
+      if (result.pass) {
         for (var i = 0; i < actual.length; i++) {
           if (!util.equals(actual[i], expected[i])) {
             result.pass = false;

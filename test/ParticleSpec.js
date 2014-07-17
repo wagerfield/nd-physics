@@ -409,7 +409,8 @@ describe('NDP.Particle(mass, opt_radius, opt_fixed, opt_dimensions)', function()
 
   describe('addBehaviour(behaviour)', function() {
     beforeEach(function() {
-      this.abstractBehaviour = new NDP.Behaviour();
+      this.abstractBehaviour1 = new NDP.Behaviour();
+      this.abstractBehaviour2 = new NDP.Behaviour();
       this.constantBehaviour = new NDP.ConstantBehaviour();
       this.collisionBehaviour = new NDP.CollisionBehaviour();
       spyOn(this.collisionBehaviour, 'addParticle');
@@ -417,38 +418,47 @@ describe('NDP.Particle(mass, opt_radius, opt_fixed, opt_dimensions)', function()
     it('should add a unique behaviour to the [behaviours] collection', function() {
       expect(this.particleA.behaviours).toEqual([]);
 
-      // Add abstractBehaviour for the first time.
-      this.particleA.addBehaviour(this.abstractBehaviour);
+      // Add abstractBehaviour1 for the first time.
+      this.particleA.addBehaviour(this.abstractBehaviour1);
       expect(this.particleA.behaviours.length).toBe(1);
       expect(this.particleA.behaviours).toEqualArray([
-        this.abstractBehaviour
+        this.abstractBehaviour1
       ]);
 
-      // Add abstractBehaviour a second time.
-      this.particleA.addBehaviour(this.abstractBehaviour);
+      // Add abstractBehaviour1 a second time.
+      this.particleA.addBehaviour(this.abstractBehaviour1);
       expect(this.particleA.behaviours.length).toBe(1);
       expect(this.particleA.behaviours).toEqualArray([
-        this.abstractBehaviour
+        this.abstractBehaviour1
       ]);
 
       // Add constantBehaviour for the first time.
       this.particleA.addBehaviour(this.constantBehaviour);
       expect(this.particleA.behaviours.length).toBe(2);
       expect(this.particleA.behaviours).toEqualArray([
-        this.abstractBehaviour,
+        this.abstractBehaviour1,
         this.constantBehaviour
       ]);
 
-      // Add abstractBehaviour a third time.
-      this.particleA.addBehaviour(this.abstractBehaviour);
+      // Add abstractBehaviour1 a third time.
+      this.particleA.addBehaviour(this.abstractBehaviour1);
       expect(this.particleA.behaviours.length).toBe(2);
       expect(this.particleA.behaviours).toEqualArray([
-        this.abstractBehaviour,
+        this.abstractBehaviour1,
         this.constantBehaviour
+      ]);
+
+      // Add abstractBehaviour2 for the first time.
+      this.particleA.addBehaviour(this.abstractBehaviour2);
+      expect(this.particleA.behaviours.length).toBe(3);
+      expect(this.particleA.behaviours).toEqualArray([
+        this.abstractBehaviour1,
+        this.constantBehaviour,
+        this.abstractBehaviour2
       ]);
     });
     it('should return the Particle instance that called it', function() {
-      expect(this.particleA.addBehaviour(this.abstractBehaviour)).toBe(this.particleA);
+      expect(this.particleA.addBehaviour(this.abstractBehaviour1)).toBe(this.particleA);
       expect(this.particleA.addBehaviour(this.constantBehaviour)).toBe(this.particleA);
     });
     describe('CollisionBehaviour', function() {
@@ -540,7 +550,23 @@ describe('NDP.Particle(mass, opt_radius, opt_fixed, opt_dimensions)', function()
   });
 
   describe('update(delta, index)', function() {
+    beforeEach(function() {
+      this.abstractBehaviour = new NDP.Behaviour();
+      this.constantBehaviour = new NDP.ConstantBehaviour();
+
+      this.particle1 = new NDP.Particle(1, 1, false, 1);
+      this.particle1.addBehaviour(this.abstractBehaviour);
+      this.particle1.addBehaviour(this.constantBehaviour);
+
+      this.particle2 = new NDP.Particle(1, 1, true, 1);
+      this.particle2.addBehaviour(this.abstractBehaviour);
+      this.particle2.addBehaviour(this.constantBehaviour);
+    });
+    it('should not call apply ', function() {
+    });
     it('should return the Particle instance that called it', function() {
+      expect(this.particleA.update(0)).toBe(this.particleA);
+      expect(this.particleA.update(0, 0)).toBe(this.particleA);
       expect(this.particleA.update(1, 0)).toBe(this.particleA);
     });
   });
