@@ -309,6 +309,34 @@ describe('NDP.Particle(mass, opt_radius, opt_fixed, opt_dimensions)', function()
         this.particle3
       ];
     });
+    it('should add a setter and getter for a prefixed component', function() {
+      var particle = new NDP.Particle(1, 1, false, 2);
+
+      // Check component definitions for [cx] and [cy].
+      expect(particle.c).toBeUndefined();
+      expect(particle.__c).toBeUndefined();
+      expect(particle.cx).toBeUndefined();
+      expect(particle.__cx).toBeUndefined();
+      expect(particle.cy).toBeUndefined();
+      expect(particle.__cy).toBeUndefined();
+
+      // Add prefixed x component [cx]
+      var X = 0;
+      particle.__defineComponent(X, 'acc', 'c');
+      expect(particle.cx).toBeDefined();
+      expect(particle.__cx).toBeDefined();
+      expect(particle.cx).toBe(particle.__acc[X]);
+      expect(particle.__cx).toBe(particle.__acc[X]);
+
+      // Add prefixed y component [cy]
+      var Y = 1;
+      particle.__acc[Y] = 100;
+      particle.__defineComponent(Y, 'acc', 'c');
+      expect(particle.cy).toBeDefined();
+      expect(particle.__cy).toBeDefined();
+      expect(particle.cy).toBe(particle.__acc[Y]);
+      expect(particle.__cy).toBe(particle.__acc[Y]);
+    });
     it('should have defined and set [public] and [__private] properties for acceleration, velocity and position', function() {
       this.particle1.x = 10;
       this.particle2.y = 10;
