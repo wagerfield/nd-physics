@@ -553,7 +553,6 @@ describe('NDP.Particle(mass, opt_radius, opt_fixed, opt_dimensions)', function()
     beforeEach(function() {
       this.abstractBehaviour = new NDP.Behaviour();
       this.constantBehaviour = new NDP.ConstantBehaviour();
-      this.abstractBehaviour.active = false;
 
       spyOn(this.abstractBehaviour, 'apply');
       spyOn(this.constantBehaviour, 'apply');
@@ -591,8 +590,46 @@ describe('NDP.Particle(mass, opt_radius, opt_fixed, opt_dimensions)', function()
       expect(this.constantBehaviour.apply).not.toHaveBeenCalled();
     });
     it('should not call behaviour.apply() when behaviour.active is false', function() {
+      expect(this.particle1.fixed).toBe(false);
+      expect(this.particle1.behaviours).toEqualArray([
+        this.abstractBehaviour,
+        this.constantBehaviour
+      ]);
+      expect(this.abstractBehaviour.apply).not.toHaveBeenCalled();
+      expect(this.constantBehaviour.apply).not.toHaveBeenCalled();
+
+      this.abstractBehaviour.active = false;
+      expect(this.abstractBehaviour.active).toBe(false);
+
+      this.particle1.update(1);
+      expect(this.abstractBehaviour.apply).not.toHaveBeenCalled();
+      expect(this.constantBehaviour.apply).toHaveBeenCalled();
+
+      this.abstractBehaviour.active = true;
+      expect(this.abstractBehaviour.active).toBe(true);
+
+      this.particle1.update(1);
+      expect(this.abstractBehaviour.apply).toHaveBeenCalled();
+      expect(this.constantBehaviour.apply).toHaveBeenCalled();
+      expect(this.abstractBehaviour.apply.calls.count()).toBe(1);
+      expect(this.constantBehaviour.apply.calls.count()).toBe(2);
     });
     it('should call behaviour.apply() on all registered behaviours', function() {
+      expect(this.particle1.fixed).toBe(false);
+      expect(this.particle1.behaviours).toEqualArray([
+        this.abstractBehaviour,
+        this.constantBehaviour
+      ]);
+      expect(this.abstractBehaviour.apply).not.toHaveBeenCalled();
+      expect(this.constantBehaviour.apply).not.toHaveBeenCalled();
+
+      this.particle1.update(1);
+      this.particle1.update(1);
+      this.particle1.update(1);
+      expect(this.abstractBehaviour.apply).toHaveBeenCalled();
+      expect(this.constantBehaviour.apply).toHaveBeenCalled();
+      expect(this.abstractBehaviour.apply.calls.count()).toBe(3);
+      expect(this.constantBehaviour.apply.calls.count()).toBe(3);
     });
     it('should set __private acceleration, velocity and position properties', function() {
     });
