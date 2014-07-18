@@ -145,4 +145,13 @@ describe('NDP.Spring(p1, p2, length, stiffness)', function() {
       expect(this.springA.stiffness).toBe(stiffness + 10);
     });
   });
+
+  describe('__vector', function() {
+    it('should be an Object', function() {
+      expect(this.springA.__vector).toEqual(jasmine.any(Object));
+    });
+    it('should reference NDP.Vector[p1.dimensions]', function() {
+      expect(this.springA.__vector).toEqual(NDP['Vector' + this.springA.p1.dimensions]);
+    });
+  });
 });

@@ -52,6 +52,9 @@ NDP.Spring = function(p1, p2, length, stiffness) {
   this.p2 = p2;
   this.length = length;
   this.stiffness = stiffness;
+
+  // Set vector object.
+  this.__vector = p1.__vector;
 };
 
 /**
