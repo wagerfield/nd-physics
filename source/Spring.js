@@ -46,6 +46,10 @@ NDP.Spring = function(p1, p2, length, stiffness) {
   Object.defineProperty(this, 'id', {
     value: this.constructor.__uid++
   });
+
+  // Set properties.
+  this.p1 = p1;
+  this.p2 = p2;
 };
 
 /**
@@ -53,6 +57,36 @@ NDP.Spring = function(p1, p2, length, stiffness) {
  * @type {Number}
  */
 NDP.Spring.__uid = 0;
+
+/**
+ * Particle 1.
+ * @type {Particle}
+ */
+Object.defineProperty(NDP.Spring.prototype, 'p1', {
+  set: function(value) {
+    if (NDP.isType(value, NDP.Particle)) {
+      this.__p1 = value;
+    }
+  },
+  get: function() {
+    return this.__p1;
+  }
+});
+
+/**
+ * Particle 2.
+ * @type {Particle}
+ */
+Object.defineProperty(NDP.Spring.prototype, 'p2', {
+  set: function(value) {
+    if (NDP.isType(value, NDP.Particle)) {
+      this.__p2 = value;
+    }
+  },
+  get: function() {
+    return this.__p2;
+  }
+});
 
 /**
  * Updates the positions of the two particles attached to the spring.
