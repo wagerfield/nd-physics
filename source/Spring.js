@@ -9,7 +9,17 @@
  */
 NDP.Spring = function(p1, p2, length, stiffness) {
 
-  // Validate particle parameters.
+  // Validate p1 argument.
+  if (!NDP.isType(p1, NDP.Particle)) {
+    throw 'Spring: p1 must be a Particle instance ['+p1+']';
+  }
+
+  // Validate p2 argument.
+  if (!NDP.isType(p2, NDP.Particle)) {
+    throw 'Spring: p2 must be a Particle instance ['+p2+']';
+  }
+
+  // Validate particle compatibility.
   if (p1.dimensions !== p2.dimensions) {
     throw 'Spring: Particles must be of the same dimensions. P1['+p1.dimensions+'] P2['+p2.dimensions+']';
   }
