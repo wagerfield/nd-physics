@@ -101,4 +101,21 @@ describe('NDP.Spring(p1, p2, length, stiffness)', function() {
       expect(this.springA.length).toBe(length + 10);
     });
   });
+
+  describe('stiffness', function() {
+    it('should be a Number', function() {
+      expect(this.springA.stiffness).toEqual(jasmine.any(Number));
+    });
+    it('should be exposed on a __private property', function() {
+      expect(this.springA.__stiffness).toEqual(jasmine.any(Number));
+    });
+    it('should only accept Number values', function() {
+      var stiffness = this.springA.stiffness;
+      this.springA.stiffness = 'cats';
+      expect(this.springA.stiffness).toBe(stiffness);
+
+      this.springA.stiffness += 10;
+      expect(this.springA.stiffness).toBe(stiffness + 10);
+    });
+  });
 });

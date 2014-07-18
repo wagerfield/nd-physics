@@ -51,6 +51,7 @@ NDP.Spring = function(p1, p2, length, stiffness) {
   this.p1 = p1;
   this.p2 = p2;
   this.length = length;
+  this.stiffness = stiffness;
 };
 
 /**
@@ -101,6 +102,21 @@ Object.defineProperty(NDP.Spring.prototype, 'length', {
   },
   get: function() {
     return this.__length;
+  }
+});
+
+/**
+ * Stiffness of the spring where 0 is elastic and 1 is rigid.
+ * @type {Number}
+ */
+Object.defineProperty(NDP.Spring.prototype, 'stiffness', {
+  set: function(value) {
+    if (NDP.isNumber(value)) {
+      this.__stiffness = value;
+    }
+  },
+  get: function() {
+    return this.__stiffness;
   }
 });
 
