@@ -71,6 +71,21 @@ describe('NDP.Spring(p1, p2, length, stiffness)', function() {
     });
   });
 
+  describe('id', function() {
+    it('should be an Integer', function() {
+      expect(this.springA.id).toBeAnInteger();
+    });
+    it('should be readonly', function() {
+      var id = this.springA.id;
+      this.springA.id = 'kittens';
+      this.springA.id = 1000000;
+      expect(this.springA.id).toBe(id);
+    });
+    it('should be 1 greater than a previously created Spring instance [id]', function() {
+      expect(this.springB.id).toBe(this.springA.id + 1);
+    });
+  });
+
   describe('p1 and p2', function() {
     it('should be Particle instances', function() {
       expect(this.springA.p1).toEqual(jasmine.any(NDP.Particle));
