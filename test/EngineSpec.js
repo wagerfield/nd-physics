@@ -10,8 +10,8 @@ describe('NDP.Engine(opt_integrator, opt_physical)', function() {
 
     this.particleA = new NDP.Particle(1);
     this.particleB = new NDP.Particle(1);
-    this.springA = new NDP.Spring(this.particleA, this.particleB);
-    this.springB = new NDP.Spring(this.particleB, this.particleA);
+    this.springA = new NDP.Spring(this.particleA, this.particleB, 1, 1);
+    this.springB = new NDP.Spring(this.particleB, this.particleA, 1, 1);
   });
 
   it('should be a Function Object', function() {
@@ -612,8 +612,8 @@ describe('NDP.Engine(opt_integrator, opt_physical)', function() {
           engine = new NDP.Engine(integrator),
           particleA = new NDP.Particle(1),
           particleB = new NDP.Particle(1),
-          springA = new NDP.Spring(particleA, particleB),
-          springB = new NDP.Spring(particleB, particleA);
+          springA = new NDP.Spring(particleA, particleB, 1, 1),
+          springB = new NDP.Spring(particleB, particleA, 1, 1);
 
       spyOn(integrator, 'integrate').and.callFake(function() {
         calls.push('i');
