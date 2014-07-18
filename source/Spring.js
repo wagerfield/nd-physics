@@ -13,7 +13,21 @@ NDP.Spring = function(p1, p2, length, stiffness) {
   if (p1.dimensions !== p2.dimensions) {
     throw 'Spring: Particles must be of the same dimensions. P1['+p1.dimensions+'] P2['+p2.dimensions+']';
   }
+
+  /**
+   * Unique identifier.
+   * @type {Number}
+   */
+  Object.defineProperty(this, 'id', {
+    value: this.constructor.__uid++
+  });
 };
+
+/**
+ * Spring unique identifier counter.
+ * @type {Number}
+ */
+NDP.Spring.__uid = 0;
 
 /**
  * Updates the positions of the two particles attached to the spring.
