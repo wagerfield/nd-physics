@@ -24,6 +24,11 @@ NDP.Spring = function(p1, p2, length, stiffness) {
     throw 'Spring: Particles must be of the same dimensions. P1['+p1.dimensions+'] P2['+p2.dimensions+']';
   }
 
+  // Validate length argument.
+  if (!NDP.isNumber(length)) {
+    throw 'Spring: length must be a Number ['+length+']';
+  }
+
   /**
    * Unique identifier.
    * @type {Number}
