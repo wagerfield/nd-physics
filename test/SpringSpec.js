@@ -58,4 +58,30 @@ describe('NDP.Spring(p1, p2, length, stiffness)', function() {
       new NDP.Spring(p1, p2, 1, 'kittens');
     }).toThrow('Spring: stiffness must be a Number [kittens]');
   });
+
+  describe('p1 and p2', function() {
+    it('should be Particle instances', function() {
+      expect(this.springA.p1).toEqual(jasmine.any(NDP.Particle));
+      expect(this.springA.p2).toEqual(jasmine.any(NDP.Particle));
+    });
+    it('should be exposed on a __private property', function() {
+      expect(this.springA.__p1).toEqual(jasmine.any(NDP.Particle));
+      expect(this.springA.__p2).toEqual(jasmine.any(NDP.Particle));
+    });
+    it('should only accept Particle instances', function() {
+      var p1 = this.springA.p1;
+      var p2 = this.springA.p2;
+      this.springA.p1 = 'cats';
+      this.springA.p2 = 'dogs';
+      expect(this.springA.p1).toBe(p1);
+      expect(this.springA.p2).toBe(p2);
+
+      var p3 = new NDP.Particle(1);
+      var p4 = new NDP.Particle(2);
+      this.springA.p1 = p3;
+      this.springA.p2 = p4;
+      expect(this.springA.p1).toBe(p3);
+      expect(this.springA.p2).toBe(p4);
+    });
+  });
 });
