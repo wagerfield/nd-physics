@@ -8,6 +8,11 @@
  * @param {Number} stiffness Stiffness of the spring where 0 is elastic and 1 is rigid.
  */
 NDP.Spring = function(p1, p2, length, stiffness) {
+
+  // Validate particle parameters.
+  if (p1.dimensions !== p2.dimensions) {
+    throw 'Spring: Particles must be of the same dimensions. P1['+p1.dimensions+'] P2['+p2.dimensions+']';
+  }
 };
 
 /**
