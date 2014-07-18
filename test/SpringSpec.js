@@ -154,4 +154,28 @@ describe('NDP.Spring(p1, p2, length, stiffness)', function() {
       expect(this.springA.__vector).toEqual(NDP['Vector' + this.springA.p1.dimensions]);
     });
   });
+
+  describe('__delta, __slave', function() {
+    beforeEach(function() {
+      this.vectorKeys = ['__delta', '__slave'];
+    });
+    it('should be __private', function() {
+      for (var i = 0; i < this.vectorKeys.length; i++) {
+        var privateKey = this.vectorKeys[i];
+        var publicKey = privateKey.replace(/_/g, '');
+        expect(this.springA[privateKey]).toBeDefined();
+        expect(this.springA[publicKey]).toBeUndefined();
+      }
+    });
+    it('should be an NDP.Array instance', function() {
+      for (var i = 0; i < this.vectorKeys.length; i++) {
+        expect(this.springA[this.vectorKeys[i]]).toEqual(jasmine.any(NDP.Array));
+      }
+    });
+    it('should be of length [p1.dimensions]', function() {
+      for (var i = 0; i < this.vectorKeys.length; i++) {
+        expect(this.springA[this.vectorKeys[i]].length).toBe(this.springA.p1.dimensions);
+      }
+    });
+  });
 });

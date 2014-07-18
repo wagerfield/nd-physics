@@ -55,6 +55,10 @@ NDP.Spring = function(p1, p2, length, stiffness) {
 
   // Set vector object.
   this.__vector = p1.__vector;
+
+  // Create spring worker vectors.
+  this.__delta = this.__vector.create();
+  this.__slave = this.__vector.create();
 };
 
 /**
