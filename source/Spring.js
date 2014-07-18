@@ -134,4 +134,32 @@ Object.defineProperty(NDP.Spring.prototype, 'stiffness', {
  * @return {Spring} Spring instance for chaining.
  */
 NDP.Spring.prototype.update = function(delta, index) {
+
+  // Calculate delta.
+  this.__vector.subtract(this.__delta, this.__p2.__pos, this.__p1.__pos);
+
+  // Calculate force.
+  var distance = NDP.__THRESHOLD + this.__vector.length(this.__delta);
+  var inverseMass = this.__p1.__inverseMass + this.__p2.__inverseMass;
+  var force = (distance - this.__length) / (distance * inverseMass) * this.__stiffness;
+
+  // Apply force to particles.
+  this.apply(this.__p1, force);
+  this.apply(this.__p2,-force);
+
+  return this;
+};
+
+/**
+ * Applies spring force to a particle.
+ * @param {Particle} particle Particle to apply force to.
+ * @param {Number} force Force to apply to the particle.
+ * @return {Spring} Spring instance for chaining.
+ */
+NDP.Spring.prototype.apply = function(particle, force) {
+  if (!particle.__fixed) {
+    this.__vector.scale(this.__slave, this.__delta, particle.__inverseMass * force);
+    this.__vector.add(particle.__pos, particle.__pos, this.__slave);
+  }
+  return this;
 };
