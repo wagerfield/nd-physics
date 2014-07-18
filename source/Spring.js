@@ -50,6 +50,7 @@ NDP.Spring = function(p1, p2, length, stiffness) {
   // Set properties.
   this.p1 = p1;
   this.p2 = p2;
+  this.length = length;
 };
 
 /**
@@ -85,6 +86,21 @@ Object.defineProperty(NDP.Spring.prototype, 'p2', {
   },
   get: function() {
     return this.__p2;
+  }
+});
+
+/**
+ * Rest length of the spring.
+ * @type {Number}
+ */
+Object.defineProperty(NDP.Spring.prototype, 'length', {
+  set: function(value) {
+    if (NDP.isNumber(value)) {
+      this.__length = value;
+    }
+  },
+  get: function() {
+    return this.__length;
   }
 });
 
