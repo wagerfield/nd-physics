@@ -59,6 +59,18 @@ describe('NDP.Spring(p1, p2, length, stiffness)', function() {
     }).toThrow('Spring: stiffness must be a Number [kittens]');
   });
 
+  describe('constructor.__uid', function() {
+    it('should be an Integer', function() {
+      expect(NDP.Spring.__uid).toBeAnInteger();
+      expect(this.springA.constructor.__uid).toBeAnInteger();
+    });
+    it('should increment with each new Spring instance', function() {
+      var uid = NDP.Spring.__uid;
+      new NDP.Spring(this.particleA, this.particleB, 1, 1);
+      expect(NDP.Spring.__uid).toBe(uid + 1);
+    });
+  });
+
   describe('p1 and p2', function() {
     it('should be Particle instances', function() {
       expect(this.springA.p1).toEqual(jasmine.any(NDP.Particle));
