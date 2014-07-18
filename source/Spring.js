@@ -34,6 +34,11 @@ NDP.Spring = function(p1, p2, length, stiffness) {
     throw 'Spring: length must be a Number ['+length+']';
   }
 
+  // Validate stiffness argument.
+  if (!NDP.isNumber(stiffness)) {
+    throw 'Spring: stiffness must be a Number ['+stiffness+']';
+  }
+
   /**
    * Unique identifier.
    * @type {Number}

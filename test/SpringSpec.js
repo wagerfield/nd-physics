@@ -48,4 +48,14 @@ describe('NDP.Spring(p1, p2, length, stiffness)', function() {
       new NDP.Spring(p1, p2, 'kittens');
     }).toThrow('Spring: length must be a Number [kittens]');
   });
+  it('should throw an error if [stiffness] is not a Number', function() {
+    var p1 = new NDP.Particle(1, 1, false, 2);
+    var p2 = new NDP.Particle(1, 1, false, 2);
+    expect(function() {
+      new NDP.Spring(p1, p2, 1);
+    }).toThrow('Spring: stiffness must be a Number [undefined]');
+    expect(function() {
+      new NDP.Spring(p1, p2, 1, 'kittens');
+    }).toThrow('Spring: stiffness must be a Number [kittens]');
+  });
 });
