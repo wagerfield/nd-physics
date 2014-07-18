@@ -10,5 +10,11 @@
 NDP.Spring = function(p1, p2, length, stiffness) {
 };
 
+/**
+ * Updates the positions of the two particles attached to the spring.
+ * @param {Number} delta Time delta since last integration.
+ * @param {Number} index Index of the spring within the system.
+ * @return {Spring} Spring instance for chaining.
+ */
 NDP.Spring.prototype.update = function(delta, index) {
 };
