@@ -25,11 +25,27 @@ describe('NDP.Spring(p1, p2, length, stiffness)', function() {
       new NDP.Spring(new NDP.Particle(1), 'kittens');
     }).toThrow('Spring: p2 must be a Particle instance [kittens]');
   });
+  it('should throw an error if [p1] === [p2]', function() {
+    expect(function() {
+      var p = new NDP.Particle(1, 1, false, 1);
+      new NDP.Spring(p, p);
+    }).toThrow('Spring: p1 and p2 cannot be the same Particle instance.');
+  });
   it('should throw an error if [p1.dimensions] !== [p2.dimensions]', function() {
     expect(function() {
       var p1 = new NDP.Particle(1, 1, false, 1);
       var p2 = new NDP.Particle(1, 1, false, 2);
       new NDP.Spring(p1, p2, 1, 1);
-    }).toThrow('Spring: Particles must be of the same dimensions. P1[1] P2[2]');
+    }).toThrow('Spring: Particles must have equal dimensions. p1.dimensions[1] p2.dimensions[2]');
+  });
+  it('should throw an error if [length] is not a Number', function() {
+    var p1 = new NDP.Particle(1, 1, false, 2);
+    var p2 = new NDP.Particle(1, 1, false, 2);
+    expect(function() {
+      new NDP.Spring(p1, p2);
+    }).toThrow('Spring: length must be a Number [undefined]');
+    expect(function() {
+      new NDP.Spring(p1, p2, 'kittens');
+    }).toThrow('Spring: length must be a Number [kittens]');
   });
 });

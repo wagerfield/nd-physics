@@ -19,9 +19,14 @@ NDP.Spring = function(p1, p2, length, stiffness) {
     throw 'Spring: p2 must be a Particle instance ['+p2+']';
   }
 
-  // Validate particle compatibility.
+  // Validate particle dimension compatibility.
+  if (p1 === p2) {
+    throw 'Spring: p1 and p2 cannot be the same Particle instance.';
+  }
+
+  // Validate particle dimension compatibility.
   if (p1.dimensions !== p2.dimensions) {
-    throw 'Spring: Particles must be of the same dimensions. P1['+p1.dimensions+'] P2['+p2.dimensions+']';
+    throw 'Spring: Particles must have equal dimensions. p1.dimensions['+p1.dimensions+'] p2.dimensions['+p2.dimensions+']';
   }
 
   // Validate length argument.
