@@ -178,4 +178,21 @@ describe('NDP.Spring(p1, p2, length, stiffness)', function() {
       }
     });
   });
+
+  describe('update(delta, index)', function() {
+    it('should return the Spring instance that called it', function() {
+      expect(this.springA.update()).toBe(this.springA);
+      expect(this.springA.update(0)).toBe(this.springA);
+      expect(this.springA.update(0, 0)).toBe(this.springA);
+    });
+  });
+
+  describe('apply(particle, force)', function() {
+    it('should return the Spring instance that called it', function() {
+      this.springA.p1.fixed = false;
+      this.springA.p2.fixed = true;
+      expect(this.springA.apply(this.springA.p1)).toBe(this.springA);
+      expect(this.springA.apply(this.springA.p2)).toBe(this.springA);
+    });
+  });
 });
