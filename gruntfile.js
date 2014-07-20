@@ -87,5 +87,5 @@ module.exports = function(grunt) {
   // Register Tasks
   grunt.registerTask('build', ['concat', 'uglify']);
   grunt.registerTask('test', ['karma:development']);
-  grunt.registerTask('default', ['watch']);
+  grunt.registerTask('default', ['build', 'watch']);
 };
