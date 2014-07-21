@@ -160,10 +160,21 @@ describe('NDP.Integrator(opt_dimensions)', function() {
       delete NDP[NAMESPACE];
     });
     it('should extend NDP.Integrator', function() {
+      var NAMESPACE = 'KittenIntegrator';
+      expect(NDP[NAMESPACE]).toBeUndefined();
+
+      NDP.Integrator.create(NAMESPACE);
+      expect(NDP[NAMESPACE]).toBeDefined();
+
+      var integrator = new NDP[NAMESPACE]();
+      expect(integrator instanceof NDP[NAMESPACE]).toBeTruthy();
+      expect(integrator instanceof NDP.Integrator).toBeTruthy();
+
+      delete NDP[NAMESPACE];
     });
     it('should assign [integration] to prototype.__integrate', function() {
       var NAMESPACE = 'KittenIntegrator';
-      var INTEGRATION = function() {};
+      var INTEGRATION = function(particle, delta, lubricity) {};
 
       expect(NDP[NAMESPACE]).toBeUndefined();
 
@@ -180,10 +191,6 @@ describe('NDP.Integrator(opt_dimensions)', function() {
       expect(integrator.__integrate).toHaveBeenCalledWith(this.particleC, 1, 1);
 
       delete NDP[NAMESPACE];
-    });
-    it('should facilitate the creation of NDP[namespace] instances', function() {
-    });
-    it('should create NDP[namespace] instances that are of type NDP.Integrator', function() {
     });
   });
 });
