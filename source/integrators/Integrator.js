@@ -62,7 +62,7 @@ NDP.Integrator.prototype.__integrate = function(particle, delta, lubricity) {
 };
 
 /**
- * Creates an Integrator.
+ * Creates an Integrator constructor and links the integration function to its prototype.
  * @param {String} namespace Namespace of the integrator.
  * @param {Function} integrate Particle motion integration function.
  * @return {Integrator} Integrator constructor.
