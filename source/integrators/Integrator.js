@@ -60,3 +60,19 @@ NDP.Integrator.prototype.__integrate = function(particle, delta, lubricity) {
   // The following line is for testing purposes only.
   this.__vector.copy(particle.__pos, particle.__pos);
 };
+
+/**
+ * Creates an Integrator.
+ * @param {String} namespace Namespace of the integrator.
+ * @param {Function} integrate Particle motion integration function.
+ * @return {Integrator} Integrator constructor.
+ */
+NDP.Integrator.create = function(namespace, integration) {
+  var Integrator = NDP[namespace] = function() {
+    NDP.Integrator.call(this);
+  };
+  Integrator.prototype = Object.create(NDP.Integrator.prototype);
+  Integrator.prototype.constructor = Integrator;
+  Integrator.prototype.__integrate = integration;
+  return Integrator;
+};
