@@ -29,7 +29,7 @@ describe('NDP.Spring(p1, p2, length, stiffness)', function() {
     expect(function() {
       var p = new NDP.Particle(1, 1, false, 1);
       new NDP.Spring(p, p);
-    }).toThrow('Spring: p1 and p2 cannot be the same Particle instance.');
+    }).toThrow('Spring: p1 and p2 cannot be the same Particle instance');
   });
   it('should throw an error if [p1.dimensions] !== [p2.dimensions]', function() {
     expect(function() {
