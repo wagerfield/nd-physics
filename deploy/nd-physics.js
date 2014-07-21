@@ -663,7 +663,7 @@ NDP.Spring = function(p1, p2, length, stiffness) {
 
   // Validate particle dimension compatibility.
   if (p1 === p2) {
-    throw 'Spring: p1 and p2 cannot be the same Particle instance.';
+    throw 'Spring: p1 and p2 cannot be the same Particle instance';
   }
 
   // Validate particle dimension compatibility.
@@ -1323,9 +1323,43 @@ NDP.Vector3.normalize = function(target, a, opt_length) {
   return target;
 };
 
-NDP.Integrator = function() {
+/**
+ * Integrator constructor.
+ * Integrates particle physics.
+ * @constructor
+ * @param {Number} opt_dimensions Optional number of component dimension that the integrator should have. Defaults to NDP.DIMENSIONS.
+ */
+NDP.Integrator = function(opt_dimensions) {
+
+  /**
+   * Dimensional size.
+   * @type {Number}
+   */
+  Object.defineProperty(this, 'dimensions', {
+    value: NDP.isNumber(opt_dimensions) ? parseInt(opt_dimensions, 10) : NDP.DIMENSIONS
+  });
+
+  // Cache dimensions privately for performance.
+  this.__dimensions = this.dimensions;
+
+  // Set vector object.
+  this.__vector = NDP.getVector(this.dimensions);
+
+  // Validate vector object.
+  if (!this.__vector) {
+    throw 'Integrator: No Vector Object available for ['+this.dimensions+'] dimensions';
+  }
+
+  // Create particle vectors.
+  this.__acc = this.__vector.create();
+  this.__vel = this.__vector.create();
+  this.__pos = this.__vector.create();
 };
 
+/**
+ * Identifier counter.
+ * @type {String}
+ */
 NDP.Integrator.id = 'Integrator';
 
 NDP.Integrator.prototype.integrate = function(particles, delta, lubricity) {
