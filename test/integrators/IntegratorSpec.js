@@ -89,4 +89,29 @@ describe('NDP.Integrator(opt_dimensions)', function() {
       }
     });
   });
+
+  describe('integrate(particles, delta, lubricity)', function() {
+    beforeEach(function() {
+      this.particles = [
+        this.particleA = new NDP.Particle(1, 1, false),
+        this.particleB = new NDP.Particle(2, 2, true),
+        this.particleC = new NDP.Particle(3, 2, false)
+      ];
+      spyOn(this.integratorA, '__integrate');
+    });
+    it('should call __integrate(particle, delta, lubricity) for each unfixed particle', function() {
+      this.integratorA.integrate(this.particles);
+      expect(this.integratorA.__integrate.calls.count()).toBe(2);
+    });
+    it('should call __integrate(particle, delta, lubricity) passing the unfixed particle instance', function() {
+      var DELTA = 2, LUBRICITY = 0.5;
+      this.integratorA.integrate(this.particles, DELTA, LUBRICITY);
+      expect(this.integratorA.__integrate).toHaveBeenCalledWith(this.particleA, DELTA, LUBRICITY);
+      expect(this.integratorA.__integrate).not.toHaveBeenCalledWith(this.particleB, DELTA, LUBRICITY);
+      expect(this.integratorA.__integrate).toHaveBeenCalledWith(this.particleC, DELTA, LUBRICITY);
+    });
+  });
+
+  describe('__integrate(particle, delta, lubricity)', function() {
+  });
 });
