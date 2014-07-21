@@ -127,4 +127,24 @@ describe('NDP.Integrator(opt_dimensions)', function() {
       expect(this.integratorA.__vector.copy).toHaveBeenCalledWith(this.particleA.__pos, this.particleA.__pos);
     });
   });
+
+  describe('constructor.create(namespace, integration)', function() {
+    it('should be a constructor method', function() {
+    });
+    it('should return a Function Object', function() {
+    });
+    it('should throw an error if NDP[namespace] is already defined', function() {
+      // 'Integrator: Object already defined for NDP[Kitten]'
+    });
+    it('should add a Function Object to NDP[namespace]', function() {
+    });
+    it('should extend NDP.Integrator', function() {
+    });
+    it('should assign [integration] to __integrate', function() {
+    });
+    it('should facilitate the creation of NDP[namespace] instances', function() {
+    });
+    it('should create NDP[namespace] instances that are of type NDP.Integrator', function() {
+    });
+  });
 });
