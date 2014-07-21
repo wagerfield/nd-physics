@@ -68,6 +68,9 @@ NDP.Integrator.prototype.__integrate = function(particle, delta, lubricity) {
  * @return {Integrator} Integrator constructor.
  */
 NDP.Integrator.create = function(namespace, integration) {
+  if (NDP[namespace]) {
+    throw 'Integrator: Object already defined for NDP['+namespace+']';
+  }
   var Integrator = NDP[namespace] = function() {
     NDP.Integrator.call(this);
   };
