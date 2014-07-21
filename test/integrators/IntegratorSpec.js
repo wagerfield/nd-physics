@@ -36,4 +36,19 @@ describe('NDP.Integrator(opt_dimensions)', function() {
   it('should set [__dimensions] to [dimensions]', function() {
     expect(this.integratorA.__dimensions).toBe(this.integratorA.dimensions);
   });
+
+  describe('dimensions', function() {
+    it('should be an Integer', function() {
+      expect(this.integratorA.dimensions).toBeAnInteger();
+    });
+    it('should be readonly', function() {
+      var dimensions = this.integratorA.dimensions;
+      this.integratorA.dimensions = 100;
+      expect(this.integratorA.dimensions).toBe(dimensions);
+    });
+    it('should have a __private counterpart', function() {
+      expect(this.integratorA.__dimensions).toBe(this.integratorA.dimensions);
+      expect(this.integratorA.__dimensions).toBeAnInteger();
+    });
+  });
 });
