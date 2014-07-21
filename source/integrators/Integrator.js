@@ -54,4 +54,9 @@ NDP.Integrator.prototype.integrate = function(particles, delta, lubricity) {
  * @param {Number} lubricity Lubricity within the system.
  */
 NDP.Integrator.prototype.__integrate = function(particle, delta, lubricity) {
+
+  // NOTE: Integration is not implementated in this abstract Integrator.
+  // Use NDP.Integrator.create(namespace, integration) to create an operational Integrator.
+  // The following line is for testing purposes only.
+  this.__vector.copy(particle.__pos, particle.__pos);
 };

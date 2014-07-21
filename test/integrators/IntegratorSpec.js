@@ -113,5 +113,18 @@ describe('NDP.Integrator(opt_dimensions)', function() {
   });
 
   describe('__integrate(particle, delta, lubricity)', function() {
+    beforeEach(function() {
+      this.particleA = new NDP.Particle(1, 1, false);
+      this.particleB = new NDP.Particle(2, 2, true);
+      spyOn(this.integratorA.__vector, 'copy');
+    });
+    it('should be defined', function() {
+      expect(this.integratorA.__integrate).toBeDefined();
+    });
+    it('should call copy on [__vector], passing [particle.__pos]', function() {
+      var DELTA = 2, LUBRICITY = 0.5;
+      this.integratorA.__integrate(this.particleA, DELTA, LUBRICITY);
+      expect(this.integratorA.__vector.copy).toHaveBeenCalledWith(this.particleA.__pos, this.particleA.__pos);
+    });
   });
 });
