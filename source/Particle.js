@@ -1,6 +1,6 @@
 /**
  * Particle constructor.
- * Manages behaviour collection.
+ * Manages behaviours collection.
  * Updates translation vectors by applying the effects of registered behaviours.
  * @constructor
  * @param {Number} mass Mass of the particle.
