@@ -1,9 +1,11 @@
 /**
  * EulerIntegrator constructor.
- * Integrates particle motion using Euler integrator.
+ * Integrates particle motion using Euler integration:
+ * v += a * dt
+ * x += v * dt
  * @constructor
- * @param {String} namespace Namespace of the integrator.
- * @param {Function} integrate Particle motion integration function.
+ * @param {String} namespace EulerIntegrator namespace.
+ * @param {Function} integrate Euler integration function.
  */
 NDP.Integrator.create('EulerIntegrator',
   function(particle, delta, lubricity) {
