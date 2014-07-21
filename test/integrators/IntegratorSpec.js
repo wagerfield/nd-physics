@@ -46,9 +46,23 @@ describe('NDP.Integrator(opt_dimensions)', function() {
       this.integratorA.dimensions = 100;
       expect(this.integratorA.dimensions).toBe(dimensions);
     });
-    it('should have a __private counterpart', function() {
+    it('should have a private __dimensions counterpart', function() {
       expect(this.integratorA.__dimensions).toBe(this.integratorA.dimensions);
       expect(this.integratorA.__dimensions).toBeAnInteger();
+    });
+  });
+
+  describe('__vector', function() {
+    it('should be an Object', function() {
+      expect(this.integratorA.__vector).toEqual(jasmine.any(Object));
+    });
+    it('should reference NDP.Vector[dimensions]', function() {
+      expect(this.integratorA.__vector).toEqual(NDP['Vector' + this.integratorA.dimensions]);
+    });
+    it('should throw an error for cases where a Vector Object is not available', function() {
+      expect(function() {
+        new NDP.Integrator(0);
+      }).toThrow('Integrator: No Vector Object available for [0] dimensions');
     });
   });
 });
