@@ -38,4 +38,20 @@ NDP.Integrator = function(opt_dimensions) {
  * @param {Number} lubricity Lubricity within the system.
  */
 NDP.Integrator.prototype.integrate = function(particles, delta, lubricity) {
+  var i, l, particle;
+  for (i = 0, l = particles.length; i < l; i++) {
+    particle = particles[i];
+    if (!particle.__fixed) {
+      this.__integrate(particle, delta, lubricity);
+    }
+  }
+};
+
+/**
+ * Integrates motion for a single particle.
+ * @param {Particle} particle Particle to integrate motion on.
+ * @param {Number} delta Time delta in milliseconds since last integration.
+ * @param {Number} lubricity Lubricity within the system.
+ */
+NDP.Integrator.prototype.__integrate = function(particle, delta, lubricity) {
 };
