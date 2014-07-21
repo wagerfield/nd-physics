@@ -27,11 +27,11 @@ NDP.Particle = function(mass, opt_radius, opt_fixed, opt_dimensions) {
   this.__dimensions = this.dimensions;
 
   // Set vector object.
-  this.__vector = NDP.getVector(this.dimensions);
+  this.__vector = NDP.getVector(this.__dimensions);
 
   // Validate vector object.
   if (!this.__vector) {
-    throw 'Particle: No Vector Object available for ['+this.dimensions+'] dimensions';
+    throw 'Particle: No Vector Object available for ['+this.__dimensions+'] dimensions';
   }
 
   // Set particle properties.
