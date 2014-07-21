@@ -21,7 +21,7 @@ NDP.Spring = function(p1, p2, length, stiffness) {
 
   // Validate particle dimension compatibility.
   if (p1 === p2) {
-    throw 'Spring: p1 and p2 cannot be the same Particle instance.';
+    throw 'Spring: p1 and p2 cannot be the same Particle instance';
   }
 
   // Validate particle dimension compatibility.
