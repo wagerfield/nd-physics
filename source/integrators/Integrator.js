@@ -24,6 +24,11 @@ NDP.Integrator = function(opt_dimensions) {
   if (!this.__vector) {
     throw 'Integrator: No Vector Object available for ['+this.__dimensions+'] dimensions';
   }
+
+  // Create worker vectors.
+  this.__acc = this.__vector.create();
+  this.__vel = this.__vector.create();
+  this.__pos = this.__vector.create();
 };
 
 /**
