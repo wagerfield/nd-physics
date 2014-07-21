@@ -5,7 +5,7 @@
  * x += v * dt
  * @constructor
  * @param {String} namespace EulerIntegrator namespace.
- * @param {Function} integrate Euler integration function.
+ * @param {Function} integration Euler integration function.
  */
 NDP.Integrator.create('EulerIntegrator',
   function(particle, delta, lubricity) {

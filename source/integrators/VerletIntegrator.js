@@ -5,7 +5,7 @@
  * x += v + a * dt * dt
  * @constructor
  * @param {String} namespace VerletIntegrator namespace.
- * @param {Function} integrate Verlet integration function.
+ * @param {Function} integration Verlet integration function.
  */
 NDP.Integrator.create('VerletIntegrator',
   function(particle, delta, lubricity) {
