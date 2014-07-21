@@ -16,6 +16,14 @@ NDP.Integrator = function(opt_dimensions) {
 
   // Cache dimensions privately for performance.
   this.__dimensions = this.dimensions;
+
+  // Set vector object.
+  this.__vector = NDP.getVector(this.__dimensions);
+
+  // Validate vector object.
+  if (!this.__vector) {
+    throw 'Integrator: No Vector Object available for ['+this.__dimensions+'] dimensions';
+  }
 };
 
 /**
