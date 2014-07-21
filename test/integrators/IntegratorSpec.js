@@ -65,4 +65,28 @@ describe('NDP.Integrator(opt_dimensions)', function() {
       }).toThrow('Integrator: No Vector Object available for [0] dimensions');
     });
   });
+
+  describe('__acc, __vel, __pos', function() {
+    beforeEach(function() {
+      this.vectorKeys = ['__acc', '__vel', '__pos'];
+    });
+    it('should be __private', function() {
+      for (var i = 0; i < this.vectorKeys.length; i++) {
+        var privateKey = this.vectorKeys[i];
+        var publicKey = privateKey.replace(/_/g, '');
+        expect(this.integratorA[privateKey]).toBeDefined();
+        expect(this.integratorA[publicKey]).toBeUndefined();
+      }
+    });
+    it('should be an NDP.Array instance', function() {
+      for (var i = 0; i < this.vectorKeys.length; i++) {
+        expect(this.integratorA[this.vectorKeys[i]]).toEqual(jasmine.any(NDP.Array));
+      }
+    });
+    it('should be of length [dimensions]', function() {
+      for (var i = 0; i < this.vectorKeys.length; i++) {
+        expect(this.integratorA[this.vectorKeys[i]].length).toBe(this.integratorA.dimensions);
+      }
+    });
+  });
 });
