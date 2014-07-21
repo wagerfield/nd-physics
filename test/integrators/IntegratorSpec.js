@@ -129,18 +129,57 @@ describe('NDP.Integrator(opt_dimensions)', function() {
   });
 
   describe('constructor.create(namespace, integration)', function() {
+    beforeEach(function() {
+      this.particles = [
+        this.particleA = new NDP.Particle(1, 1, false),
+        this.particleB = new NDP.Particle(2, 2, true),
+        this.particleC = new NDP.Particle(3, 2, false)
+      ];
+    });
     it('should be a constructor method', function() {
+      expect(NDP.Integrator.create).toEqual(jasmine.any(Function));
+      expect(this.integratorA.constructor.create).toEqual(jasmine.any(Function));
     });
     it('should return a Function Object', function() {
+      expect(NDP.Integrator.create).toEqual(jasmine.any(Function));
     });
     it('should throw an error if NDP[namespace] is already defined', function() {
-      // 'Integrator: Object already defined for NDP[Kitten]'
+      expect(function() {
+        NDP.Integrator.create('DIMENSIONS');
+      }).toThrow('Integrator: Object already defined for NDP[DIMENSIONS]');
+      expect(function() {
+        NDP.Integrator.create('Kittens');
+      }).not.toThrow('Integrator: Object already defined for NDP[Kittens]');
+      delete NDP.Kittens;
     });
     it('should add a Function Object to NDP[namespace]', function() {
+      var NAMESPACE = 'KittenIntegrator';
+      expect(NDP[NAMESPACE]).toBeUndefined();
+      NDP.Integrator.create(NAMESPACE);
+      expect(NDP[NAMESPACE]).toBeDefined();
+      delete NDP[NAMESPACE];
     });
     it('should extend NDP.Integrator', function() {
     });
-    it('should assign [integration] to __integrate', function() {
+    it('should assign [integration] to prototype.__integrate', function() {
+      var NAMESPACE = 'KittenIntegrator';
+      var INTEGRATION = function() {};
+
+      expect(NDP[NAMESPACE]).toBeUndefined();
+
+      NDP.Integrator.create(NAMESPACE, INTEGRATION);
+      expect(NDP[NAMESPACE]).toBeDefined();
+      expect(NDP[NAMESPACE].prototype.__integrate).toBe(INTEGRATION);
+
+      var integrator = new NDP[NAMESPACE]();
+      spyOn(integrator, '__integrate');
+
+      integrator.integrate(this.particles, 1, 1);
+      expect(integrator.__integrate).toHaveBeenCalledWith(this.particleA, 1, 1);
+      expect(integrator.__integrate).not.toHaveBeenCalledWith(this.particleB, 1, 1);
+      expect(integrator.__integrate).toHaveBeenCalledWith(this.particleC, 1, 1);
+
+      delete NDP[NAMESPACE];
     });
     it('should facilitate the creation of NDP[namespace] instances', function() {
     });
