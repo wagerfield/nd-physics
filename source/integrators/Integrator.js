@@ -5,6 +5,17 @@
  * @param {Number} opt_dimensions Optional number of component dimension that the integrator should have. Defaults to NDP.DIMENSIONS.
  */
 NDP.Integrator = function(opt_dimensions) {
+
+  /**
+   * Dimensional size.
+   * @type {Number}
+   */
+  Object.defineProperty(this, 'dimensions', {
+    value: NDP.isNumber(opt_dimensions) ? parseInt(opt_dimensions, 10) : NDP.DIMENSIONS
+  });
+
+  // Cache dimensions privately for performance.
+  this.__dimensions = this.dimensions;
 };
 
 /**
