@@ -201,7 +201,7 @@ NDP.Particle.prototype.update = function(delta, index) {
   if (!this.__fixed && delta !== 0) {
     for (i = 0, l = this.behaviours.length; i < l; i++) {
       behaviour = this.behaviours[i];
-      if (behaviour.active) {
+      if (behaviour.__active) {
         behaviour.apply(this, delta, index);
       }
     }
