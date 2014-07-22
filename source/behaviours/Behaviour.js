@@ -71,6 +71,7 @@ NDP.Behaviour.create = function(namespace) {
   var Behaviour = NDP[namespace] = function() {
     NDP.Behaviour.call(this);
   };
+  Behaviour.id = namespace;
   Behaviour.prototype = Object.create(NDP.Behaviour.prototype);
   Behaviour.prototype.constructor = Behaviour;
   return Behaviour;
