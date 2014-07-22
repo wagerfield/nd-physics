@@ -423,7 +423,7 @@ NDP.Engine.prototype.integrate = function(delta) {
 
 /**
  * Particle constructor.
- * Manages behaviour collection.
+ * Manages behaviours collection.
  * Updates translation vectors by applying the effects of registered behaviours.
  * @constructor
  * @param {Number} mass Mass of the particle.
@@ -450,11 +450,11 @@ NDP.Particle = function(mass, opt_radius, opt_fixed, opt_dimensions) {
   this.__dimensions = this.dimensions;
 
   // Set vector object.
-  this.__vector = NDP.getVector(this.dimensions);
+  this.__vector = NDP.getVector(this.__dimensions);
 
   // Validate vector object.
   if (!this.__vector) {
-    throw 'Particle: No Vector Object available for ['+this.dimensions+'] dimensions';
+    throw 'Particle: No Vector Object available for ['+this.__dimensions+'] dimensions';
   }
 
   // Set particle properties.
@@ -1325,7 +1325,7 @@ NDP.Vector3.normalize = function(target, a, opt_length) {
 
 /**
  * Integrator constructor.
- * Integrates particle physics.
+ * Integrates particle motion.
  * @constructor
  * @param {Number} opt_dimensions Optional number of component dimension that the integrator should have. Defaults to NDP.DIMENSIONS.
  */
@@ -1343,44 +1343,252 @@ NDP.Integrator = function(opt_dimensions) {
   this.__dimensions = this.dimensions;
 
   // Set vector object.
-  this.__vector = NDP.getVector(this.dimensions);
+  this.__vector = NDP.getVector(this.__dimensions);
 
   // Validate vector object.
   if (!this.__vector) {
-    throw 'Integrator: No Vector Object available for ['+this.dimensions+'] dimensions';
+    throw 'Integrator: No Vector Object available for ['+this.__dimensions+'] dimensions';
   }
 
-  // Create particle vectors.
+  // Create worker vectors.
   this.__acc = this.__vector.create();
   this.__vel = this.__vector.create();
   this.__pos = this.__vector.create();
 };
 
 /**
- * Identifier counter.
- * @type {String}
+ * Integrates motion for a collection of particles.
+ * @param {Array.<Particle>} particles Particle collection to integrate motion on.
+ * @param {Number} delta Time delta in milliseconds since last integration.
+ * @param {Number} lubricity Lubricity within the system.
  */
-NDP.Integrator.id = 'Integrator';
-
 NDP.Integrator.prototype.integrate = function(particles, delta, lubricity) {
+  var i, l, particle;
+  for (i = 0, l = particles.length; i < l; i++) {
+    particle = particles[i];
+    if (!particle.__fixed) {
+      this.__integrate(particle, delta, lubricity);
+    }
+  }
 };
 
-NDP.EulerIntegrator = function() {
-  NDP.Integrator.call(this);
+/**
+ * Integrates motion for a single particle.
+ * @param {Particle} particle Particle to integrate motion on.
+ * @param {Number} delta Time delta in milliseconds since last integration.
+ * @param {Number} lubricity Lubricity within the system.
+ */
+NDP.Integrator.prototype.__integrate = function(particle, delta, lubricity) {
+
+  // NOTE: Integration is not implementated in this abstract Integrator.
+  // Use NDP.Integrator.create(namespace, integration) to create an operational Integrator.
+  // The following line is for testing purposes only.
+  this.__vector.copy(particle.__pos, particle.__pos);
 };
 
-NDP.EulerIntegrator.id = 'EulerIntegrator';
+/**
+ * Creates an Integrator constructor and links the integration function to its prototype.
+ * @param {String} namespace Namespace of the integrator.
+ * @param {Function} integrate Particle motion integration function.
+ * @return {Integrator} Integrator constructor.
+ */
+NDP.Integrator.create = function(namespace, integration) {
+  if (NDP[namespace]) {
+    throw 'Integrator: Object already defined for NDP['+namespace+']';
+  }
+  var Integrator = NDP[namespace] = function() {
+    NDP.Integrator.call(this);
+  };
+  Integrator.prototype = Object.create(NDP.Integrator.prototype);
+  Integrator.prototype.constructor = Integrator;
+  Integrator.prototype.__integrate = integration;
+  return Integrator;
+};
 
-NDP.EulerIntegrator.prototype = Object.create(NDP.Integrator.prototype);
-NDP.EulerIntegrator.prototype.constructor = NDP.EulerIntegrator;
+/**
+ * EulerIntegrator constructor.
+ * Integrates particle motion using Euler integration:
+ * v += a * dt
+ * x += v * dt
+ * @constructor
+ * @param {String} namespace EulerIntegrator namespace.
+ * @param {Function} integration Euler integration function.
+ */
+NDP.Integrator.create('EulerIntegrator',
+  function(particle, delta, lubricity) {
 
-NDP.Behaviour = function() {
+    // Calculate acceleration.
+    // acceleration *= inverseMass * delta
+    this.__vector.scale(particle.__acc, particle.__acc, particle.__inverseMass * delta);
+
+    // Add acceleration to velocity.
+    // velocity += acceleration
+    this.__vector.add(particle.__vel, particle.__vel, particle.__acc);
+
+    // Scale velocity by lubricity.
+    // velocity *= friction
+    this.__vector.scale(particle.__vel, particle.__vel, lubricity);
+
+    // Calculate velocity into slave to preserve momentum.
+    // velocity *= delta
+    this.__vector.scale(this.__vel, particle.__vel, delta);
+
+    // Add slave velocity to position.
+    // position += velocity
+    this.__vector.add(particle.__pos, particle.__pos, this.__vel);
+
+    // Reset acceleration.
+    this.__vector.identity(particle.__acc);
+  }
+);
+
+/**
+ * ImprovedEulerIntegrator constructor.
+ * Integrates particle motion using Euler integration:
+ * x += v * dt + a * dt * dt * 0.5
+ * v += a * dt
+ * @constructor
+ * @param {String} namespace ImprovedEulerIntegrator namespace.
+ * @param {Function} integration Improved Euler integration function.
+ */
+NDP.Integrator.create('ImprovedEulerIntegrator',
+  function(particle, delta, lubricity) {
+
+    // Calculate acceleration.
+    // acceleration *= inverseMass * deltaSquared * 0.5
+    this.__vector.scale(this.__acc, particle.__acc, particle.__inverseMass * delta * delta * 0.5);
+
+    // Calculate velocity into slave to preserve momentum.
+    // velocity *= delta
+    this.__vector.scale(this.__vel, particle.__vel, delta);
+
+    // Add slave acceleration to slave velocity.
+    // velocity += acceleration
+    this.__vector.add(this.__vel, this.__vel, this.__acc);
+
+    // Add slave velocity to position.
+    // position += velocity
+    this.__vector.add(particle.__pos, particle.__pos, this.__vel);
+
+    // Calculate acceleration.
+    // acceleration *= delta
+    this.__vector.scale(particle.__acc, particle.__acc, delta);
+
+    // Add acceleration to velocity.
+    // velocity += acceleration
+    this.__vector.add(particle.__vel, particle.__vel, particle.__acc);
+
+    // Scale velocity by lubricity.
+    // velocity *= friction
+    this.__vector.scale(particle.__vel, particle.__vel, lubricity);
+
+    // Reset acceleration.
+    this.__vector.identity(particle.__acc);
+  }
+);
+
+/**
+ * VerletIntegrator constructor.
+ * Integrates particle motion using Verlet integration:
+ * v = x - ox
+ * x += v + a * dt * dt
+ * @constructor
+ * @param {String} namespace VerletIntegrator namespace.
+ * @param {Function} integration Verlet integration function.
+ */
+NDP.Integrator.create('VerletIntegrator',
+  function(particle, delta, lubricity) {
+
+    // Calculate velocity.
+    // velocity = position - oldPosition
+    this.__vector.subtract(particle.__vel, particle.__pos, particle.__old.pos);
+
+    // Scale velocity by lubricity.
+    // velocity *= friction
+    this.__vector.scale(particle.__vel, particle.__vel, lubricity);
+
+    // Calculate acceleration.
+    // acceleration *= delta * delta
+    this.__vector.scale(particle.__acc, particle.__acc, delta * delta);
+
+    // Add acceleration to velocity.
+    // velocity += acceleration
+    this.__vector.add(particle.__vel, particle.__vel, particle.__acc);
+
+    // Store old position.
+    // oldPosition = position
+    this.__vector.copy(particle.__old.pos, particle.__pos);
+
+    // Add velocity to position.
+    // position += velocity
+    this.__vector.add(particle.__pos, particle.__pos, particle.__vel);
+
+    // Reset acceleration.
+    this.__vector.identity(particle.__acc);
+  }
+);
+
+/**
+ * Behaviour constructor.
+ * Applies forces to a particle.
+ * @constructor
+ * @param {Number} opt_dimensions Optional number of component dimension that the behaviour should have. Defaults to NDP.DIMENSIONS.
+ */
+NDP.Behaviour = function(opt_dimensions) {
+
+  /**
+   * Dimensional size.
+   * @type {Number}
+   */
+  Object.defineProperty(this, 'dimensions', {
+    value: NDP.isNumber(opt_dimensions) ? parseInt(opt_dimensions, 10) : NDP.DIMENSIONS
+  });
+
+  // Cache dimensions privately for performance.
+  this.__dimensions = this.dimensions;
+
+  // Set vector object.
+  this.__vector = NDP.getVector(this.__dimensions);
+
+  // Validate vector object.
+  if (!this.__vector) {
+    throw 'Behaviour: No Vector Object available for ['+this.__dimensions+'] dimensions';
+  }
+
+  // Active flag.
   this.active = true;
 };
 
+/**
+ * Unique identifier.
+ * @type {String}
+ */
 NDP.Behaviour.id = 'Behaviour';
 
+/**
+ * Behaviour constructor.
+ * @param {Particle} particle Particle instance to apply the behaviour to.
+ * @param {Number} delta Time delta in milliseconds since last integration.
+ * @param {Number} index Index of the particle within the system.
+ */
 NDP.Behaviour.prototype.apply = function(particle, delta, index) {
+};
+
+/**
+ * Creates an Behaviour constructor.
+ * @param {String} namespace Namespace of the behaviour.
+ * @return {Behaviour} Behaviour constructor.
+ */
+NDP.Behaviour.create = function(namespace) {
+  if (NDP[namespace]) {
+    throw 'Behaviour: Object already defined for NDP['+namespace+']';
+  }
+  var Behaviour = NDP[namespace] = function() {
+    NDP.Behaviour.call(this);
+  };
+  Behaviour.prototype = Object.create(NDP.Behaviour.prototype);
+  Behaviour.prototype.constructor = Behaviour;
+  return Behaviour;
 };
 
 NDP.CollisionBehaviour = function() {
