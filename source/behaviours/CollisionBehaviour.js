@@ -4,10 +4,12 @@
  * @constructor
  * @param {String} namespace CollisionBehaviour namespace.
  */
-var CollisionBehaviour = NDP.Behaviour.create('CollisionBehaviour');
+(function(Behaviour) {
 
-CollisionBehaviour.prototype.addParticle = function(particle) {
-};
+  Behaviour.prototype.addParticle = function(particle) {
+  };
 
-CollisionBehaviour.prototype.removeParticle = function(particle) {
-};
+  Behaviour.prototype.removeParticle = function(particle) {
+  };
+
+})(NDP.Behaviour.create('CollisionBehaviour'));

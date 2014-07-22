@@ -4,4 +4,6 @@
  * @constructor
  * @param {String} namespace ConstantBehaviour namespace.
  */
-var ConstantBehaviour = NDP.Behaviour.create('ConstantBehaviour');
+(function(Behaviour) {
+
+})(NDP.Behaviour.create('ConstantBehaviour'));
