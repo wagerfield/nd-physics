@@ -25,7 +25,7 @@ NDP.Behaviour = function(opt_dimensions) {
     throw 'Behaviour: No Vector Object available for ['+this.__dimensions+'] dimensions';
   }
 
-  // Active flag.
+  // Set active state.
   this.active = true;
 };
 
@@ -34,6 +34,21 @@ NDP.Behaviour = function(opt_dimensions) {
  * @type {String}
  */
 NDP.Behaviour.id = 'Behaviour';
+
+/**
+ * Active state of the behaviour.
+ * @type {Boolean}
+ */
+Object.defineProperty(NDP.Behaviour.prototype, 'active', {
+  set: function(value) {
+    if (NDP.isBoolean(value)) {
+      this.__active = value;
+    }
+  },
+  get: function() {
+    return this.__active;
+  }
+});
 
 /**
  * Behaviour constructor.
