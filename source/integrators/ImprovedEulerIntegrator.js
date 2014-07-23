@@ -4,8 +4,7 @@
  * x += v * dt + a * dt * dt * 0.5
  * v += a * dt
  * @constructor
- * @param {String} namespace ImprovedEulerIntegrator namespace.
- * @param {Function} integration Improved Euler integration function.
+ * @param {Number} opt_dimensions Optional number of component dimension that the integrator should have. Defaults to NDP.DIMENSIONS.
  */
 NDP.Integrator.create('ImprovedEulerIntegrator',
   function(particle, delta, lubricity) {

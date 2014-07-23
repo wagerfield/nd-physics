@@ -2,7 +2,7 @@
  * CollisionBehaviour constructor.
  * Manages collisions between a collection of particles.
  * @constructor
- * @param {String} namespace CollisionBehaviour namespace.
+ * @param {Number} opt_dimensions Optional number of component dimension that the behaviour should have. Defaults to NDP.DIMENSIONS.
  */
 (function(Behaviour) {
 

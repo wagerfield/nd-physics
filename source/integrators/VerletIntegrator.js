@@ -4,8 +4,7 @@
  * v = x - ox
  * x += v + a * dt * dt
  * @constructor
- * @param {String} namespace VerletIntegrator namespace.
- * @param {Function} integration Verlet integration function.
+ * @param {Number} opt_dimensions Optional number of component dimension that the integrator should have. Defaults to NDP.DIMENSIONS.
  */
 NDP.Integrator.create('VerletIntegrator',
   function(particle, delta, lubricity) {

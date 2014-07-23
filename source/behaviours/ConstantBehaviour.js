@@ -2,7 +2,7 @@
  * ConstantBehaviour constructor.
  * Applies a constant force to the acceleration of a particle.
  * @constructor
- * @param {String} namespace ConstantBehaviour namespace.
+ * @param {Number} opt_dimensions Optional number of component dimension that the behaviour should have. Defaults to NDP.DIMENSIONS.
  */
 (function(Behaviour) {
 
