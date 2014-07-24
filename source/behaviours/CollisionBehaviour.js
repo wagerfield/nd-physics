@@ -12,4 +12,7 @@
   Behaviour.prototype.removeParticle = function(particle) {
   };
 
-})(NDP.Behaviour.create('CollisionBehaviour'));
+})(NDP.Behaviour.create('CollisionBehaviour',
+  function(particle, delta, index) {
+  }
+));

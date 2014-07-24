@@ -64,7 +64,7 @@ NDP.Behaviour.prototype.apply = function(particle, delta, index) {
  * @param {String} namespace Namespace of the behaviour.
  * @return {Behaviour} Behaviour constructor.
  */
-NDP.Behaviour.create = function(namespace) {
+NDP.Behaviour.create = function(namespace, apply) {
   if (NDP[namespace]) {
     throw 'Behaviour: Object already defined for NDP['+namespace+']';
   }
@@ -74,5 +74,6 @@ NDP.Behaviour.create = function(namespace) {
   Behaviour.id = namespace;
   Behaviour.prototype = Object.create(NDP.Behaviour.prototype);
   Behaviour.prototype.constructor = Behaviour;
+  Behaviour.prototype.apply = apply;
   return Behaviour;
 };
