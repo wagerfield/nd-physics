@@ -1,12 +1,18 @@
 /**
  * VerletIntegrator constructor.
- * Integrates particle motion using Verlet integration:
- * v = x - ox
- * x += v + a * dt * dt
  * @constructor
  * @param {Number} opt_dimensions Optional number of component dimension that the integrator should have. Defaults to NDP.DIMENSIONS.
  */
 NDP.Integrator.create('VerletIntegrator',
+
+  /**
+   * Integrates motion for a single particle using Verlet integration.
+   * v = x - ox
+   * x += v + a * dt * dt
+   * @param {Particle} particle Particle to integrate motion on.
+   * @param {Number} delta Time delta in milliseconds since last integration.
+   * @param {Number} lubricity Lubricity within the system.
+   */
   function(particle, delta, lubricity) {
 
     // Calculate velocity.
