@@ -1,12 +1,18 @@
 /**
  * ImprovedEulerIntegrator constructor.
- * Integrates particle motion using Euler integration:
- * x += v * dt + a * dt * dt * 0.5
- * v += a * dt
  * @constructor
  * @param {Number} opt_dimensions Optional number of component dimension that the integrator should have. Defaults to NDP.DIMENSIONS.
  */
 NDP.Integrator.create('ImprovedEulerIntegrator',
+
+  /**
+   * Integrates motion for a single particle using Improved Euler integration.
+   * x += v * dt + a * dt * dt * 0.5
+   * v += a * dt
+   * @param {Particle} particle Particle to integrate motion on.
+   * @param {Number} delta Time delta in milliseconds since last integration.
+   * @param {Number} lubricity Lubricity within the system.
+   */
   function(particle, delta, lubricity) {
 
     // Calculate acceleration.
