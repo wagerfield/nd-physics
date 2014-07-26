@@ -8,6 +8,10 @@
 
   // this.__force = this.__vector.create();
 
+  /**
+   * Force to apply to each component.
+   * @type {Array}
+   */
   Object.defineProperty(Behaviour.prototype, 'force', {
     set: function(value) {
       if (NDP.isArray(value)) {
