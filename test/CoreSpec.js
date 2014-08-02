@@ -68,7 +68,7 @@ describe('Core (NDP Object)', function() {
   });
 
   describe('isType(value, expected)', function() {
-    it("should assert true for values of an expected type", function() {
+    it('should assert true for values of an expected type', function() {
       expect(NDP.isType(false, Boolean)).toBeTruthy();
       expect(NDP.isType(true, Boolean)).toBeTruthy();
       expect(NDP.isType(0.1, Number)).toBeTruthy();
@@ -94,7 +94,7 @@ describe('Core (NDP Object)', function() {
   });
 
   describe('isBoolean(value)', function() {
-    it("should assert true for Boolean values", function() {
+    it('should assert true for Boolean values', function() {
       expect(NDP.isBoolean(true)).toBeTruthy();
       expect(NDP.isBoolean(false)).toBeTruthy();
       expect(NDP.isBoolean(1)).toBeFalsy();
@@ -105,7 +105,7 @@ describe('Core (NDP Object)', function() {
   });
 
   describe('isNumber(value)', function() {
-    it("should assert true for Number values", function() {
+    it('should assert true for Number values', function() {
       expect(NDP.isNumber(0.1)).toBeTruthy();
       expect(NDP.isNumber(100)).toBeTruthy();
       expect(NDP.isNumber(1e10)).toBeTruthy();
@@ -118,7 +118,7 @@ describe('Core (NDP Object)', function() {
   });
 
   describe('isArray(value)', function() {
-    it("should assert true for NDP.Array values", function() {
+    it('should assert true for NDP.Array values', function() {
       expect(NDP.isArray(new NDP.Array())).toBeTruthy();
       expect(NDP.isArray(1)).toBeFalsy();
       expect(NDP.isArray(null)).toBeFalsy();
@@ -153,35 +153,35 @@ describe('Core (NDP Object)', function() {
     });
   });
 
-  describe("getAxes(dimensions)", function() {
+  describe('getAxes(dimensions)', function() {
     var axesU = NDP.getAxes(),
         axes0 = NDP.getAxes(0),
         axes1 = NDP.getAxes(1),
         axes2 = NDP.getAxes(2),
         axes3 = NDP.getAxes(3);
-    it("should return 0 axes for undefined dimensions", function() {
+    it('should return 0 axes for undefined dimensions', function() {
       expect(axesU.length).toBe(0);
     });
-    it("should return 0 axes for dimensions less than 2", function() {
+    it('should return 0 axes for dimensions less than 2', function() {
       expect(axes0.length).toBe(0);
       expect(axes1.length).toBe(0);
     });
-    it("should return 1 axis for 2 dimensions", function() {
+    it('should return 1 axis for 2 dimensions', function() {
       expect(axes2.length).toBe(1);
     });
-    it("should return 3 axes for 3 dimensions", function() {
+    it('should return 3 axes for 3 dimensions', function() {
       expect(axes3.length).toBe(3);
     });
   });
 
-  describe("addItemToArray(item, array)", function() {
+  describe('addItemToArray(item, array)', function() {
     beforeEach(function() {
       this.valueA = 1;
       this.valueB = 'b';
       this.valueC = {key: 'c'};
       this.array = [this.valueA, this.valueB, this.valueC];
     });
-    it("should only add a unique item to an array", function() {
+    it('should only add a unique item to an array', function() {
       expect(this.array.length).toBe(3);
       expect(NDP.addItemToArray(1, this.array)).toBeFalsy();
       expect(this.array.length).toBe(3);
@@ -192,7 +192,7 @@ describe('Core (NDP Object)', function() {
       expect(NDP.addItemToArray('beans', this.array)).toBeFalsy();
       expect(this.array.length).toBe(5);
     });
-    it("should only add items of a certain type when specified", function() {
+    it('should only add items of a certain type when specified', function() {
       expect(this.array.length).toBe(3);
       expect(NDP.addItemToArray(2, this.array)).toBeTruthy();
       expect(this.array.length).toBe(4);
@@ -203,14 +203,14 @@ describe('Core (NDP Object)', function() {
     });
   });
 
-  describe("removeItemFromArray(item, array)", function() {
+  describe('removeItemFromArray(item, array)', function() {
     beforeEach(function() {
       this.valueA = 1;
       this.valueB = 'b';
       this.valueC = {key: 'c'};
       this.array = [this.valueA, this.valueB, this.valueC];
     });
-    it("should only add a unique item to an array", function() {
+    it('should only add a unique item to an array', function() {
       expect(this.array.length).toBe(3);
       expect(NDP.removeItemFromArray(1, this.array)).toBeTruthy();
       expect(this.array.length).toBe(2);
@@ -221,7 +221,7 @@ describe('Core (NDP Object)', function() {
     });
   });
 
-  describe("copyValuesToArray(values, array)", function() {
+  describe('copyValuesToArray(values, array, opt_limit, opt_type)', function() {
     beforeEach(function() {
       this.valueA = 1;
       this.valueB = 'b';
@@ -229,7 +229,7 @@ describe('Core (NDP Object)', function() {
       this.source = [this.valueA, this.valueB, this.valueC];
       this.target = ['one', 'two'];
     });
-    it("should copy values from a source array to a target array", function() {
+    it('should copy values from a source array to a target array', function() {
       expect(this.source.length).toBe(3);
       expect(this.target.length).toBe(2);
       expect(this.target).not.toContain(this.valueA);
@@ -241,16 +241,23 @@ describe('Core (NDP Object)', function() {
       expect(this.target).toContain(this.valueA);
       expect(this.target).toContain(this.valueB);
       expect(this.target).not.toContain(this.valueC);
-
-      this.target = ['one', 'two'];
+    });
+    it('should only copy values within target.length when [opt_limit] is true', function() {
       expect(this.target.length).toBe(2);
       expect(this.target).not.toContain(this.valueA);
       expect(this.target).not.toContain(this.valueB);
       expect(this.target).not.toContain(this.valueC);
+
       NDP.copyValuesToArray(this.source, this.target, true);
       expect(this.target.length).toBe(2);
       expect(this.target).toContain(this.valueA);
       expect(this.target).toContain(this.valueB);
+      expect(this.target).not.toContain(this.valueC);
+    });
+    it('should copy values beyond target.length when [opt_limit] is false', function() {
+      expect(this.target.length).toBe(2);
+      expect(this.target).not.toContain(this.valueA);
+      expect(this.target).not.toContain(this.valueB);
       expect(this.target).not.toContain(this.valueC);
 
       NDP.copyValuesToArray(this.source, this.target, false);
@@ -258,6 +265,21 @@ describe('Core (NDP Object)', function() {
       expect(this.target).toContain(this.valueA);
       expect(this.target).toContain(this.valueB);
       expect(this.target).toContain(this.valueC);
+    });
+    it('should only copy values of type [opt_type] when defined', function() {
+      expect(this.target).toEqualArray(['one', 'two']);
+
+      NDP.copyValuesToArray(['three', 'four'], this.target, true, String);
+      expect(this.target).toEqualArray(['three', 'four']);
+
+      NDP.copyValuesToArray(['five', 6], this.target, true, String);
+      expect(this.target).toEqualArray(['five', 'four']);
+
+      NDP.copyValuesToArray([7, 8, 'cats'], this.target, false, String);
+      expect(this.target).toEqualArray(['five', 'four', 'cats']);
+
+      NDP.copyValuesToArray([7, 8, 'cats'], this.target, false);
+      expect(this.target).toEqualArray([7, 8, 'cats']);
     });
   });
 

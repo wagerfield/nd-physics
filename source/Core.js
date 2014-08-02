@@ -176,10 +176,12 @@ NDP.removeItemFromArray = function(item, array) {
  * @param {Array} source Source Array to copy values from.
  * @param {Array} target Target Array to copy values to.
  * @param {Boolean} opt_limit Whether or not to limit the copy to the length of the target Array. Defaults to true.
+ * @param {Object} opt_type Optional type Object to filter the copy by.
  */
-NDP.copyValuesToArray = function(source, target, opt_limit) {
+NDP.copyValuesToArray = function(source, target, opt_limit, opt_type) {
   opt_limit = this.isBoolean(opt_limit) ? opt_limit : true;
   for (var i = 0, l = source.length; i < l; i++) {
+    if (opt_type !== undefined && !NDP.isType(source[i], opt_type)) continue;
     if (opt_limit) {
       if (i < target.length) {
         target[i] = source[i];
