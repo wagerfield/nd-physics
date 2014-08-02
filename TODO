@@ -1,14 +1,33 @@
- ☐ Hookes Law test suite for Spring
- ☐ EulerIntegrator test suite
- ☐ ImprovedEulerIntegrator test suite
- ☐ VerletEulerIntegrator test suite
- ☐ Add Runge Kutta Integrator with RK4 implementation
- ☐ Implement CollisionBehaviour
- ☐ Implement ConstantBehaviour
- ☐ Implement AttractionBehaviour
- ☐ Implement CollisionBehaviour
- ☐ Implement EdgeWrapBehaviour
- ☐ Implement EdgeBounceBehaviour
- ☐ Implement WanderBehaviour
- ☐ Implement FlockBehaviour
- ☐ Implement ChargeBehaviour
+
+Components:
+ ☐ Add Hookes Law equation to Spring comments
+
+--- ✄ -----------------------
+
+Behaviours:
+  ☐ CollisionBehaviour
+  ☐ ConstantBehaviour
+  ☐ AttractionBehaviour
+  ☐ CollisionBehaviour
+  ☐ EdgeWrapBehaviour
+  ☐ EdgeBounceBehaviour
+  ☐ WanderBehaviour
+  ☐ FlockBehaviour
+  ☐ ChargeBehaviour
+
+--- ✄ -----------------------
+
+Integrators:
+  ☐ Abstract Runge Kutta Integrator
+  ☐ RK4 Integrator
+
+--- ✄ -----------------------
+
+Tests:
+  Remaining BDD tests.
+  Components:
+   ☐ Hookes Law test suite for Spring
+   Integrators:
+   ☐ EulerIntegrator test suite
+   ☐ ImprovedEulerIntegrator test suite
+   ☐ VerletEulerIntegrator test suite
