@@ -5,9 +5,10 @@
  ☐ Add Runge Kutta Integrator with RK4 implementation
  ☐ Implement CollisionBehaviour
  ☐ Implement ConstantBehaviour
- ☐ Implement AttractionBehavior
- ☐ Implement CollisionBehavior
- ☐ Implement EdgeWrapBehavior
- ☐ Implement EdgeBounceBehavior
- ☐ Implement WanderBehavior
- ☐ Implement FlockBehavior
+ ☐ Implement AttractionBehaviour
+ ☐ Implement CollisionBehaviour
+ ☐ Implement EdgeWrapBehaviour
+ ☐ Implement EdgeBounceBehaviour
+ ☐ Implement WanderBehaviour
+ ☐ Implement FlockBehaviour
+ ☐ Implement ChargeBehaviour
