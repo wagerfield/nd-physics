@@ -5,8 +5,8 @@ Components:
 --- ✄ -----------------------
 
 Behaviours:
-  ☐ CollisionBehaviour
   ☐ ConstantBehaviour
+  ☐ CollisionBehaviour
   ☐ AttractionBehaviour
   ☐ CollisionBehaviour
   ☐ EdgeWrapBehaviour
@@ -26,8 +26,12 @@ Integrators:
 Tests:
   Remaining BDD tests.
   Components:
-   ☐ Hookes Law test suite for Spring
-   Integrators:
-   ☐ EulerIntegrator test suite
-   ☐ ImprovedEulerIntegrator test suite
-   ☐ VerletEulerIntegrator test suite
+   ☐ Hookes Law test for Spring
+  Integrators:
+   ☐ EulerIntegrator validation tests
+   ☐ ImprovedEulerIntegrator validation tests
+   ☐ VerletEulerIntegrator validation tests
+  Behaviours:
+    ☐ Abstract Behaviour
+    ☐ ConstantBehaviour
+    ☐ CollisionBehaviour
