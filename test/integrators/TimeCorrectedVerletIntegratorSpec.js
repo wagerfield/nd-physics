@@ -12,7 +12,7 @@ describe('NDP.TimeCorrectedVerletIntegrator(opt_dimensions)', function() {
   });
 
   describe('__integrate(particle, delta, lubricity)', function() {
-    it('should integrate acceleration > velocity > position using Time Corrected Verlet integration', function() {
+    it('should integrate motion using Time Corrected Verlet equation', function() {
       this.integrator.__integrate(this.particle, 1, this.engine.lubricity);
     });
   });

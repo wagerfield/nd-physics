@@ -12,7 +12,7 @@ describe('NDP.ImprovedEulerIntegrator(opt_dimensions)', function() {
   });
 
   describe('__integrate(particle, delta, lubricity)', function() {
-    it('should integrate acceleration > velocity > position using Improved Euler integration', function() {
+    it('should integrate motion using Improved Euler equation', function() {
       this.integrator.__integrate(this.particle, 1, this.engine.lubricity);
     });
   });
