@@ -29,6 +29,12 @@ NDP.Integrator = function(opt_dimensions) {
   this.__acc = this.__vector.create();
   this.__vel = this.__vector.create();
   this.__pos = this.__vector.create();
+
+  // Create caches.
+  this.__delta = 0;
+  this.__oldDelta = 0;
+  this.__deltaSquared = 0;
+  this.__halfDeltaSquared = 0;
 };
 
 /**
@@ -39,6 +45,14 @@ NDP.Integrator = function(opt_dimensions) {
  */
 NDP.Integrator.prototype.integrate = function(particles, delta, lubricity) {
   var i, l, particle;
+
+  // Set delta values.
+  this.__deltaSquared = delta * delta;
+  this.__halfDeltaSquared = this.__deltaSquared * 0.5;
+  this.__oldDelta = this.__delta;
+  this.__delta = delta;
+
+  // Integrate motion for each particle in the particles collection.
   for (i = 0, l = particles.length; i < l; i++) {
     particle = particles[i];
     if (!particle.__fixed) {
