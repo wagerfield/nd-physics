@@ -90,6 +90,30 @@ describe('NDP.Integrator(opt_dimensions)', function() {
     });
   });
 
+  describe('__delta, __deltaSquared, __halfDeltaSquared, __deltaCorrection', function() {
+    beforeEach(function() {
+      this.deltaKeys = [
+        '__delta',
+        '__deltaSquared',
+        '__halfDeltaSquared',
+        '__deltaCorrection'
+      ];
+    });
+    it('should be __private', function() {
+      for (var i = 0; i < this.deltaKeys.length; i++) {
+        var privateKey = this.deltaKeys[i];
+        var publicKey = privateKey.replace(/_/g, '');
+        expect(this.integratorA[privateKey]).toBeDefined();
+        expect(this.integratorA[publicKey]).toBeUndefined();
+      }
+    });
+    it('should be set to null initially', function() {
+      for (var i = 0; i < this.deltaKeys.length; i++) {
+        expect(this.integratorA[this.deltaKeys[i]]).toBeNull();
+      }
+    });
+  });
+
   describe('integrate(particles, delta, lubricity)', function() {
     beforeEach(function() {
       this.particles = [
@@ -98,6 +122,28 @@ describe('NDP.Integrator(opt_dimensions)', function() {
         this.particleC = new NDP.Particle(3, 2, false)
       ];
       spyOn(this.integratorA, '__integrate');
+    });
+    it('should calculate and set __delta, __deltaSquared, __halfDeltaSquared, __deltaCorrection', function() {
+      expect(this.integratorA.__delta).toBeNull();
+      expect(this.integratorA.__deltaSquared).toBeNull();
+      expect(this.integratorA.__halfDeltaSquared).toBeNull();
+      expect(this.integratorA.__deltaCorrection).toBeNull();
+
+      var DELTA_A = 2, DELTA_B = 8, LUBRICITY = 0.5;
+
+      this.integratorA.integrate(this.particles, DELTA_A, LUBRICITY);
+      expect(this.integratorA.__delta).toBe(DELTA_A);
+      expect(this.integratorA.__deltaSquared).toBe(Math.pow(DELTA_A, 2));
+      expect(this.integratorA.__halfDeltaSquared).toBe(Math.pow(DELTA_A, 2) * 0.5);
+      expect(this.integratorA.__deltaCorrection).toBe(1); // First integration sets __delta to [delta]
+
+      var __delta = this.integratorA.__delta;
+
+      this.integratorA.integrate(this.particles, DELTA_B, LUBRICITY);
+      expect(this.integratorA.__delta).toBe(DELTA_B);
+      expect(this.integratorA.__deltaSquared).toBe(Math.pow(DELTA_B, 2));
+      expect(this.integratorA.__halfDeltaSquared).toBe(Math.pow(DELTA_B, 2) * 0.5);
+      expect(this.integratorA.__deltaCorrection).toBe(DELTA_B / DELTA_A);
     });
     it('should call __integrate(particle, delta, lubricity) for each unfixed particle', function() {
       this.integratorA.integrate(this.particles);
