@@ -30,7 +30,7 @@ describe('NDP.VerletIntegrator(opt_dimensions)', function() {
       // acceleration = force / mass || force * inverseMass
       this.vector.scale(this.acc, this.force, this.particle.__inverseMass);
 
-      // acceleration *= delta
+      // acceleration *= delta * delta
       this.vector.scale(this.acc, this.acc, delta * delta);
 
       // velocity = position - oldPosition
@@ -42,7 +42,7 @@ describe('NDP.VerletIntegrator(opt_dimensions)', function() {
       // velocity *= lubricity
       this.vector.scale(this.vel, this.vel, lubricity);
 
-      // copy pos to oldPos
+      // oldPos = pos
       this.vector.copy(this.oldPos, this.pos);
 
       // position += velocity
