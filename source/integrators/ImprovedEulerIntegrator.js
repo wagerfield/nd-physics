@@ -16,7 +16,11 @@ NDP.Integrator.create('ImprovedEulerIntegrator',
   function(particle, delta, lubricity) {
 
     // Calculate acceleration.
-    // acceleration *= inverseMass * deltaSquared * 0.5
+    // NOTE: Force is stored in the acceleration vector,
+    //       so needs to be converted to acceleration:
+    //       force = mass * acceleration
+    //       acceleration = force * 1 / mass (inverseMass)
+    // acceleration *= inverseMass * delta * delta * 0.5
     this.__vector.scale(this.__acc, particle.__acc, particle.__inverseMass * this.__halfDeltaSquared);
 
     // Calculate velocity into slave to preserve momentum.
