@@ -19,7 +19,7 @@ NDP.Integrator.create('ImprovedEulerIntegrator',
     // Calculate acceleration.
     // force = mass * acceleration
     // acceleration = force / mass || force * inverseMass
-    this.__vector.scale(particle.__acc, particle.__force, particle.__inverseMass * this.__halfDeltaSquared);
+    this.__vector.scale(this.__acc, particle.__force, particle.__inverseMass * this.__halfDeltaSquared);
 
     // Calculate velocity into slave to preserve momentum.
     // velocity *= delta
@@ -27,7 +27,7 @@ NDP.Integrator.create('ImprovedEulerIntegrator',
 
     // Add slave acceleration to slave velocity.
     // velocity += acceleration
-    this.__vector.add(this.__vel, this.__vel, particle.__acc);
+    this.__vector.add(this.__vel, this.__vel, this.__acc);
 
     // Add slave velocity to position.
     // position += velocity
@@ -35,11 +35,11 @@ NDP.Integrator.create('ImprovedEulerIntegrator',
 
     // Calculate acceleration.
     // acceleration *= delta
-    this.__vector.scale(this.__acc, particle.__force, particle.__inverseMass * delta);
+    this.__vector.scale(particle.__acc, particle.__force, particle.__inverseMass * delta);
 
     // Add acceleration to velocity.
     // velocity += acceleration
-    this.__vector.add(particle.__vel, particle.__vel, this.__acc);
+    this.__vector.add(particle.__vel, particle.__vel, particle.__acc);
 
     // Scale velocity by lubricity.
     // velocity *= lubricity
