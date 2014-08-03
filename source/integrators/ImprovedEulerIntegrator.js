@@ -7,8 +7,8 @@ NDP.Integrator.create('ImprovedEulerIntegrator',
 
   /**
    * Integrates motion for a single particle using Improved Euler integration.
+   * x += v * dt + 0.5 * a * dt * dt
    * v += a * dt
-   * x += v * dt + a * dt * dt * 0.5
    * @param {Particle} particle Particle to integrate motion on.
    * @param {Number} delta Time delta in milliseconds since last integration.
    * @param {Number} lubricity Lubricity within the system.
