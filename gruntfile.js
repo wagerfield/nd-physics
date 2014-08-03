@@ -23,7 +23,13 @@ module.exports = function(grunt) {
 
     // Test Files
     testFiles: [
-      'test/**/*.js'
+      'test/matchers/*.js',
+      'test/*.js',
+      'test/math/*.js',
+      'test/integrators/IntegratorSpec.js',
+      'test/integrators/*.js',
+      'test/behaviours/BehaviourSpec.js',
+      'test/behaviours/*.js'
     ],
 
     // Concat Tasks
