@@ -1,9 +1,3 @@
-/**
- * CollisionBehaviour constructor.
- * Manages collisions between a collection of particles.
- * @constructor
- * @param {Number} opt_dimensions Optional number of component dimension that the behaviour should have. Defaults to NDP.DIMENSIONS.
- */
 (function(Behaviour) {
 
   Behaviour.prototype.addParticle = function(particle) {
@@ -13,6 +7,8 @@
   };
 
 })(NDP.Behaviour.create('CollisionBehaviour',
+  function() {
+  },
   function(particle, delta, index) {
   }
 ));
