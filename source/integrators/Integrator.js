@@ -31,10 +31,10 @@ NDP.Integrator = function(opt_dimensions) {
   this.__pos = this.__vector.create();
 
   // Create caches.
-  this.__delta = 0;
-  this.__deltaSquared = 0;
-  this.__halfDeltaSquared = 0;
-  this.__deltaCorrection = 0;
+  this.__delta = null;
+  this.__deltaSquared = null;
+  this.__halfDeltaSquared = null;
+  this.__deltaCorrection = null;
 };
 
 /**
@@ -45,6 +45,9 @@ NDP.Integrator = function(opt_dimensions) {
  */
 NDP.Integrator.prototype.integrate = function(particles, delta, lubricity) {
   var i, l, particle;
+
+  // Handle first integration.
+  if (this.__delta === null) this.__delta = delta;
 
   // Set delta values.
   this.__deltaSquared = delta * delta;
