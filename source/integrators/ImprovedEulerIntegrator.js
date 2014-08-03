@@ -7,7 +7,7 @@ NDP.Integrator.create('ImprovedEulerIntegrator',
 
   /**
    * Integrates motion for a single particle using Improved Euler integration.
-   * x += v * dt + 0.5 * a * dt * dt
+   * x += v * dt + a * dt * dt * 0.5
    * v += a * dt
    * @param {Particle} particle Particle to integrate motion on.
    * @param {Number} delta Time delta in milliseconds since last integration.
@@ -17,7 +17,7 @@ NDP.Integrator.create('ImprovedEulerIntegrator',
 
     // Calculate acceleration.
     // acceleration *= inverseMass * deltaSquared * 0.5
-    this.__vector.scale(this.__acc, particle.__acc, particle.__inverseMass * delta * delta * 0.5);
+    this.__vector.scale(this.__acc, particle.__acc, particle.__inverseMass * this.__halfDeltaSquared);
 
     // Calculate velocity into slave to preserve momentum.
     // velocity *= delta
