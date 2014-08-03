@@ -6,9 +6,10 @@ describe('NDP.EulerIntegrator(opt_dimensions)', function() {
     NDP.DIMENSIONS = 2;
 
     this.integrator = new NDP.EulerIntegrator();
-    this.particle = new NDP.Particle(2);
-    this.vector = NDP.getVector(NDP.DIMENSIONS);
+    this.particle = new NDP.Particle(1);
+    this.particles = [this.particle];
 
+    this.vector = NDP.getVector(NDP.DIMENSIONS);
     this.identity = this.vector.create();
     this.force = this.vector.create();
     this.slave = this.vector.create();
@@ -59,7 +60,7 @@ describe('NDP.EulerIntegrator(opt_dimensions)', function() {
     expect(this.integrator instanceof NDP.Integrator).toBeTruthy();
   });
 
-  describe('__integrate(particle, delta, lubricity)', function() {
+  describe('integrate(particles, delta, lubricity)', function() {
     it('should integrate motion using Euler integration', function() {
 
       var DELTA = 2,
@@ -70,7 +71,7 @@ describe('NDP.EulerIntegrator(opt_dimensions)', function() {
       expect(this.particle.__vel).toEqualArray(this.identity);
       expect(this.particle.__pos).toEqualArray(this.identity);
 
-      this.integrator.__integrate(this.particle, DELTA, LUBRICITY);
+      this.integrator.integrate(this.particles, DELTA, LUBRICITY);
 
       expect(this.particle.__force).toEqualArray(this.identity);
       expect(this.particle.__acc).toEqualArray(this.identity);
@@ -87,7 +88,7 @@ describe('NDP.EulerIntegrator(opt_dimensions)', function() {
       this.integrate(this.particle.__force, DELTA, LUBRICITY);
 
       // Integrate using integrator integration method.
-      this.integrator.__integrate(this.particle, DELTA, LUBRICITY);
+      this.integrator.integrate(this.particles, DELTA, LUBRICITY);
 
       // Compare vectors.
       expect(this.particle.__force).toEqualArray(this.identity);
@@ -113,7 +114,7 @@ describe('NDP.EulerIntegrator(opt_dimensions)', function() {
       this.integrate(this.particle.__force, DELTA, LUBRICITY);
 
       // Integrate using integrator integration method.
-      this.integrator.__integrate(this.particle, DELTA, LUBRICITY);
+      this.integrator.integrate(this.particles, DELTA, LUBRICITY);
 
       // Compare vectors.
       expect(this.particle.__force).toEqualArray(this.identity);
