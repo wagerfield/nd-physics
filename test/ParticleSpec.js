@@ -237,9 +237,9 @@ describe('NDP.Particle(mass, opt_radius, opt_fixed, opt_dimensions)', function()
     });
   });
 
-  describe('__acc, __vel, __pos', function() {
+  describe('__force, __acc, __vel, __pos', function() {
     beforeEach(function() {
-      this.vectorKeys = ['__acc', '__vel', '__pos'];
+      this.vectorKeys = ['__force', '__acc', '__vel', '__pos'];
     });
     it('should be __private', function() {
       for (var i = 0; i < this.vectorKeys.length; i++) {
@@ -274,9 +274,9 @@ describe('NDP.Particle(mass, opt_radius, opt_fixed, opt_dimensions)', function()
         expect(this.particleA.__old[key]).toEqual(jasmine.any(NDP.Array));
       }
     });
-    describe('acc, vel, pos', function() {
+    describe('force, acc, vel, pos', function() {
       beforeEach(function() {
-        this.vectorKeys = ['acc', 'vel', 'pos'];
+        this.vectorKeys = ['force', 'acc', 'vel', 'pos'];
       });
       it('should be an NDP.Array instance', function() {
         for (var i = 0; i < this.vectorKeys.length; i++) {
@@ -299,6 +299,7 @@ describe('NDP.Particle(mass, opt_radius, opt_fixed, opt_dimensions)', function()
       this.particle2 = new NDP.Particle(1, 1, false, 2);
       this.particle3 = new NDP.Particle(1, 1, false, 3);
       this.map = [
+        {prefix:'f', array:'__force'},
         {prefix:'a', array:'__acc'},
         {prefix:'v', array:'__vel'},
         {prefix:'' , array:'__pos'}
@@ -323,24 +324,30 @@ describe('NDP.Particle(mass, opt_radius, opt_fixed, opt_dimensions)', function()
       // Add prefixed x component [cx]
       var X = 0;
       particle.__defineComponent(X, 'acc', 'c');
+      particle.cx = 2;
       expect(particle.cx).toBeDefined();
       expect(particle.__cx).toBeDefined();
       expect(particle.cx).toBe(particle.__acc[X]);
       expect(particle.__cx).toBe(particle.__acc[X]);
+      expect(particle.cx).toBe(2);
+      expect(particle.__cx).toBe(2);
 
       // Add prefixed y component [cy]
       var Y = 1;
-      particle.__acc[Y] = 100;
+      particle.__acc[Y] = 4;
       particle.__defineComponent(Y, 'acc', 'c');
       expect(particle.cy).toBeDefined();
       expect(particle.__cy).toBeDefined();
       expect(particle.cy).toBe(particle.__acc[Y]);
       expect(particle.__cy).toBe(particle.__acc[Y]);
+      expect(particle.cy).toBe(4);
+      expect(particle.__cy).toBe(4);
     });
-    it('should have defined and set [public] and [__private] properties for acceleration, velocity and position', function() {
+    it('should have defined and set [public] and [__private] properties for force, acceleration, velocity and position', function() {
       this.particle1.x = 10;
       this.particle2.y = 10;
       this.particle3.z = 10;
+      this.particle3.fx = 8;
       // console.log(JSON.stringify(this.particle1, null, 4));
       // console.log(JSON.stringify(this.particle2, null, 4));
       // console.log(JSON.stringify(this.particle3, null, 4));
@@ -391,6 +398,14 @@ describe('NDP.Particle(mass, opt_radius, opt_fixed, opt_dimensions)', function()
       expect(this.particle3.__vz).toBe(NEW_VELOCITY);
       expect(this.particle3.__vel[2]).toBe(NEW_VELOCITY);
       expect(this.particle3.__old.vel[2]).toBe(NEW_VELOCITY);
+
+      // Force
+      var NEW_FORCE = 30;
+      this.particle3.fx = NEW_FORCE;
+      expect(this.particle3.fx).toBe(NEW_FORCE);
+      expect(this.particle3.__fx).toBe(NEW_FORCE);
+      expect(this.particle3.__force[0]).toBe(NEW_FORCE);
+      expect(this.particle3.__old.force[0]).toBe(NEW_FORCE);
     });
     it('should only accept Number values', function() {
 
