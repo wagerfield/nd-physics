@@ -24,8 +24,12 @@ NDP.Integrator.create('VerletIntegrator',
     this.__vector.scale(particle.__vel, particle.__vel, lubricity);
 
     // Calculate acceleration.
-    // acceleration *= delta * delta
-    this.__vector.scale(particle.__acc, particle.__acc, delta * delta);
+    // NOTE: Force is stored in the acceleration vector,
+    //       so needs to be converted to acceleration:
+    //       force = mass * acceleration
+    //       acceleration = force * 1 / mass (inverseMass)
+    // acceleration *= inverseMass * delta * delta
+    this.__vector.scale(particle.__acc, particle.__acc, particle.__inverseMass * this.__deltaSquared);
 
     // Add acceleration to velocity.
     // velocity += acceleration
