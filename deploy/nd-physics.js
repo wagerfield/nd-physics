@@ -176,10 +176,12 @@ NDP.removeItemFromArray = function(item, array) {
  * @param {Array} source Source Array to copy values from.
  * @param {Array} target Target Array to copy values to.
  * @param {Boolean} opt_limit Whether or not to limit the copy to the length of the target Array. Defaults to true.
+ * @param {Object} opt_type Optional type Object to filter the copy by.
  */
-NDP.copyValuesToArray = function(source, target, opt_limit) {
+NDP.copyValuesToArray = function(source, target, opt_limit, opt_type) {
   opt_limit = this.isBoolean(opt_limit) ? opt_limit : true;
   for (var i = 0, l = source.length; i < l; i++) {
+    if (opt_type !== undefined && !NDP.isType(source[i], opt_type)) continue;
     if (opt_limit) {
       if (i < target.length) {
         target[i] = source[i];
@@ -424,7 +426,7 @@ NDP.Engine.prototype.integrate = function(delta) {
 /**
  * Particle constructor.
  * Manages behaviours collection.
- * Updates translation vectors by applying the effects of registered behaviours.
+ * Updates translation vectors by applying forces from registered behaviours.
  * @constructor
  * @param {Number} mass Mass of the particle.
  * @param {Number} opt_radius Optional radius value for the particle. Defaults to the same value as the mass.
@@ -477,10 +479,12 @@ NDP.Particle = function(mass, opt_radius, opt_fixed, opt_dimensions) {
   });
 
   // Create particle vectors.
+  this.__force = this.__vector.create();
   this.__acc = this.__vector.create();
   this.__vel = this.__vector.create();
   this.__pos = this.__vector.create();
   this.__old = {
+    force: this.__vector.create(),
     acc: this.__vector.create(),
     vel: this.__vector.create(),
     pos: this.__vector.create()
@@ -488,6 +492,7 @@ NDP.Particle = function(mass, opt_radius, opt_fixed, opt_dimensions) {
 
   // Define component getters and setters.
   for (var i = 0; i < this.__dimensions; i++) {
+    this.__defineComponent(i, 'force', 'f');
     this.__defineComponent(i, 'acc', 'a');
     this.__defineComponent(i, 'vel', 'v');
     this.__defineComponent(i, 'pos');
@@ -624,7 +629,7 @@ NDP.Particle.prototype.update = function(delta, index) {
   if (!this.__fixed && delta !== 0) {
     for (i = 0, l = this.behaviours.length; i < l; i++) {
       behaviour = this.behaviours[i];
-      if (behaviour.active) {
+      if (behaviour.__active) {
         behaviour.apply(this, delta, index);
       }
     }
@@ -633,6 +638,7 @@ NDP.Particle.prototype.update = function(delta, index) {
   // Set private component properties.
   for (i = 0, l = this.__dimensions; i < l; i++) {
     component = NDP.COMPONENTS[i];
+    this['__f' + component] = this.__force[i];
     this['__a' + component] = this.__acc[i];
     this['__v' + component] = this.__vel[i];
     this['__'  + component] = this.__pos[i];
@@ -1354,6 +1360,12 @@ NDP.Integrator = function(opt_dimensions) {
   this.__acc = this.__vector.create();
   this.__vel = this.__vector.create();
   this.__pos = this.__vector.create();
+
+  // Create caches.
+  this.__delta = null;
+  this.__deltaSquared = null;
+  this.__halfDeltaSquared = null;
+  this.__deltaCorrection = null;
 };
 
 /**
@@ -1364,6 +1376,17 @@ NDP.Integrator = function(opt_dimensions) {
  */
 NDP.Integrator.prototype.integrate = function(particles, delta, lubricity) {
   var i, l, particle;
+
+  // Handle first integration.
+  if (this.__delta === null) this.__delta = delta;
+
+  // Set delta values.
+  this.__deltaSquared = delta * delta;
+  this.__halfDeltaSquared = this.__deltaSquared * 0.5;
+  this.__deltaCorrection = delta / this.__delta;
+  this.__delta = delta;
+
+  // Integrate motion for each particle in the particles collection.
   for (i = 0, l = particles.length; i < l; i++) {
     particle = particles[i];
     if (!particle.__fixed) {
@@ -1407,26 +1430,33 @@ NDP.Integrator.create = function(namespace, integration) {
 
 /**
  * EulerIntegrator constructor.
- * Integrates particle motion using Euler integration:
- * v += a * dt
- * x += v * dt
  * @constructor
- * @param {String} namespace EulerIntegrator namespace.
- * @param {Function} integration Euler integration function.
+ * @param {Number} opt_dimensions Optional number of component dimension that the integrator should have. Defaults to NDP.DIMENSIONS.
  */
 NDP.Integrator.create('EulerIntegrator',
+
+  /**
+   * Integrates motion for a single particle using Euler integration.
+   * a(i+1) = a(i) * dt(i)
+   * v(i+1) = v(i) + a(i+1)
+   * x(i+1) = x(i) + v(i+1) * dt(i)
+   * @param {Particle} particle Particle to integrate motion on.
+   * @param {Number} delta Time delta in milliseconds since last integration.
+   * @param {Number} lubricity Lubricity within the system.
+   */
   function(particle, delta, lubricity) {
 
     // Calculate acceleration.
-    // acceleration *= inverseMass * delta
-    this.__vector.scale(particle.__acc, particle.__acc, particle.__inverseMass * delta);
+    // force = mass * acceleration
+    // acceleration = force / mass || force * inverseMass
+    this.__vector.scale(particle.__acc, particle.__force, particle.__inverseMass * delta);
 
     // Add acceleration to velocity.
     // velocity += acceleration
     this.__vector.add(particle.__vel, particle.__vel, particle.__acc);
 
     // Scale velocity by lubricity.
-    // velocity *= friction
+    // velocity *= lubricity
     this.__vector.scale(particle.__vel, particle.__vel, lubricity);
 
     // Calculate velocity into slave to preserve momentum.
@@ -1437,26 +1467,33 @@ NDP.Integrator.create('EulerIntegrator',
     // position += velocity
     this.__vector.add(particle.__pos, particle.__pos, this.__vel);
 
-    // Reset acceleration.
-    this.__vector.identity(particle.__acc);
+    // Reset force.
+    this.__vector.identity(particle.__force);
   }
 );
 
 /**
  * ImprovedEulerIntegrator constructor.
- * Integrates particle motion using Euler integration:
- * x += v * dt + a * dt * dt * 0.5
- * v += a * dt
  * @constructor
- * @param {String} namespace ImprovedEulerIntegrator namespace.
- * @param {Function} integration Improved Euler integration function.
+ * @param {Number} opt_dimensions Optional number of component dimension that the integrator should have. Defaults to NDP.DIMENSIONS.
  */
 NDP.Integrator.create('ImprovedEulerIntegrator',
+
+  /**
+   * Integrates motion for a single particle using Improved Euler integration.
+   * a(i+1) = a(i) * dt(i) * dt(i) * 0.5
+   * x(i+1) = x(i) + v(i) * dt(i) + a(i+1)
+   * v(i+1) = v(i) + a(i) * dt(i)
+   * @param {Particle} particle Particle to integrate motion on.
+   * @param {Number} delta Time delta in milliseconds since last integration.
+   * @param {Number} lubricity Lubricity within the system.
+   */
   function(particle, delta, lubricity) {
 
     // Calculate acceleration.
-    // acceleration *= inverseMass * deltaSquared * 0.5
-    this.__vector.scale(this.__acc, particle.__acc, particle.__inverseMass * delta * delta * 0.5);
+    // force = mass * acceleration
+    // acceleration = force / mass || force * inverseMass
+    this.__vector.scale(this.__acc, particle.__force, particle.__inverseMass * this.__halfDeltaSquared);
 
     // Calculate velocity into slave to preserve momentum.
     // velocity *= delta
@@ -1472,48 +1509,61 @@ NDP.Integrator.create('ImprovedEulerIntegrator',
 
     // Calculate acceleration.
     // acceleration *= delta
-    this.__vector.scale(particle.__acc, particle.__acc, delta);
+    this.__vector.scale(particle.__acc, particle.__force, particle.__inverseMass * delta);
 
     // Add acceleration to velocity.
     // velocity += acceleration
     this.__vector.add(particle.__vel, particle.__vel, particle.__acc);
 
     // Scale velocity by lubricity.
-    // velocity *= friction
+    // velocity *= lubricity
     this.__vector.scale(particle.__vel, particle.__vel, lubricity);
 
-    // Reset acceleration.
-    this.__vector.identity(particle.__acc);
+    // Reset force.
+    this.__vector.identity(particle.__force);
   }
 );
 
 /**
- * VerletIntegrator constructor.
- * Integrates particle motion using Verlet integration:
- * v = x - ox
- * x += v + a * dt * dt
+ * TimeCorrectedVerletIntegrator constructor.
+ * @author Jonathan Dummer
+ * @see http://lonesock.net/article/verlet.html
  * @constructor
- * @param {String} namespace VerletIntegrator namespace.
- * @param {Function} integration Verlet integration function.
+ * @param {Number} opt_dimensions Optional number of component dimension that the integrator should have. Defaults to NDP.DIMENSIONS.
  */
-NDP.Integrator.create('VerletIntegrator',
+NDP.Integrator.create('TimeCorrectedVerletIntegrator',
+
+  /**
+   * Integrates motion for a single particle using Verlet integration.
+   * a(i+1) = a(i) * dt(i) * dt(i)
+   * v(i) = x(i) - x(i-1)
+   * x(i+1) = x(i) + v(i) * (dt(i) / dt(i-1)) + a(i+1)
+   * @param {Particle} particle Particle to integrate motion on.
+   * @param {Number} delta Time delta in milliseconds since last integration.
+   * @param {Number} lubricity Lubricity within the system.
+   */
   function(particle, delta, lubricity) {
+
+    // Calculate acceleration.
+    // force = mass * acceleration
+    // acceleration = force / mass || force * inverseMass
+    this.__vector.scale(particle.__acc, particle.__force, particle.__inverseMass * this.__deltaSquared);
 
     // Calculate velocity.
     // velocity = position - oldPosition
     this.__vector.subtract(particle.__vel, particle.__pos, particle.__old.pos);
 
-    // Scale velocity by lubricity.
-    // velocity *= friction
-    this.__vector.scale(particle.__vel, particle.__vel, lubricity);
-
-    // Calculate acceleration.
-    // acceleration *= delta * delta
-    this.__vector.scale(particle.__acc, particle.__acc, delta * delta);
+    // Scale velocity by deltaCorrection.
+    // velocity *= deltaCorrection
+    this.__vector.scale(particle.__vel, particle.__vel, this.__deltaCorrection);
 
     // Add acceleration to velocity.
     // velocity += acceleration
     this.__vector.add(particle.__vel, particle.__vel, particle.__acc);
+
+    // Scale velocity by lubricity.
+    // velocity *= lubricity
+    this.__vector.scale(particle.__vel, particle.__vel, lubricity);
 
     // Store old position.
     // oldPosition = position
@@ -1523,14 +1573,62 @@ NDP.Integrator.create('VerletIntegrator',
     // position += velocity
     this.__vector.add(particle.__pos, particle.__pos, particle.__vel);
 
-    // Reset acceleration.
-    this.__vector.identity(particle.__acc);
+    // Reset force.
+    this.__vector.identity(particle.__force);
+  }
+);
+
+/**
+ * VerletIntegrator constructor.
+ * @constructor
+ * @param {Number} opt_dimensions Optional number of component dimension that the integrator should have. Defaults to NDP.DIMENSIONS.
+ */
+NDP.Integrator.create('VerletIntegrator',
+
+  /**
+   * Integrates motion for a single particle using Verlet integration.
+   * a(i+1) = a(i) * dt(i) * dt(i)
+   * v(i+1) = x(i) - x(i-1)
+   * x(i+1) = x(i) + v(i+1) + a(i+1)
+   * @param {Particle} particle Particle to integrate motion on.
+   * @param {Number} delta Time delta in milliseconds since last integration.
+   * @param {Number} lubricity Lubricity within the system.
+   */
+  function(particle, delta, lubricity) {
+
+    // Calculate acceleration.
+    // force = mass * acceleration
+    // acceleration = force / mass || force * inverseMass
+    this.__vector.scale(particle.__acc, particle.__force, particle.__inverseMass * this.__deltaSquared);
+
+    // Calculate velocity.
+    // velocity = position - oldPosition
+    this.__vector.subtract(particle.__vel, particle.__pos, particle.__old.pos);
+
+    // Add acceleration to velocity.
+    // velocity += acceleration
+    this.__vector.add(particle.__vel, particle.__vel, particle.__acc);
+
+    // Scale velocity by lubricity.
+    // velocity *= lubricity
+    this.__vector.scale(particle.__vel, particle.__vel, lubricity);
+
+    // Store old position.
+    // oldPosition = position
+    this.__vector.copy(particle.__old.pos, particle.__pos);
+
+    // Add velocity to position.
+    // position += velocity
+    this.__vector.add(particle.__pos, particle.__pos, particle.__vel);
+
+    // Reset force.
+    this.__vector.identity(particle.__force);
   }
 );
 
 /**
  * Behaviour constructor.
- * Applies forces to a particle.
+ * Applies a force to a particle.
  * @constructor
  * @param {Number} opt_dimensions Optional number of component dimension that the behaviour should have. Defaults to NDP.DIMENSIONS.
  */
@@ -1555,7 +1653,7 @@ NDP.Behaviour = function(opt_dimensions) {
     throw 'Behaviour: No Vector Object available for ['+this.__dimensions+'] dimensions';
   }
 
-  // Active flag.
+  // Set active state.
   this.active = true;
 };
 
@@ -1566,7 +1664,22 @@ NDP.Behaviour = function(opt_dimensions) {
 NDP.Behaviour.id = 'Behaviour';
 
 /**
- * Behaviour constructor.
+ * Active state of the behaviour.
+ * @type {Boolean}
+ */
+Object.defineProperty(NDP.Behaviour.prototype, 'active', {
+  set: function(value) {
+    if (NDP.isBoolean(value)) {
+      this.__active = value;
+    }
+  },
+  get: function() {
+    return this.__active;
+  }
+});
+
+/**
+ * Calculates and adds the force of the behaviour to the particle force vector.
  * @param {Particle} particle Particle instance to apply the behaviour to.
  * @param {Number} delta Time delta in milliseconds since last integration.
  * @param {Number} index Index of the particle within the system.
@@ -1579,38 +1692,101 @@ NDP.Behaviour.prototype.apply = function(particle, delta, index) {
  * @param {String} namespace Namespace of the behaviour.
  * @return {Behaviour} Behaviour constructor.
  */
-NDP.Behaviour.create = function(namespace) {
+NDP.Behaviour.create = function(namespace, constructor, apply) {
   if (NDP[namespace]) {
     throw 'Behaviour: Object already defined for NDP['+namespace+']';
   }
   var Behaviour = NDP[namespace] = function() {
     NDP.Behaviour.call(this);
   };
+  Behaviour.id = namespace;
   Behaviour.prototype = Object.create(NDP.Behaviour.prototype);
   Behaviour.prototype.constructor = Behaviour;
+  Behaviour.prototype.apply = apply;
   return Behaviour;
 };
 
-NDP.CollisionBehaviour = function() {
-  NDP.Behaviour.call(this);
-};
+(function(Behaviour) {
 
-NDP.CollisionBehaviour.id = 'CollisionBehaviour';
+  Behaviour.prototype.addParticle = function(particle) {
+  };
 
-NDP.CollisionBehaviour.prototype = Object.create(NDP.Behaviour.prototype);
-NDP.CollisionBehaviour.prototype.constructor = NDP.CollisionBehaviour;
+  Behaviour.prototype.removeParticle = function(particle) {
+  };
 
-NDP.CollisionBehaviour.prototype.addParticle = function(particle) {
-};
+})(NDP.Behaviour.create('CollisionBehaviour',
+  function() {
+  },
+  function(particle, delta, index) {
+  }
+));
 
-NDP.CollisionBehaviour.prototype.removeParticle = function(particle) {
-};
+(function(Behaviour) {
 
-NDP.ConstantBehaviour = function() {
-  NDP.Behaviour.call(this);
-};
+})(NDP.Behaviour.create('ConstantBehaviour',
+  function() {
+  },
+  function(particle, delta, index) {
+  }
+));
 
-NDP.ConstantBehaviour.id = 'ConstantBehaviour';
 
-NDP.ConstantBehaviour.prototype = Object.create(NDP.Behaviour.prototype);
-NDP.ConstantBehaviour.prototype.constructor = NDP.ConstantBehaviour;
+
+// /**
+//  * Behaviour constructor.
+//  * Applies a constant force to a particle.
+//  * @constructor
+//  * @param {Array} force Array of force values to apply to each respective component.
+//  * @param {Number} opt_dimensions Optional number of component dimension that the behaviour should have. Defaults to NDP.DIMENSIONS.
+//  */
+// NDP.ConstantBehaviour = function(force, opt_dimensions) {
+//   NDP.Behaviour.call(this);
+
+//   // Create force vector.
+//   this.__force = this.__vector.create();
+
+//   // Set force.
+//   this.setForce.apply(this, force);
+// };
+
+// NDP.ConstantBehaviour.prototype = Object.create(NDP.Behaviour.prototype);
+// NDP.ConstantBehaviour.prototype.constructor = NDP.ConstantBehaviour;
+
+// /**
+//  * Unique identifier.
+//  * @type {String}
+//  */
+// NDP.ConstantBehaviour.id = 'Behaviour';
+
+// /**
+//  * Array of component force values.
+//  * @type {Array}
+//  */
+// Object.defineProperty(NDP.ConstantBehaviour.prototype, 'force', {
+//   set: function(value) {
+//     if (NDP.isArray(value)) {
+//       this.__force = value;
+//     }
+//   },
+//   get: function() {
+//     return this.__force;
+//   }
+// });
+
+// /**
+//  * Sets the force component values to respective numerical arguments. force[n] = arguments[n].
+//  * @param {Array} arguments List of numerical force values to set each respective component to.
+//  */
+// NDP.ConstantBehaviour.prototype.setForce = function() {
+//   NDP.copyValuesToArray(arguments, this.__force, true, Number);
+// };
+
+// /**
+//  * Calculates and adds the force of the behaviour to the particle force vector.
+//  * @param {Particle} particle Particle instance to apply the behaviour to.
+//  * @param {Number} delta Time delta in milliseconds since last integration.
+//  * @param {Number} index Index of the particle within the system.
+//  */
+// NDP.ConstantBehaviour.prototype.apply = function(particle, delta, index) {
+//   this.__vector.add(particle.__force, particle.__force, this.__force);
+// };
