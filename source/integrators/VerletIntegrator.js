@@ -7,8 +7,8 @@ NDP.Integrator.create('VerletIntegrator',
 
   /**
    * Integrates motion for a single particle using Verlet integration.
-   * v = x - ox
-   * x += v + a * dt * dt
+   * vi = xi - xi-1
+   * xi+1 = xi + vi + a * dti * dti
    * @param {Particle} particle Particle to integrate motion on.
    * @param {Number} delta Time delta in milliseconds since last integration.
    * @param {Number} lubricity Lubricity within the system.

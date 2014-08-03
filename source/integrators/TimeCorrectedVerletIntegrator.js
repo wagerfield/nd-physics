@@ -9,8 +9,8 @@ NDP.Integrator.create('TimeCorrectedVerletIntegrator',
 
   /**
    * Integrates motion for a single particle using Verlet integration.
-   * v = x - ox
-   * x += v + a * dt * dt
+   * vi = xi - xi-1
+   * xi+1 = xi + vi * (dti / dti-1) + a * dti * dti
    * @param {Particle} particle Particle to integrate motion on.
    * @param {Number} delta Time delta in milliseconds since last integration.
    * @param {Number} lubricity Lubricity within the system.
@@ -23,7 +23,7 @@ NDP.Integrator.create('TimeCorrectedVerletIntegrator',
 
     // Scale velocity by lubricity.
     // velocity *= friction
-    this.__vector.scale(particle.__vel, particle.__vel, lubricity);
+    this.__vector.scale(particle.__vel, particle.__vel, this.__deltaCorrection * lubricity);
 
     // Calculate acceleration.
     // NOTE: Force is stored in the acceleration vector,
