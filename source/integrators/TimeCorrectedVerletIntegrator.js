@@ -19,12 +19,9 @@ NDP.Integrator.create('TimeCorrectedVerletIntegrator',
   function(particle, delta, lubricity) {
 
     // Calculate acceleration.
-    // NOTE: Force is stored in the acceleration vector,
-    //       so needs to be converted to acceleration:
-    //       force = mass * acceleration
-    //       acceleration = force / mass || force * inverseMass
-    // acceleration *= inverseMass * delta * delta
-    this.__vector.scale(particle.__acc, particle.__acc, particle.__inverseMass * this.__deltaSquared);
+    // force = mass * acceleration
+    // acceleration = force / mass || force * inverseMass
+    this.__vector.scale(particle.__acc, particle.__force, particle.__inverseMass * this.__deltaSquared);
 
     // Calculate velocity.
     // velocity = position - oldPosition
@@ -50,7 +47,7 @@ NDP.Integrator.create('TimeCorrectedVerletIntegrator',
     // position += velocity
     this.__vector.add(particle.__pos, particle.__pos, particle.__vel);
 
-    // Reset acceleration.
-    this.__vector.identity(particle.__acc);
+    // Reset force.
+    this.__vector.identity(particle.__force);
   }
 );
