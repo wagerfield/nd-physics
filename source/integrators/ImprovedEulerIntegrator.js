@@ -7,8 +7,9 @@ NDP.Integrator.create('ImprovedEulerIntegrator',
 
   /**
    * Integrates motion for a single particle using Improved Euler integration.
-   * x += v * dt + a * dt * dt * 0.5
-   * v += a * dt
+   * a(i+1) = a(i) * dt(i) * dt(i) * 0.5
+   * x(i+1) = x(i) + v(i) * dt(i) + a(i+1)
+   * v(i+1) = v(i) + a(i) * dt(i)
    * @param {Particle} particle Particle to integrate motion on.
    * @param {Number} delta Time delta in milliseconds since last integration.
    * @param {Number} lubricity Lubricity within the system.
@@ -19,7 +20,7 @@ NDP.Integrator.create('ImprovedEulerIntegrator',
     // NOTE: Force is stored in the acceleration vector,
     //       so needs to be converted to acceleration:
     //       force = mass * acceleration
-    //       acceleration = force * 1 / mass (inverseMass)
+    //       acceleration = force / mass || force * inverseMass
     // acceleration *= inverseMass * delta * delta * 0.5
     this.__vector.scale(this.__acc, particle.__acc, particle.__inverseMass * this.__halfDeltaSquared);
 
@@ -44,7 +45,7 @@ NDP.Integrator.create('ImprovedEulerIntegrator',
     this.__vector.add(particle.__vel, particle.__vel, particle.__acc);
 
     // Scale velocity by lubricity.
-    // velocity *= friction
+    // velocity *= lubricity
     this.__vector.scale(particle.__vel, particle.__vel, lubricity);
 
     // Reset acceleration.
