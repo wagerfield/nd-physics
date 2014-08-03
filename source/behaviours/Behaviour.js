@@ -1,6 +1,6 @@
 /**
  * Behaviour constructor.
- * Applies forces to a particle.
+ * Applies a force to a particle.
  * @constructor
  * @param {Number} opt_dimensions Optional number of component dimension that the behaviour should have. Defaults to NDP.DIMENSIONS.
  */
@@ -51,7 +51,7 @@ Object.defineProperty(NDP.Behaviour.prototype, 'active', {
 });
 
 /**
- * Behaviour constructor.
+ * Calculates and adds the force of the behaviour to the particle force vector.
  * @param {Particle} particle Particle instance to apply the behaviour to.
  * @param {Number} delta Time delta in milliseconds since last integration.
  * @param {Number} index Index of the particle within the system.
@@ -64,7 +64,7 @@ NDP.Behaviour.prototype.apply = function(particle, delta, index) {
  * @param {String} namespace Namespace of the behaviour.
  * @return {Behaviour} Behaviour constructor.
  */
-NDP.Behaviour.create = function(namespace, apply) {
+NDP.Behaviour.create = function(namespace, constructor, apply) {
   if (NDP[namespace]) {
     throw 'Behaviour: Object already defined for NDP['+namespace+']';
   }
