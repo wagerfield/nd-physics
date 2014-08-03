@@ -2,7 +2,9 @@ describe('NDP.EulerIntegrator(opt_dimensions)', function() {
 
   beforeEach(function() {
     jasmine.addMatchers(CustomMatchers);
+
     NDP.DIMENSIONS = 2;
+
     this.integrator = new NDP.EulerIntegrator();
     this.particle = new NDP.Particle(2);
     this.vector = NDP.getVector(NDP.DIMENSIONS);
@@ -14,10 +16,10 @@ describe('NDP.EulerIntegrator(opt_dimensions)', function() {
     this.vel = this.vector.create();
     this.pos = this.vector.create();
 
-    this.integrate = function(fx, fy, delta, lubricity) {
+    this.integrate = function(force, delta, lubricity) {
 
       // Set force.
-      this.vector.set(this.force, fx, fy);
+      this.vector.copy(this.force, force);
 
 
       // Euler Integration
@@ -71,20 +73,25 @@ describe('NDP.EulerIntegrator(opt_dimensions)', function() {
       expect(this.particle.__vel).toEqualArray(this.identity);
       expect(this.particle.__pos).toEqualArray(this.identity);
 
-      this.integrate(2, 4, DELTA, LUBRICITY);
-
-      // Set particle force
+      // Set particle force.
       this.particle.fx = 2;
       this.particle.fy = 4;
+
+      // Integrate using test integration method.
+      this.integrate(this.particle.__force, DELTA, LUBRICITY);
+
+      // Integrate using integrator integration method.
       this.integrator.__integrate(this.particle, DELTA, LUBRICITY);
+
+      // Compare vectors.
       expect(this.particle.__force).toEqualArray(this.identity);
       expect(this.particle.__acc).toEqualArray(this.acc);
       expect(this.particle.__vel).toEqualArray(this.vel);
       expect(this.particle.__pos).toEqualArray(this.pos);
 
-      console.log('acc:', this.acc, this.particle.__acc);
-      console.log('vel:', this.vel, this.particle.__vel);
-      console.log('pos:', this.pos, this.particle.__pos);
+      // console.log('acc:', this.acc, this.particle.__acc);
+      // console.log('vel:', this.vel, this.particle.__vel);
+      // console.log('pos:', this.pos, this.particle.__pos);
     });
   });
 });
