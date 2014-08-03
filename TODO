@@ -32,7 +32,7 @@ Tests:
    ✔ EulerIntegrator validation tests @done (14-08-03 22:56)
    ✔ ImprovedEulerIntegrator validation tests @done (14-08-03 23:50)
    ✔ VerletIntegrator validation tests @done (14-08-03 23:59)
-   ☐ TimeCorrectedVerletIntegrator validation tests
+   ✔ TimeCorrectedVerletIntegrator validation tests @done (14-08-04 00:06)
   Behaviours:
     ☐ Abstract Behaviour
     ☐ ConstantBehaviour
