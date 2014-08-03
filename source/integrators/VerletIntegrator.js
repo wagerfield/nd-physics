@@ -7,33 +7,34 @@ NDP.Integrator.create('VerletIntegrator',
 
   /**
    * Integrates motion for a single particle using Verlet integration.
-   * vi = xi - xi-1
-   * xi+1 = xi + vi + a * dti * dti
+   * a(i+1) = a(i) * dt(i) * dt(i)
+   * v(i+1) = x(i) - x(i-1)
+   * x(i+1) = x(i) + v(i+1) + a(i+1)
    * @param {Particle} particle Particle to integrate motion on.
    * @param {Number} delta Time delta in milliseconds since last integration.
    * @param {Number} lubricity Lubricity within the system.
    */
   function(particle, delta, lubricity) {
 
-    // Calculate velocity.
-    // velocity = position - oldPosition
-    this.__vector.subtract(particle.__vel, particle.__pos, particle.__old.pos);
-
-    // Scale velocity by lubricity.
-    // velocity *= friction
-    this.__vector.scale(particle.__vel, particle.__vel, lubricity);
-
     // Calculate acceleration.
     // NOTE: Force is stored in the acceleration vector,
     //       so needs to be converted to acceleration:
     //       force = mass * acceleration
-    //       acceleration = force * 1 / mass (inverseMass)
+    //       acceleration = force / mass || force * inverseMass
     // acceleration *= inverseMass * delta * delta
     this.__vector.scale(particle.__acc, particle.__acc, particle.__inverseMass * this.__deltaSquared);
+
+    // Calculate velocity.
+    // velocity = position - oldPosition
+    this.__vector.subtract(particle.__vel, particle.__pos, particle.__old.pos);
 
     // Add acceleration to velocity.
     // velocity += acceleration
     this.__vector.add(particle.__vel, particle.__vel, particle.__acc);
+
+    // Scale velocity by lubricity.
+    // velocity *= lubricity
+    this.__vector.scale(particle.__vel, particle.__vel, lubricity);
 
     // Store old position.
     // oldPosition = position
