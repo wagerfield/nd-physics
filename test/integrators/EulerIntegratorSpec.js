@@ -55,6 +55,10 @@ describe('NDP.EulerIntegrator(opt_dimensions)', function() {
     expect(NDP.EulerIntegrator).toEqual(jasmine.any(Function));
   });
 
+  it('should inherit from NDP.Integrator', function() {
+    expect(this.integrator instanceof NDP.Integrator).toBeTruthy();
+  });
+
   describe('__integrate(particle, delta, lubricity)', function() {
     it('should integrate motion using Euler integration', function() {
 
