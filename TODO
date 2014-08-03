@@ -18,6 +18,7 @@ Behaviours:
 --- ✄ -----------------------
 
 Integrators:
+  ✔ TimeCorrectedVerletIntegrator @done (14-08-03 22:57)
   ☐ Abstract Runge Kutta Integrator
   ☐ RK4 Integrator
 
@@ -28,9 +29,10 @@ Tests:
   Components:
    ☐ Hookes Law test for Spring
   Integrators:
-   ☐ EulerIntegrator validation tests
-   ☐ ImprovedEulerIntegrator validation tests
-   ☐ VerletEulerIntegrator validation tests
+   ✔ EulerIntegrator validation tests @done (14-08-03 22:56)
+   ✔ ImprovedEulerIntegrator validation tests @done (14-08-03 23:50)
+   ☐ VerletIntegrator validation tests
+   ☐ TimeCorrectedVerletIntegrator validation tests
   Behaviours:
     ☐ Abstract Behaviour
     ☐ ConstantBehaviour
