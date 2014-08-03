@@ -73,6 +73,8 @@ describe('NDP.EulerIntegrator(opt_dimensions)', function() {
       expect(this.particle.__vel).toEqualArray(this.identity);
       expect(this.particle.__pos).toEqualArray(this.identity);
 
+
+
       // Set particle force.
       this.particle.fx = 2;
       this.particle.fy = 4;
@@ -89,9 +91,35 @@ describe('NDP.EulerIntegrator(opt_dimensions)', function() {
       expect(this.particle.__vel).toEqualArray(this.vel);
       expect(this.particle.__pos).toEqualArray(this.pos);
 
-      // console.log('acc:', this.acc, this.particle.__acc);
-      // console.log('vel:', this.vel, this.particle.__vel);
-      // console.log('pos:', this.pos, this.particle.__pos);
+      // console.log('acc1:', this.acc, this.particle.__acc);
+      // console.log('vel1:', this.vel, this.particle.__vel);
+      // console.log('pos1:', this.pos, this.particle.__pos);
+
+
+
+      // Change DELTA & LUBRICITY.
+      DELTA = 3;
+      LUBRICITY = 0.5;
+
+      // Set particle force.
+      this.particle.fx = 5;
+      this.particle.fy = 7;
+
+      // Integrate using test integration method.
+      this.integrate(this.particle.__force, DELTA, LUBRICITY);
+
+      // Integrate using integrator integration method.
+      this.integrator.__integrate(this.particle, DELTA, LUBRICITY);
+
+      // Compare vectors.
+      expect(this.particle.__force).toEqualArray(this.identity);
+      expect(this.particle.__acc).toEqualArray(this.acc);
+      expect(this.particle.__vel).toEqualArray(this.vel);
+      expect(this.particle.__pos).toEqualArray(this.pos);
+
+      // console.log('acc2:', this.acc, this.particle.__acc);
+      // console.log('vel2:', this.vel, this.particle.__vel);
+      // console.log('pos2:', this.pos, this.particle.__pos);
     });
   });
 });
