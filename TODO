@@ -31,7 +31,7 @@ Tests:
   Integrators:
    ✔ EulerIntegrator validation tests @done (14-08-03 22:56)
    ✔ ImprovedEulerIntegrator validation tests @done (14-08-03 23:50)
-   ☐ VerletIntegrator validation tests
+   ✔ VerletIntegrator validation tests @done (14-08-03 23:59)
    ☐ TimeCorrectedVerletIntegrator validation tests
   Behaviours:
     ☐ Abstract Behaviour
