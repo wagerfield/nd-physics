@@ -1,4 +1,3 @@
-
 Components:
  ☐ Add Hookes Law equation to Spring comments
 
@@ -37,3 +36,10 @@ Tests:
     ☐ Abstract Behaviour
     ☐ ConstantBehaviour
     ☐ CollisionBehaviour
+    ☐ AttractionBehaviour
+    ☐ CollisionBehaviour
+    ☐ EdgeWrapBehaviour
+    ☐ EdgeBounceBehaviour
+    ☐ WanderBehaviour
+    ☐ FlockBehaviour
+    ☐ ChargeBehaviour
