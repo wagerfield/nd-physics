@@ -1,4 +1,4 @@
-# ND Physics
+# nD Physics
 
 > Dimension Agnostic Physics Engine
 

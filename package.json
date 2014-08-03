@@ -21,7 +21,7 @@
     "springs",
     "2D",
     "3D",
-    "ND"
+    "nD"
   ],
   "devDependencies": {
     "grunt": "^0.4.5",
