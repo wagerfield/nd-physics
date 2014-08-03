@@ -32,9 +32,9 @@ NDP.Integrator = function(opt_dimensions) {
 
   // Create caches.
   this.__delta = 0;
-  this.__oldDelta = 0;
   this.__deltaSquared = 0;
   this.__halfDeltaSquared = 0;
+  this.__deltaCorrection = 0;
 };
 
 /**
@@ -49,7 +49,7 @@ NDP.Integrator.prototype.integrate = function(particles, delta, lubricity) {
   // Set delta values.
   this.__deltaSquared = delta * delta;
   this.__halfDeltaSquared = this.__deltaSquared * 0.5;
-  this.__oldDelta = this.__delta;
+  this.__deltaCorrection = delta / this.__delta;
   this.__delta = delta;
 
   // Integrate motion for each particle in the particles collection.
