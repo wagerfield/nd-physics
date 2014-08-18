@@ -129,19 +129,26 @@ Object.defineProperty(NDP.Spring.prototype, 'stiffness', {
 
 /**
  * Updates the positions of the two particles attached to the spring.
+ * Hooke's Law
+ * F = -k * e
+ * F = Force in newtons [N]
+ * k = Spring constant in newtons per metre [N/m]
+ * e = Extension beyond rest length in metres [m]
  * @param {Number} delta Time delta since last integration.
  * @param {Number} index Index of the spring within the system.
  * @return {Spring} Spring instance for chaining.
  */
 NDP.Spring.prototype.update = function(delta, index) {
 
-  // Calculate delta.
+  // Calculate delta between the two particles.
   this.__vector.subtract(this.__delta, this.__p2.__pos, this.__p1.__pos);
 
   // Calculate force.
-  var distance = NDP.__THRESHOLD + this.__vector.length(this.__delta);
   var inverseMass = this.__p1.__inverseMass + this.__p2.__inverseMass;
-  var force = (distance - this.__length) / (distance * inverseMass) * this.__stiffness;
+  var distance = NDP.__THRESHOLD + this.__vector.length(this.__delta);
+  var extension = distance - this.__length;
+  // var force = extension * this.__stiffness;
+  var force = extension / (distance * inverseMass) * this.__stiffness;
 
   // Apply force to particles.
   this.apply(this.__p1, force);
