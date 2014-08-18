@@ -1,0 +1,107 @@
+<html>
+  <head>
+    <title>nD Physics | Springs</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="/assets/styles/css/styles.css">
+  </head>
+  <body>
+    <script src="/assets/scripts/js/libraries/stats/stats.min.js"></script>
+    <script src="/assets/scripts/js/libraries/sketch/sketch.min.js"></script>
+    <script src="/deploy/nd-physics.min.js"></script>
+    <script>
+    Sketch.create({
+      setup: function() {
+        this.stats = new Stats();
+        this.stats.domElement.style.position = 'absolute';
+        this.stats.domElement.style.left = '0px';
+        this.stats.domElement.style.top = '0px';
+        document.body.appendChild(this.stats.domElement);
+
+        NDP.DIMENSIONS = 2;
+        this.integrators = [
+          new NDP.EulerIntegrator(),
+          new NDP.ImprovedEulerIntegrator(),
+          new NDP.VerletIntegrator(),
+          new NDP.TimeCorrectedVerletIntegrator()
+        ];
+        this.engine = new NDP.Engine(this.integrators[2], true);
+        this.particles = this.engine.particles;
+        this.springs = this.engine.springs;
+
+        var GRID_SIZE = 10,
+            GRID_COUNT_X = 55,
+            GRID_COUNT_Y = 30,
+            GRID_OFFSET_X = GRID_COUNT_X * GRID_SIZE * 0.5,
+            GRID_OFFSET_Y = GRID_COUNT_Y * GRID_SIZE * 0.5,
+            SPRING_STIFFNESS = 0.8;
+
+        var centerX = this.width * 0.5,
+            centerY = this.height * 0.5,
+            offsetX = centerX - GRID_OFFSET_X,
+            // offsetY = centerY - GRID_OFFSET_Y,
+            offsetY = 0,
+            x, y, l, p1, p2, spring;
+
+        var garvity = new NDP.ConstantBehaviour([0, 10]);
+
+        for (x = 0; x < GRID_COUNT_X; x++) {
+          for (y = 0; y < GRID_COUNT_Y; y++) {
+            l = this.particles.length;
+            p1 = new NDP.Particle(0.1);
+            p1.x = offsetX + x * GRID_SIZE;
+            p1.y = offsetY + y * GRID_SIZE;
+            var tl = x === 0 && y === 0;
+            var tr = x === GRID_COUNT_X-1 && y === 0;
+            var bl = x === 0 && y === GRID_COUNT_Y-1;
+            var br = x === GRID_COUNT_X-1 && y === GRID_COUNT_Y-1;
+            p1.fixed = tl || tr || bl || br;
+            // p1.fixed = y === 0;
+            p1.addBehaviour(garvity);
+            this.engine.addParticle(p1);
+            if (x > 0) {
+              p2 = this.particles[l - GRID_COUNT_Y];
+              spring = new NDP.Spring(p1, p2, GRID_SIZE, SPRING_STIFFNESS);
+              this.engine.addSpring(spring);
+            }
+            if (y > 0) {
+              p2 = this.particles[l - 1];
+              spring = new NDP.Spring(p1, p2, GRID_SIZE, SPRING_STIFFNESS);
+              this.engine.addSpring(spring);
+            }
+          }
+        }
+      },
+      resize: function() {
+      },
+      update: function() {
+        this.stats.begin();
+        this.engine.step();
+        this.stats.end();
+      },
+      draw: function() {
+
+        // Particles
+        this.beginPath();
+        this.lineWidth = 0.2;
+        this.strokeStyle = '#AAA';
+        for (var p = 0, pl = this.particles.length, particle; p < pl; p++) {
+          particle = this.particles[p];
+          // this.moveTo(particle.x, particle.y);
+          // this.arc(particle.x, particle.y, 1, 0, Math.PI2);
+        }
+        // this.stroke();
+
+        // Springs
+        this.beginPath();
+        this.strokeStyle = '#666';
+        for (var s = 0, sl = this.springs.length, spring; s < sl; s++) {
+          spring = this.springs[s];
+          this.moveTo(spring.p1.x, spring.p1.y);
+          this.lineTo(spring.p2.x, spring.p2.y);
+        }
+        this.stroke();
+      }
+    });
+    </script>
+  </body>
+</html>
