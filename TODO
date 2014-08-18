@@ -25,8 +25,10 @@ Integrators:
 
 Tests:
   Remaining BDD tests.
-  Components:
-   ☐ Hookes Law test for Spring
+  Spring:
+   ☐ Hookes Law
+   ☐ update(delta, index)
+   ☐ apply(particle, force)
   Integrators:
    ✔ EulerIntegrator validation tests @done (14-08-03 22:56)
    ✔ ImprovedEulerIntegrator validation tests @done (14-08-03 23:50)
