@@ -42,7 +42,7 @@
             offsetY = 0,
             x, y, l, p1, p2, spring;
 
-        var garvity = new NDP.ConstantBehaviour([0, 10]);
+        var gravity = new NDP.ConstantBehaviour([0, 10]);
 
         for (x = 0; x < GRID_COUNT_X; x++) {
           for (y = 0; y < GRID_COUNT_Y; y++) {
@@ -56,7 +56,7 @@
             var br = x === GRID_COUNT_X-1 && y === GRID_COUNT_Y-1;
             p1.fixed = tl || tr || bl || br;
             // p1.fixed = y === 0;
-            p1.addBehaviour(garvity);
+            p1.addBehaviour(gravity);
             this.engine.addParticle(p1);
             if (x > 0) {
               p2 = this.particles[l - GRID_COUNT_Y];
