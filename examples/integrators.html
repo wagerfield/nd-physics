@@ -3,20 +3,80 @@
     <title>nD Physics | Integrators</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <link rel="stylesheet" href="/assets/styles/css/styles.css">
+    <style>
+    .container {
+      border: 1px solid #333;
+      margin: 20px 0 0 20px;
+      position: relative;
+      height: 360px;
+      width: 540px;
+      float: left;
+    }
+    .stats {
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+    </style>
   </head>
   <body>
+    <div id="a" class="container"></div>
+    <div id="b" class="container"></div>
+    <div id="c" class="container"></div>
+    <div id="d" class="container"></div>
+    <script src="/assets/scripts/js/libraries/stats/stats.min.js"></script>
     <script src="/assets/scripts/js/libraries/sketch/sketch.min.js"></script>
+    <script src="/deploy/nd-physics.min.js"></script>
     <script>
-    Sketch.create({
-      setup: function() {
-      },
-      resize: function() {
-      },
-      update: function() {
-      },
-      draw: function() {
-      }
-    });
+
+    NDP.DIMENSIONS = 2;
+
+    function createSketch(containerID, integratorID) {
+      return {
+        container: document.getElementById(containerID),
+        setup: function() {
+          this.stats = new Stats();
+          this.stats.domElement.classList.add('stats');
+          this.container.appendChild(this.stats.domElement);
+
+          this.integrator = new NDP[integratorID]();
+          this.engine = new NDP.Engine(this.integrator, true);
+          this.particles = this.engine.particles;
+          this.gravity = new NDP.ConstantBehaviour([0, 10]);
+
+          for (var p = 0, particle; p < 10; p++) {
+            particle = new NDP.Particle(p+1);
+            particle.x = 100 + p * 20;
+            particle.y = 100;
+            particle.addBehaviour(this.gravity);
+            this.engine.addParticle(particle);
+          }
+        },
+        resize: function() {
+        },
+        update: function() {
+          this.stats.begin();
+          this.engine.step();
+          this.stats.end();
+        },
+        draw: function() {
+          this.beginPath();
+          this.lineWidth = 0.2;
+          this.strokeStyle = '#AAA';
+          for (var p = 0, pl = this.particles.length, particle; p < pl; p++) {
+            particle = this.particles[p];
+            this.moveTo(particle.x, particle.y);
+            this.arc(particle.x, particle.y, particle.radius, 0, Math.PI2);
+          }
+          this.stroke();
+        }
+      };
+    }
+
+    Sketch.create(createSketch('a', 'EulerIntegrator'));
+    Sketch.create(createSketch('b', 'ImprovedEulerIntegrator'));
+    Sketch.create(createSketch('c', 'VerletIntegrator'));
+    Sketch.create(createSketch('d', 'TimeCorrectedVerletIntegrator'));
     </script>
   </body>
 </html>
