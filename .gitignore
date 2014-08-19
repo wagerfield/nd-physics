@@ -10,6 +10,7 @@ logs
 results
 
 npm-debug.log
+dump
 node_modules
 bower_components
 report
