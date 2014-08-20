@@ -42,12 +42,12 @@
             offsetY = 0,
             x, y, l, p1, p2, spring;
 
-        var gravity = new NDP.ConstantBehaviour([0, 10]);
+        var gravity = new NDP.ConstantBehaviour([0, 0.98]);
 
         for (x = 0; x < GRID_COUNT_X; x++) {
           for (y = 0; y < GRID_COUNT_Y; y++) {
             l = this.particles.length;
-            p1 = new NDP.Particle(0.1);
+            p1 = new NDP.Particle(1);
             p1.x = offsetX + x * GRID_SIZE;
             p1.y = offsetY + y * GRID_SIZE;
             var tl = x === 0 && y === 0;
@@ -83,13 +83,13 @@
         // Particles
         this.beginPath();
         this.lineWidth = 0.2;
-        this.strokeStyle = '#AAA';
+        this.strokeStyle = '#666';
         for (var p = 0, pl = this.particles.length, particle; p < pl; p++) {
           particle = this.particles[p];
-          // this.moveTo(particle.x, particle.y);
-          // this.arc(particle.x, particle.y, 1, 0, Math.PI2);
+          this.moveTo(particle.x, particle.y);
+          this.arc(particle.x, particle.y, 0.5, 0, Math.PI2, false);
         }
-        // this.stroke();
+        this.stroke();
 
         // Springs
         this.beginPath();
