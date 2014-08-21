@@ -1,0 +1,220 @@
+<html>
+  <head>
+    <title>nD Physics | Performance</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="/assets/styles/css/styles.css">
+    <style>
+    body {
+      cursor: default;
+    }
+    .container {
+      border: 1px solid #333;
+      margin: 20px 0 0 20px;
+      position: relative;
+      height: 360px;
+      width: 540px;
+      float: left;
+    }
+    .stats {
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+    </style>
+  </head>
+  <body>
+    <div id="a" class="container"></div>
+    <script src="/assets/scripts/js/libraries/stats/stats.js"></script>
+    <script>
+
+    Vector = {
+      zero: new Float32Array(2),
+      create: function(size) {
+        size = size || 2;
+        var vector;
+        // vector = new Float32Array(size);
+        // vector = new Array(size);
+        vector = {};
+        for (var i = 0; i < size; i++) vector[i.toString()] = 0;
+        return vector;
+      },
+      id: function(target) {
+        target[0] = this.zero[0];
+        target[1] = this.zero[1];
+      },
+      set: function(target, x, y) {
+        target[0] = x;
+        target[1] = y;
+      },
+      copy: function(target, a) {
+        target[0] = a[0];
+        target[1] = a[1];
+      },
+      add: function(target, a, b) {
+        target[0] = a[0] + b[0];
+        target[1] = a[1] + b[1];
+      },
+      sub: function(target, a, b) {
+        target[0] = a[0] - b[0];
+        target[1] = a[1] - b[1];
+      },
+      mul: function(target, a, b) {
+        target[0] = a[0] * b[0];
+        target[1] = a[1] * b[1];
+      },
+      scale: function(target, a, s) {
+        target[0] = a[0] * s;
+        target[1] = a[1] * s;
+      }
+    };
+
+    var Particle = function(mass, radius) {
+      this.mass = mass || 1;
+      this.radius = radius || this.mass;
+      this.pos = Vector.create();
+      this.old = Vector.create();
+      this.vel = Vector.create();
+      this.acc = Vector.create();
+      this.inv = Vector.create();
+      var inv = 1 / this.mass;
+      Vector.set(this.inv, inv, inv);
+    };
+    Particle.prototype = {
+      set: function(x, y) {
+        Vector.set(this.pos, x, y);
+        Vector.copy(this.old, this.pos);
+      },
+      addForce: function(force) {
+        Vector.add(this.acc, this.acc, force);
+      },
+      integrate: function(delta) {
+        // force = mass * acceleration
+        // acceleration = force / mass
+        Vector.mul(this.acc, this.acc, delta);
+        Vector.mul(this.acc, this.acc, this.inv);
+        Vector.sub(this.vel, this.pos, this.old);
+        Vector.add(this.vel, this.vel, this.acc);
+        Vector.copy(this.old, this.pos);
+        Vector.add(this.pos, this.pos, this.vel);
+        Vector.id(this.acc);
+      },
+      bound: function(bounds) {
+        this.set(
+          Math.max(bounds[0] + this.radius, Math.min(bounds[2] - this.radius, this.pos[0])),
+          Math.max(bounds[1] + this.radius, Math.min(bounds[3] - this.radius, this.pos[1]))
+        );
+      }
+    };
+
+
+
+    var container = document.getElementById('a'),
+        canvas = document.createElement('canvas'),
+        context = canvas.getContext('2d'),
+        force = Vector.create(),
+        stats = new Stats(),
+        dragging = false,
+        particles = [],
+        mouseX = 0,
+        mouseY = 0,
+        deltaX = 0,
+        deltaY = 0,
+        downX = 0,
+        downY = 0;
+
+    var STEP = 1/60,
+        DELTA = Vector.create(),
+        BOUNDS = Vector.create(4),
+        WIDTH = container.clientWidth,
+        HEIGHT = container.clientHeight,
+        CENTER_X = WIDTH / 2,
+        CENTER_Y = HEIGHT / 2,
+        FORCE_SCALAR = 60;
+
+    setup();
+
+    function setup() {
+      Vector.set(DELTA, STEP, STEP);
+      BOUNDS[2] = WIDTH;
+      BOUNDS[3] = HEIGHT;
+
+      for (var i = 0, particle, mass, radius; i < 10000; i++) {
+        mass = (i + 1);
+        radius = Math.min(mass, 10);
+        particle = new Particle(mass, radius);
+        particle.set(20 + i * 40, 0);
+        particles.push(particle);
+      }
+      canvas.width = WIDTH;
+      canvas.height = HEIGHT;
+
+      stats.domElement.style.position = 'absolute';
+      stats.domElement.style.left = 0;
+      stats.domElement.style.top = 0;
+
+      container.addEventListener('mousedown', onMouseDown);
+      container.appendChild(stats.domElement);
+      container.appendChild(canvas);
+
+      update();
+    }
+
+    function update() {
+      requestAnimationFrame(update);
+      stats.begin();
+      step(DELTA);
+      // clear();
+      // draw();
+      stats.end();
+    }
+    function step(delta) {
+      Vector.set(force, deltaX * FORCE_SCALAR, deltaY * FORCE_SCALAR);
+      for (var i = 0, l = particles.length, p; i < l; i++) {
+        p = particles[i];
+        p.addForce(force);
+        p.integrate(delta);
+        p.bound(BOUNDS);
+      }
+    }
+    function clear() {
+      context.clearRect(0, 0, WIDTH, HEIGHT);
+    }
+    function draw() {
+      context.beginPath();
+      context.moveTo(downX, downY);
+      context.lineTo(mouseX, mouseY);
+      context.strokeStyle = '#F44';
+      context.lineWidth = 0.5;
+      context.stroke();
+      for (var i = 0, l = particles.length, p; i < l; i++) {
+        p = particles[i];
+        context.beginPath();
+        context.arc(p.pos[0], p.pos[1], p.radius, 0, Math.PI * 2, false);
+        context.strokeStyle = '#6BB';
+        context.lineWidth = 1;
+        context.stroke();
+      }
+    }
+
+    function onMouseDown(event) {
+      dragging = true;
+      deltaX = deltaY = 0;
+      downX = mouseX = event.offsetX;
+      downY = mouseY = event.offsetY;
+      window.addEventListener('mousemove', onMouseMove);
+      window.addEventListener('mouseup', onMouseUp);
+    }
+    function onMouseMove(event) {
+      mouseX = event.offsetX;
+      mouseY = event.offsetY;
+      deltaX = mouseX - downX;
+      deltaY = mouseY - downY;
+    }
+    function onMouseUp(event) {
+      dragging = false;
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseup', onMouseUp);
+    }
+    </script>
+  </body>
+</html>
