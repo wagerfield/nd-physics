@@ -59,7 +59,6 @@ NDP.Particle = function(mass, opt_radius, opt_fixed, opt_dimensions) {
   this.__vel = this.__vector.create();
   this.__pos = this.__vector.create();
   this.__old = {
-    force: this.__vector.create(),
     acc: this.__vector.create(),
     vel: this.__vector.create(),
     pos: this.__vector.create()
@@ -67,7 +66,6 @@ NDP.Particle = function(mass, opt_radius, opt_fixed, opt_dimensions) {
 
   // Define component getters and setters.
   for (var i = 0; i < this.__dimensions; i++) {
-    this.__defineComponent(i, 'force', 'f');
     this.__defineComponent(i, 'acc', 'a');
     this.__defineComponent(i, 'vel', 'v');
     this.__defineComponent(i, 'pos');
@@ -213,7 +211,6 @@ NDP.Particle.prototype.update = function(delta, index) {
   // Set private component properties.
   for (i = 0, l = this.__dimensions; i < l; i++) {
     component = NDP.COMPONENTS[i];
-    this['__f' + component] = this.__force[i];
     this['__a' + component] = this.__acc[i];
     this['__v' + component] = this.__vel[i];
     this['__'  + component] = this.__pos[i];

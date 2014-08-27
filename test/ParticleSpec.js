@@ -274,9 +274,9 @@ describe('NDP.Particle(mass, opt_radius, opt_fixed, opt_dimensions)', function()
         expect(this.particleA.__old[key]).toEqual(jasmine.any(NDP.Array));
       }
     });
-    describe('force, acc, vel, pos', function() {
+    describe('acc, vel, pos', function() {
       beforeEach(function() {
-        this.vectorKeys = ['force', 'acc', 'vel', 'pos'];
+        this.vectorKeys = ['acc', 'vel', 'pos'];
       });
       it('should be an NDP.Array instance', function() {
         for (var i = 0; i < this.vectorKeys.length; i++) {
@@ -299,7 +299,6 @@ describe('NDP.Particle(mass, opt_radius, opt_fixed, opt_dimensions)', function()
       this.particle2 = new NDP.Particle(1, 1, false, 2);
       this.particle3 = new NDP.Particle(1, 1, false, 3);
       this.map = [
-        {prefix:'f', array:'__force'},
         {prefix:'a', array:'__acc'},
         {prefix:'v', array:'__vel'},
         {prefix:'' , array:'__pos'}
@@ -398,14 +397,6 @@ describe('NDP.Particle(mass, opt_radius, opt_fixed, opt_dimensions)', function()
       expect(this.particle3.__vz).toBe(NEW_VELOCITY);
       expect(this.particle3.__vel[2]).toBe(NEW_VELOCITY);
       expect(this.particle3.__old.vel[2]).toBe(NEW_VELOCITY);
-
-      // Force
-      var NEW_FORCE = 30;
-      this.particle3.fx = NEW_FORCE;
-      expect(this.particle3.fx).toBe(NEW_FORCE);
-      expect(this.particle3.__fx).toBe(NEW_FORCE);
-      expect(this.particle3.__force[0]).toBe(NEW_FORCE);
-      expect(this.particle3.__old.force[0]).toBe(NEW_FORCE);
     });
     it('should only accept Number values', function() {
 
